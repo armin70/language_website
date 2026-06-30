@@ -1,0 +1,36 @@
+<h2>Placement Test</h2>
+
+<form method="post">
+{% csrf_token %}
+
+<label>Select Stage:</label>
+
+<select name="stage">
+
+{% for stage in stages %}
+
+<option value="{{stage.number}}">
+Level {{stage.level.name}} - Stage {{stage.number}}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+<br><br>
+
+<button type="submit">Finish Test</button>
+
+</form>
+{% for question in questions %}
+<p>{{question.text}}</p>
+
+{% for choice in question.choice_set.all %}
+<label>
+<input type="radio" name="{{question.id}}" value="{{choice.id}}">
+{{choice.text}}
+</label>
+{% endfor %}
+
+{% endfor %}

@@ -1,0 +1,25 @@
+<h2>Your 30 Day Program</h2>
+
+<ul>
+
+{% for day in days %}
+
+<li>
+
+{% if day.day_number <= current_day %}
+
+<a href="/students/day/{{day.id}}">
+Day {{day.day_number}}
+</a>
+
+{% else %}
+
+🔒 Day {{day.day_number}}
+
+{% endif %}
+
+</li>
+
+{% endfor %}
+
+</ul>

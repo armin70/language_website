@@ -6,6 +6,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('website.urls')),  # main page handled by courses app
+    path('students/', include('students.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path("placement/", include("placement.urls")),
 ]
 
 if settings.DEBUG:

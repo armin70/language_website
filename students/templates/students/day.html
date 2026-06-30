@@ -1,0 +1,26 @@
+<h2>Day {{day.day_number}}</h2>
+
+<h3>Tasks</h3>
+
+<form method="post">
+{% csrf_token %}
+
+{% for task in tasks %}
+
+<div>
+
+<label>
+
+<input type="checkbox"
+       name="task_{{task.id}}"
+       {% if task.id in completed_task_ids %}checked{% endif %}>
+
+{{task.title}}
+
+</label>
+
+</div>
+
+{% endfor %}
+
+<button type="submit">Save</button>
