@@ -1533,7 +1533,8 @@ h6 {
 
 #header #logo img {
     padding: 0;
-    margin: 0
+    margin: 0;
+    width: 40px;
 }
 
 @media (max-width: 768px) {
@@ -1858,7 +1859,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .banner-area {
-    background: url(../img/banner-bg.jpg) left;
+    background: url(../img/bg.png) left;
     background-size: cover
 }
 

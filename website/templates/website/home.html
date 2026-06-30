@@ -10,7 +10,7 @@
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="{% static 'img/fav.png '%}">
+    <link rel="shortcut icon" href="{% static 'img/logo_main.png '%}">
     <!-- Author Meta -->
     <meta name="author" content="colorlib">
     <!-- Meta Description -->
@@ -63,7 +63,7 @@
         <div class="container main-menu">
             <div class="row align-items-center justify-content-between d-flex">
                 <div id="logo">
-                    <a href="index.html"><img src="{% static 'img/logo.png' %}" alt="" title="" fetchpriority="high"
+                    <a href="index.html"><img src="{% static 'img/logo_main.png' %}" alt="" title="" fetchpriority="high"
                             decoding="sync" /></a>
                 </div>
                 <nav id="nav-menu-container">
@@ -171,44 +171,32 @@
     <!-- End feature Area -->
 
     <!-- Start popular-course Area -->
-    <section class="popular-course-area section-gap">
-        <div class="container">
-            <div class="row d-flex justify-content-center">
-                <div class="menu-content pb-70 col-lg-8">
-                    <div class="title text-center">
-                        <h1 class="mb-10">دوره‌های محبوب ما</h1>
-                        <p>لحظه‌ای در زندگی هر فرد مشتاق وجود دارد.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="active-popular-carusel" dir="ltr">
-                    {% for course in courses %}
-                    <div class="single-popular-carusel">
-                        <div class="thumb-wrap relative">
-                            <div class="thumb relative">
-                                <div class="overlay overlay-bg"></div>
-                                <img class="img-fluid" src="{{ course.image.url }}" alt="{{ course.title }}"
-                                    fetchpriority="high" decoding="sync">
-                            </div>
-                            <div class="meta d-flex justify-content-between">
-                                <p><span class="lnr lnr-users"></span> {{ course.get_course_type_display }}   <h4>{{ course.price }} تومان</h4>
-                            </div>
-                        </div>
-                        <div class="details">
-                            <a href="#">
-                                <h4>{{ course.title }}</h4>
-                            </a>
-                            <p>
-                                {{ course.description|truncatewords:15 }}
-                            </p>
-                        </div>
-                    </div>
+    <section class="section-gap">
 
-                    {% endfor %}
+            <div class="container">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-6 col-md-6"> 
+                        <img src="{% static 'img/about.jpg '%}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                    <h2>
+                        درباره ما
+                    </h2>    
+                    <p class="pt-10">
+                        <b>
+                        به لینگونیک خوش آمدید.
+                            
+                        </b>
+                    </p>
+                    <p>
+                        لینگونیک یک آکادمی آنلاین آموزش زبان انگلیسی است که با یک باور ساده اما عمیق شکل گرفته است: یادگیری زبان انگلیسی فقط یادگیری یک زبان نیست؛ بلکه مسیری برای رشد فردی، توسعه ذهن و ایجاد فرصت‌های جدید در زندگی است.
+                    </p>
+                    <p>
+                        هدف ما این نیست که تنها واژگان و قواعد گرامری را آموزش دهیم؛ بلکه می‌خواهیم زبان‌آموزان بتوانند به انگلیسی فکر کنند، با اعتمادبه‌نفس ارتباط برقرار کنند و از زبان به عنوان ابزاری برای پیشرفت تحصیلی، شغلی و شخصی استفاده کنند.
+                    </p>
+                    </div>
                 </div>
             </div>
-        </div>
     </section>
     <!-- End popular-course Area -->
 
