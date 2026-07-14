@@ -1,0 +1,146 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Mock Tests | Linguistic{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">Mock Tests</h2>
+            <p class="text-muted mb-0">Choose a test, continue your progress, or review completed attempts.</p>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="text-muted">New Tests</div>
+                    <div class="fs-3 fw-bold">{{ new_tests|length }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="text-muted">In Progress</div>
+                    <div class="fs-3 fw-bold">{{ ongoing_attempts|length }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="text-muted">Completed</div>
+                    <div class="fs-3 fw-bold">{{ completed_attempts|length }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ongoing Tests -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white border-0 py-3">
+            <h5 class="mb-0">Continue Tests</h5>
+        </div>
+        <div class="card-body">
+            {% if ongoing_attempts %}
+                <div class="row g-3">
+                    {% for attempt in ongoing_attempts %}
+                    <div class="col-md-6 col-xl-4">
+                        <div class="card h-100 border">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ attempt.mock_test.title }}</h5>
+                                <p class="text-muted mb-2">
+                                    Started: {{ attempt.started_at|date:"Y-m-d H:i" }}
+                                </p>
+                                <p class="mb-3">
+                                    <span class="badge bg-warning text-dark">In Progress</span>
+                                </p>
+                                <a href="{% url 'toefl:take_mock_test' slug=attempt.mock_test.slug %}" class="btn btn-primary w-100">
+                                    Continue
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">No ongoing tests.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Available Tests -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white border-0 py-3">
+            <h5 class="mb-0">Available Tests</h5>
+        </div>
+        <div class="card-body">
+            {% if new_tests %}
+                <div class="row g-3">
+                    {% for test in new_tests %}
+                    <div class="col-md-6 col-xl-4">
+                        <div class="card h-100 border">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ test.title }}</h5>
+                                <p class="text-muted mb-2">
+                                    Duration: {{ test.duration }} minutes
+                                </p>
+                                <p class="text-muted mb-3">
+                                    Reading sections and practice blocks
+                                </p>
+                                <a href="{% url 'toefl:take_mock_test' slug=test.slug %}" class="btn btn-success w-100">
+                                    Start Test
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">No new tests available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Completed Tests -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-0 py-3">
+            <h5 class="mb-0">Completed Tests</h5>
+        </div>
+        <div class="card-body">
+            {% if completed_attempts %}
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Test</th>
+                                <th>Submitted At</th>
+                                <th>Score</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attempt in completed_attempts %}
+                            <tr>
+                                <td>{{ attempt.mock_test.title }}</td>
+                                <td>{{ attempt.submitted_at|date:"Y-m-d H:i" }}</td>
+                                <td>{{ attempt.score|default:"-" }}</td>
+                                <td>
+                                    <a href="{% url 'toefl:test_result' attempt_id=attempt.id %}" class="btn btn-sm btn-outline-primary">
+                                        View Result
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">No completed tests yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

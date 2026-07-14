@@ -3,9 +3,14 @@
     color: #fff
 }
 
+@font-face {
+    font-family: "vazir";
+    src: url(../fonts/Vazirmatn-Medium.ttf);
+}
+
 body {
     color: #777;
-    font-family: "Poppins", sans-serif;
+    font-family: "vazir", sans-serif;
     font-size: 14px;
     font-weight: 300;
     line-height: 1.625em;
@@ -68,9 +73,9 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Poppins", sans-serif;
+    font-family: "vazir", sans-serif;
     color: #222;
-    line-height: 1.2em !important;
+    line-height: 1.2em ;
     margin-bottom: 0;
     margin-top: 0;
     font-weight: 600
@@ -84,7 +89,7 @@ h6 {
 .h6 {
     margin-bottom: 0;
     margin-top: 0;
-    font-family: "Poppins", sans-serif;
+    font-family: "vazir", sans-serif;
     font-weight: 600;
     color: #222
 }
@@ -1568,7 +1573,7 @@ h6 {
 }
 
 .nav-menu>li {
-    float: left
+    float: right
 }
 
 .nav-menu li:hover>ul,
@@ -1770,6 +1775,11 @@ body.mobile-nav-active #mobile-nav-toggle {
     color: #fff
 }
 
+.home-about p {
+    font-size: 16px;
+    line-height: 2;
+}
+
 .section-gap {
     padding: 120px 0
 }
@@ -1860,13 +1870,18 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .banner-area {
     background: url(../img/bg.png) left;
-    background-size: cover
+    background-size: cover;
 }
+#home.banner-area{
+    height: 80vh
 
+}
 .banner-area .overlay-bg {
     background-color: rgba(4, 9, 30, 0.8)
 }
-
+input::placeholder{
+    text-align: right!important;
+}
 @media (max-width: 767px) {
     .fullscreen {
         height: 700px !important
@@ -1876,7 +1891,9 @@ body.mobile-nav-active #mobile-nav-toggle {
 .banner-content {
     text-align: right
 }
-
+.banner-content h1{
+    line-height: 1.5em !important;
+}
 .banner-content h1 {
     font-size: 48px;
     font-weight: 700;
@@ -2493,7 +2510,8 @@ body.mobile-nav-active #mobile-nav-toggle {
     padding-right: 80px
 }
 
-.info-area .info-area-right h1 {
+.info-area .info-area-right h1,
+.info-area .info-area-right h2 {
     max-width: 400px;
     margin-bottom: 20px
 }
@@ -4212,4 +4230,214 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .footer-bottom .footer-social a:hover {
     background-color: #f7631b
+}
+
+
+/* cutom css */
+
+.special-list {
+    list-style: circle;
+    color: white;
+}
+
+.normal-list {
+    list-style: circle;
+    color: #777;
+    padding-right: 20px;
+}
+
+.consultation-message {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    line-height: 1.8;
+    text-align: right;
+}
+
+.consultation-message.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.consultation-message.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+
+
+.contact-intro {
+    margin-bottom: 60px;
+    padding: 50px 45px;
+    border-radius: 12px;
+    background: linear-gradient(
+        135deg,
+        #f7f8ff 0%,
+        #ffffff 100%
+    );
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+    text-align: center;
+}
+
+.contact-intro-label {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #f7631b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.contact-intro h2 {
+    margin-bottom: 18px;
+    color: #222;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.contact-intro > p {
+    max-width: 780px;
+    margin: 0 auto 35px;
+    color: #777;
+    font-size: 16px;
+    line-height: 2;
+}
+
+.contact-intro-items {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.contact-intro-item {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    max-width: 330px;
+    padding: 22px;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    background-color: #ffffff;
+    text-align: right;
+}
+
+.contact-intro-item > span {
+    flex: 0 0 auto;
+    margin-left: 15px;
+    color: #f7631b;
+    font-size: 30px;
+}
+
+.contact-intro-item h5 {
+    margin-bottom: 8px;
+    color: #222;
+    font-size: 16px;
+}
+
+.contact-intro-item p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.contact-content-row {
+    align-items: flex-start;
+}
+
+.contact-field {
+    margin-bottom: 20px;
+}
+
+.contact-field .form-control {
+    margin-bottom: 0 !important;
+}
+
+.contact-field textarea {
+    min-height: 190px;
+    resize: vertical;
+}
+
+.contact-field-error {
+    display: block;
+    margin-top: 6px;
+    color: #dc3545;
+    font-size: 13px;
+    text-align: right;
+}
+
+.contact-alert {
+    padding: 13px 16px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    line-height: 1.8;
+    text-align: right;
+}
+
+.contact-alert.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.contact-alert.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.contact-form input,
+.contact-form textarea {
+    text-align: right;
+}
+
+.contact-form input[type="email"] {
+    direction: ltr;
+    text-align: left;
+}
+.contact-form input[type="email"]::placeholder{
+    direction: rtl;
+    text-align: right;
+}
+.address-wrap {
+    direction: rtl;
+}
+
+.single-contact-address .icon {
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+.single-contact-address .contact-details {
+    text-align: right;
+}
+
+@media (max-width: 991px) {
+    .contact-intro {
+        padding: 35px 25px;
+    }
+
+    .contact-intro-items {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .contact-intro-item {
+        max-width: none;
+    }
+
+    .address-wrap {
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 575px) {
+    .contact-intro {
+        padding: 30px 18px;
+    }
+
+    .contact-intro h2 {
+        font-size: 25px;
+    }
 }

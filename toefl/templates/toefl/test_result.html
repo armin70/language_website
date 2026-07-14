@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .result-card {
+            background: white;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .score {
+            font-size: 48px;
+            color: #27ae60;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .details {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="result-card">
+        <h2>Reading Result</h2>
+
+        <p>
+            Correct answers:
+            {{ attempt.correct_answers }}/{{ attempt.total_questions }}
+        </p>
+
+        <p>
+            Percentage:
+            {{ attempt.score_percentage }}%
+        </p>
+
+        <p>
+            Equivalent score:
+            {{ attempt.score_out_of_30 }}/30
+        </p>
+
+        <p>
+            Final Reading score:
+            <strong>{{ attempt.score|floatformat:1 }}/6</strong>
+        </p>
+    </div>
+
+</body>
+
+</html>

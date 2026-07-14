@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ mock_test.title }} - {{ block.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+        }
+
+        .module-info {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .block-section {
+            background: #fafafa;
+            border: 1px solid #eef0f2;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+    .passage-text {
+            line-height: 2.2; 
+            font-size: 17px;
+            margin-bottom: 20px;
+            text-align: justify; 
+        }
+
+         .word-wrapper {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0 1px;
+            vertical-align: middle;
+        }
+
+        .start {
+            color: #333;
+        }
+
+        .dashes {
+            color: #bbb;
+            letter-spacing: 2px;
+            padding: 0 2px;
+        }
+
+
+        .blank-area {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            background: #fdf7f2;
+            margin-left: 1px;
+            height: 1.4em;
+        }
+
+        .blank-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e67e22;
+            font-weight: bold;
+            letter-spacing: 2px;
+            padding-left: 2px;
+        }
+
+        .blank-input:focus {
+            color: #e67e22;
+        }
+
+        /* استایل‌های سوالات تستی */
+        .question-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .choice-option {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .choice-option:hover {
+            background-color: #f0f7fd;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .submit-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #219150;
+        }
+
+        .next-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .next-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <h1>{{ mock_test.title }}</h1>
+              <span id="timer-display" style="color: #e67e22; font-weight: bold; font-size: 1.2rem;">35:00</span>
+        </div>
+        <p>{{ mock_test.description }}</p>
+        <hr>
+
+        <div class="module-info">{{ block.module.title }}</div>
+        <div class="block-section">
+            <h3>{{ block.title }}</h3>
+            <p><i>{{ block.instructions }}</i></p>
+
+            <form method="POST" action="">
+                {% csrf_token %}
+
+                {% if block.block_type == 'complete_words' %}
+                <div class="passage-text">
+                    {% for part in block.get_processed_content %}
+                    {% if part.type == 'text' %}
+                    {{ part.content|linebreaksbr }}
+                    {% else %}
+                    <span class="word-wrapper">
+                        <span class="start">{{ part.start_part }}</span>
+                        <span class="blank-area">
+                            <span class="dashes">{{ part.dashes }}</span>
+                            <input type="text" name="q_{{ part.q_number }}" class="blank-input"
+                                maxlength="{{ part.remaining_len }}" autocomplete="off" spellcheck="false">
+                        </span>
+                    </span>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="passage-text">
+                    {{ block.text|linebreaksbr }}
+                </div>
+
+                {% for question in block.questions.all %}
+                <div class="question-box">
+                    <p><strong>Q{{ question.question_number }}. {{ question.question_text }}</strong></p>
+                    {% for choice in question.choices.all %}
+                    <label class="choice-option">
+                        <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}">
+                        {{ choice.text }}
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <div class="nav-buttons">
+                    {% if next_block %}
+                    <button type="submit" class="next-btn">Next Section →</button>
+                    {% else %}
+                    <button type="submit" class="submit-btn">Submit Test</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+<script>
+    // تنظیم زمان کل به ثانیه (مثلاً 35 دقیقه)
+    let totalSeconds = 35 * 60;
+
+    // بررسی اینکه آیا قبلاً زمانی در Session Storage ذخیره شده یا خیر
+    if (sessionStorage.getItem('remainingTime')) {
+        totalSeconds = parseInt(sessionStorage.getItem('remainingTime'));
+    }
+
+    const timerDisplay = document.getElementById('timer-display');
+
+    function updateTimer() {
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds % 60;
+
+        // فرمت دو رقمی (05:09)
+        timerDisplay.innerText = 
+            (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+            (seconds < 10 ? "0" + seconds : seconds);
+
+        if (totalSeconds <= 0) {
+            clearInterval(timerInterval);
+            alert("Time is up!");
+            document.querySelector('form').submit(); // ارسال خودکار فرم وقتی وقت تمام شد
+        } else {
+            totalSeconds--;
+            // ذخیره زمان فعلی برای اینکه با رفرش شدن صفحه یا رفتن به بلاک بعد نپرد
+            sessionStorage.setItem('remainingTime', totalSeconds);
+        }
+    }
+
+    // آپدیت هر یک ثانیه
+    const timerInterval = setInterval(updateTimer, 1000);
+</script>
+</body>
+
+</html>

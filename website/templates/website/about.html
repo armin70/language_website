@@ -1,0 +1,413 @@
+{% extends "website/base.html" %}
+
+{% load static %}
+
+{% block title %}
+about
+{% endblock %}
+{% block content %}
+
+<!-- start banner Area -->
+<section class="banner-area relative about-banner" >
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="about-content col-lg-12">
+                <h1 class="text-white">
+                    درباره ما
+                </h1>
+                <p class="text-white link-nav"><a href="/">صفحه اصلی </a> <span class="lnr lnr-arrow-right"></span> <a
+                        href="/about"> درباره ما</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End banner Area -->
+
+<!-- Start feature Area -->
+<section class="feature-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="single-feature">
+                    <div class="title">
+                        <h4>کلاس‌های Free Discussion</h4>
+                    </div>
+                    <div class="desc-wrap">
+                        <p>
+                            در کلاس‌های Free Discussion مهارت مکالمه، تفکر به زبان انگلیسی و اعتمادبه‌نفس در ارتباط
+                            واقعی را تقویت می‌کنید.
+                        </p>
+                        <a href="free_discussion">همین حالا بپیوندید</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="single-feature">
+                    <div class="title">
+                        <h4>دوره‌های آموزش زبان A1 تا C1</h4>
+                    </div>
+                    <div class="desc-wrap">
+                        <p>
+                            دوره‌های جامع زبان انگلیسی از سطح مبتدی تا پیشرفته طراحی شده‌اند تا زبان‌آموزان قدم‌به‌قدم
+                            و اصولی پیشرفت کنند.
+                        </p>
+                        <a href="private_course">همین حالا بپیوندید</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="single-feature">
+                    <div class="title">
+                        <h4>دوره تخصصی تافل</h4>
+                    </div>
+                    <div class="desc-wrap">
+                        <p>
+                            با آموزش تکنیک‌های Listening، Reading، Speaking و Writing، همراه با ماک تافل و نمونه
+                            سوال‌های استاندارد، برای آزمون آماده شوید.
+                        </p>
+                        <a href="toefl">همین حالا بپیوندید</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End feature Area -->
+
+<!-- Start info Area -->
+<section class="info-area pb-120">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 no-padding info-area-left">
+                <img class="img-fluid" src="{% static 'img/about.png' %}" alt=""  >
+            </div>
+            <div class="col-lg-6 info-area-right">
+                <h1>
+                    به <b>لینگونیک</b> خوش آمدید.
+                </h1>
+                <p>
+                    لینگونیک یک آکادمی آنلاین آموزش زبان انگلیسی است که با یک باور ساده اما عمیق شکل گرفته است: یادگیری
+                    زبان انگلیسی فقط یادگیری یک زبان نیست؛ بلکه مسیری برای رشد فردی، توسعه ذهن و ایجاد فرصت‌های جدید در
+                    زندگی است.
+                </p>
+
+                <p>
+                    هدف ما این نیست که تنها واژگان و قواعد گرامری را آموزش دهیم؛ بلکه می‌خواهیم زبان‌آموزان بتوانند به
+                    انگلیسی فکر کنند، با اعتمادبه‌نفس ارتباط برقرار کنند و از زبان به عنوان ابزاری برای پیشرفت تحصیلی،
+                    شغلی و شخصی استفاده کنند.
+                </p>
+                <p>
+                    در لینگونیک، آموزش زبان را بر پایه‌ی علم بنا کرده‌ایم، نه بر اساس روش‌های تبلیغاتی یا تکنیک‌های
+                    زودگذر. تمامی دوره‌های ما بر اساس یافته‌های روز زبان‌شناسی، اکتساب زبان دوم، روان‌شناسی یادگیری و
+                    اصول علمی آموزش زبان (TEFL)طراحی شده‌اند. ما معتقدیم هر روشی که پشتوانه علمی نداشته باشد، هرچقدر هم
+                    محبوب یا پرطرفدار باشد، نمی‌تواند یادگیری عمیق و ماندگار ایجاد کند.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End info Area -->
+
+<!-- Start course-mission Area -->
+<section class="course-mission-area pb-120">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="menu-content pb-70 col-lg-8">
+                <div class="title text-center">
+                    <h1 class="mb-10">فلسفه آموزشی ما</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 accordion-left">
+
+                <!-- accordion 2 start-->
+                <dl class="accordion">
+                    <dt>
+                        <a href="">فلسفه آموزشی ما</a>
+                    </dt>
+                    <dd>
+                        ما باور داریم که زبان با ارتباط برقرار کردن آموخته می‌شود، نه با حفظ کردن.
+                        به همین دلیل کلاس‌های لینگونیک با کلاس‌های سنتی تفاوت دارند. ما از کلاس‌های شلوغ که فرصت صحبت
+                        کردن را از زبان‌آموز می‌گیرند فاصله گرفته‌ایم. در کلاس‌های ما هر زبان‌آموز فرصت کافی برای صحبت
+                        کردن، دریافت بازخورد، اصلاح اشتباهات و پیشرفت مستمر دارد؛ زیرا معتقدیم بدون تمرین واقعی و
+                        بازخورد مستمر، یادگیری زبان به نتیجه مطلوب نخواهد رسید.
+                    </dd>
+                    <dt>
+                        <a href="">اساتید ما</a>
+                    </dt>
+                    <dd>
+                        تمامی مدرسین لینگونیک متخصص آموزش زبان انگلیسی هستند و دارای مدارک دانشگاهی در رشته آموزش زبان
+                        انگلیسی (TEFL) یا رشته‌های مرتبط می‌باشند. علاوه بر دانش تخصصی، آن‌ها با علاقه، تعهد و
+                        مسئولیت‌پذیری در کنار زبان‌آموزان حضور دارند؛ زیرا باور داریم آموزش مؤثر تنها با عشق به یادگیری
+                        و توجه واقعی به پیشرفت دانشجو امکان‌پذیر است. </dd>
+                    <dt>
+                        <a href="">فراتر از یک کلاس زبان</a>
+                    </dt>
+                    <dd>
+                        ما تنها برگزارکننده کلاس‌های آموزش زبان نیستیم. در لینگونیک یک سیستم آموزشی و منتورینگ جامع
+                        طراحی کرده‌ایم تا زبان‌آموز در تمام مسیر یادگیری همراهی شود.
+                    </dd>
+                    <dt>
+                        <a href="">کلاس‌ها و خدمات ما</a>
+                    </dt>
+                    <dd>
+                        در لینگونیک، آموزش تنها به برگزاری کلاس محدود نمی‌شود. ما مجموعه‌ای کامل از دوره‌ها، کلاس‌های
+                        تخصصی و خدمات مشاوره‌ای را طراحی کرده‌ایم تا هر زبان‌آموز، متناسب با هدف خود، بهترین مسیر
+                        یادگیری را انتخاب کند. </dd>
+                </dl>
+                <!-- accordion 2 end-->
+            </div>
+            <div class="col-md-6 no-padding info-area-left ">
+                <img class="img-fluid" src="{% static 'img/IMG_6637.png' %}" alt=""  >
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End course-mission Area -->
+
+
+<!-- Start search-course Area -->
+<section class="search-course-area relative " >
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-lg-6 col-md-6 search-course-left">
+                <h1 class="text-white">
+                    دوره‌ها و کلاس‌های آموزشی: </h1>
+
+                <div class="row details-content">
+                    <div class="col single-detials">
+                        <span class="lnr lnr-license"></span>
+                        <a href="#">
+                        </a>
+                        <p>
+                        <ul class=" special-list">
+                            <li>
+                                کلاس های گروهی ترمیک با مکسیموم ۵ نفر
+                            </li>
+                            <li>
+                                سیستم منتورینگ تخصصی زبان جنرال
+                            </li>
+                            <li>
+                                دوره‌های General English (انگلیسی عمومی)
+                            </li>
+                            <li>
+                                دوره‌ منتورینگ آمادگی آزمون TOEFL
+                            </li>
+                            <li>
+                                دوره منتورینگ آمادگی آزمون IELTS
+                            </li>
+                            <li>
+                                کلاس‌های Shadowing برای تقویت تلفظ، Listening و Fluency
+                            </li>
+                            <li>
+                                کلاس‌های Free Discussion برای تقویت مهارت مکالمه
+                            </li>
+                            <li>
+                                کلاس‌های Presentation برای آمادگی ارائه‌های دانشگاهی و حرفه‌ای
+                            </li>
+                            <li>
+                                دوره‌های اختصاصی Speaking و Pronunciation
+                            </li>
+                            <li>
+                                کلاس‌های خصوصی و نیمه‌خصوصی متناسب با نیاز هر زبان‌آموز
+                            </li>
+                        </ul>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 search-course-right section-gap" id="consultation">
+
+                <form class="form-wrap" action="{% url 'website:consultation_request' %}" method="post" >
+                    {% csrf_token %}
+
+                    <h4 class="text-white pb-20 text-center mb-30">
+                        درخواست مشاوره
+                    </h4>
+                    {% if messages %}
+                    <div class="consultation-messages">
+                        {% for message in messages %}
+                        <div class="consultation-message {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <input type="text" class="form-control" name="name" placeholder="نام شما" autocomplete="name"
+                        minlength="2" required onfocus="this.placeholder = ''" onblur="this.placeholder = 'نام شما'">
+
+                    <input type="tel" class="form-control" name="phone" placeholder="شماره تماس شما" autocomplete="tel"
+                        inputmode="tel" dir="ltr" required onfocus="this.placeholder = ''"
+                        onblur="this.placeholder = 'شماره تماس شما'">
+
+                    <input type="email" class="form-control" name="email" placeholder="آدرس ایمیل شما (اختیاری)"
+                        autocomplete="email" dir="ltr" onfocus="this.placeholder = ''"
+                        onblur="this.placeholder = 'آدرس ایمیل شما (اختیاری)'">
+
+                    <div class="form-select" id="service-select">
+                        <select name="course" required>
+                            <option value="" selected disabled>
+                                انتخاب دوره
+                            </option>
+
+                            <option value="free_discussion">
+                                Free Discussion
+                            </option>
+
+                            <option value="a1_c1">
+                                دوره‌های A1 تا C1
+                            </option>
+
+                            <option value="toefl_course">
+                                دوره تخصصی تافل
+                            </option>
+
+                            <option value="mock_toefl">
+                                ماک تافل
+                            </option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="primary-btn text-uppercase">
+                        ارسال درخواست
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End search-course Area -->
+<!-- Start info Area -->
+<section class="info-area pt-120 pb-120">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 no-padding info-area-left ">
+                <img class="img-fluid" src="{% static 'img/IMG_6636.png' %}" alt=""  >
+
+            </div>
+            <div class="col-lg-6 info-area-right">
+                <h1>
+                    خدمات مشاوره تخصصی:
+                </h1>
+                <p>
+                    ما معتقدیم انتخاب مسیر درست، به اندازه خودِ آموزش اهمیت دارد. به همین دلیل، جلسات مشاوره تخصصی با
+                    اساتید و متخصصان هر حوزه برگزار می‌کنیم تا زبان‌آموزان بتوانند با آگاهی کامل برای آینده خود
+                    برنامه‌ریزی کنند.
+                </p>
+
+                <p>
+                    مشاوره تخصصی برای:
+                </p>
+
+                <ul class="normal-list">
+                    <li>
+                        آزمون کارشناسی ارشد و دکتری (کنکور زبان)
+                    </li>
+                    <li>
+                        IELTS
+                    </li>
+                    <li>
+                        TOEFL
+                    </li>
+                    <li>
+                        PTE
+                    </li>
+                    <li>
+                        GRE
+                    </li>
+                    <li>
+                        Duolingo English Test
+                    </li>
+                    <li>
+                        مصاحبه‌های شغلی و دانشگاهی
+                    </li>
+                </ul>
+                <p>
+                    و هر هدف دیگری که برای یادگیری زبان داشته باشید؛ در لینگونیک، متخصص آن را خواهید یافت.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End info Area -->
+
+<!-- Start info Area -->
+<section class="info-area pt-120 pb-120"  style="background: #e7e7e7;">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-lg-6 info-area-right">
+                <h2>
+                    مأموریت ما:
+                </h2>
+                <p>
+                    ایجاد نسلی از زبان‌آموزان که انگلیسی را نه فقط به عنوان یک درس، بلکه به عنوان ابزاری برای ارتباط،
+                    رشد، موفقیت و ساختن آینده‌ای بهتر به کار بگیرند.
+                </p>
+
+                <h2>
+                    چشم‌انداز ما
+                </h2>
+                <p>
+                    تبدیل شدن به یکی از معتبرترین آکادمی‌های آنلاین آموزش زبان انگلیسی که با تکیه بر آموزش علمی،
+                    منتورینگ تخصصی و یادگیری تعاملی، استاندارد جدیدی در آموزش زبان ایجاد کند. </p>
+
+            </div>
+
+            <div class="col-lg-6 no-padding info-area-right">
+                <h2>
+                    ارزش‌های ما:
+                </h2>
+                <p>
+                    آموزش بر پایه علم، نه تبلیغات.
+                </p>
+                <p>
+                    کیفیت یادگیری مهم‌تر از تعداد زبان‌آموزان است.
+                </p>
+                <p>
+                    یادگیری واقعی از طریق ارتباط مؤثر و بازخورد مستمر شکل می‌گیرد.
+                    هر زبان‌آموز شایسته توجه، حمایت و مسیر آموزشی اختصاصی است.
+                    آموزش زبان باید به رشد شخصیت، اعتمادبه‌نفس و نگرش فرد نیز کمک کند.
+                </p>
+
+            </div>
+
+            <div class="col-lg-12 pt-120 text-center">
+                <p>
+                    در لینگونیک، شما تنها یک زبان‌آموز نیستید؛ بلکه عضوی از خانواده‌ای هستید که به رشد، یادگیری و موفقیت
+                    باور دارد.
+                </p>
+                <p>
+                    <b>
+                        انگلیسی را واقعی یاد بگیرید، با اعتمادبه‌نفس صحبت کنید و آینده‌ای بزرگ‌تر برای خود بسازید.
+                    </b>
+                </p>
+                <p>
+                    خوشحالیم که در این مسیر همراه شما باشیم.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End info Area -->
+
+<!-- Start cta-two Area -->
+<section class="cta-two-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 cta-left">
+                <h1>هنوز برای شروع مسیر تافل مردد هستید؟</h1>
+            </div>
+            <div class="col-lg-4 cta-right">
+                <a class="primary-btn wh" href="#">مشاهده وبلاگ</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End cta-two Area -->
+{% endblock %}

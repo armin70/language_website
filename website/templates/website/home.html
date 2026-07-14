@@ -1,548 +1,396 @@
+{% extends "website/base.html" %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="fa" dir="rtl" class="no-js">
 
-<head>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <!-- Mobile Specific Meta -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Favicon-->
-    <link rel="shortcut icon" href="{% static 'img/logo_main.png '%}">
-    <!-- Author Meta -->
-    <meta name="author" content="colorlib">
-    <!-- Meta Description -->
-    <meta name="description" content="">
-    <!-- Meta Keyword -->
-    <meta name="keywords" content="">
-    <!-- meta character set -->
-    <meta charset="UTF-8">
-    <!-- Site Title -->
-    <title>آموزش آنلاین</title>
-
-    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"
-        media="print" onload="this.media='all';this.onload=null;">
-    <!--
-    CSS
-    ============================================= -->
-    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}" fetchpriority="high">
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
-    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
-    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
-    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
-    <link rel="stylesheet" href="{% static 'css/main-rtl.css' %}">
-</head>
-
-<body>
-    <header id="header" id="home">
-        <div class="header-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-sm-6 col-8 header-top-right no-padding">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-                            <li><a href="#"><i class="fa fa-behance"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-6 col-sm-6 col-4 header-top-left no-padding">
-                        <a href="tel:+953 012 3654 896"><span class="lnr lnr-phone-handset"></span> <span
-                                class="text">+953 012 3654 896</span></a>
-                        <a href="mailto:support@colorlib.com"><span class="lnr lnr-envelope"></span> <span
-                                class="text">support@colorlib.com</span></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container main-menu">
-            <div class="row align-items-center justify-content-between d-flex">
-                <div id="logo">
-                    <a href="index.html"><img src="{% static 'img/logo_main.png' %}" alt="" title="" fetchpriority="high"
-                            decoding="sync" /></a>
-                </div>
-                <nav id="nav-menu-container">
-                    <ul class="nav-menu">
-                        <li><a href="index.html">خانه</a></li>
-                        <li><a href="about.html">درباره ما</a></li>
-                        <li><a href="courses.html">دوره‌ها</a></li>
-                        <li><a href="events.html">رویدادها</a></li>
-                        <li><a href="gallery.html">گالری</a></li>
-                        <li class="menu-has-children"><a href="">وبلاگ</a>
-                            <ul>
-                                <li><a href="blog-home.html">خانه وبلاگ</a></li>
-                                <li><a href="blog-single.html">جزئیات وبلاگ</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-has-children"><a href="">صفحات</a>
-                            <ul>
-                                <li><a href="course-details.html">جزئیات دوره</a></li>
-                                <li><a href="event-details.html">جزئیات رویداد</a></li>
-                                <li><a href="elements.html">المان‌ها</a></li>
-                                <li class="menu-has-children"><a href="">سطح ۲ </a>
-                                    <ul>
-                                        <li><a href="#">آیتم یک</a></li>
-                                        <li><a href="#">آیتم دو</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a href="contact.html">تماس با ما</a></li>
-                    </ul>
-                </nav><!-- #nav-menu-container -->
-            </div>
-        </div>
-    </header><!-- #header -->
-
-    <!-- start banner Area -->
-    <section class="banner-area relative" id="home">
-        <div class="overlay overlay-bg"></div>
-        <div class="container">
-            <div class="row fullscreen d-flex align-items-center justify-content-between">
-                <div class="banner-content col-lg-9 col-md-12">
-                    <h1 class="text-uppercase">
-                        ما آموزش بهتر را برای <br>
-                        جهانی بهتر تضمین می‌کنیم
-                    </h1>
-                    <p class="pt-10 pb-10">
-                        در تاریخ نجوم مدرن، احتمالاً هیچ گام بزرگی رو به جلو به اندازه ساخت و پرتاب تلسکوپ فضایی معروف
-                        به هابل وجود ندارد.
-                    </p>
-                    <a href="#" class="primary-btn text-uppercase">شروع کنید</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End banner Area -->
-
-    <!-- Start feature Area -->
-    <section class="feature-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="single-feature">
-                        <div class="title">
-                            <h4>یادگیری دوره‌های آنلاین</h4>
-                        </div>
-                        <div class="desc-wrap">
-                            <p>
-                                استفاده از اینترنت به دلیل پیشرفت سریع تکنولوژی هر روز رایج‌تر می‌شود.
-                            </p>
-                            <a href="#">همین حالا بپیوندید</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="single-feature">
-                        <div class="title">
-                            <h4>برترین دانشگاه‌ها</h4>
-                        </div>
-                        <div class="desc-wrap">
-                            <p>
-                                برای بسیاری از ما، اولین تجربه یادگیری در مورد اجرام آسمانی از زمانی شروع شد که اولین
-                                آن‌ها را دیدیم.
-                            </p>
-                            <a href="#">همین حالا بپیوندید</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="single-feature">
-                        <div class="title">
-                            <h4>کتابخانه عظیم</h4>
-                        </div>
-                        <div class="desc-wrap">
-                            <p>
-                                اگر شما هم مثل بسیاری از ما از طرفداران جدی نجوم هستید، احتمالاً آن رویداد خاص را به
-                                خاطر دارید.
-                            </p>
-                            <a href="#">همین حالا بپیوندید</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End feature Area -->
-
-    <!-- Start popular-course Area -->
-    <section class="section-gap">
-
-            <div class="container">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-lg-6 col-md-6"> 
-                        <img src="{% static 'img/about.jpg '%}" alt="" class="img-fluid">
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                    <h2>
-                        درباره ما
-                    </h2>    
-                    <p class="pt-10">
-                        <b>
-                        به لینگونیک خوش آمدید.
-                            
-                        </b>
-                    </p>
-                    <p>
-                        لینگونیک یک آکادمی آنلاین آموزش زبان انگلیسی است که با یک باور ساده اما عمیق شکل گرفته است: یادگیری زبان انگلیسی فقط یادگیری یک زبان نیست؛ بلکه مسیری برای رشد فردی، توسعه ذهن و ایجاد فرصت‌های جدید در زندگی است.
-                    </p>
-                    <p>
-                        هدف ما این نیست که تنها واژگان و قواعد گرامری را آموزش دهیم؛ بلکه می‌خواهیم زبان‌آموزان بتوانند به انگلیسی فکر کنند، با اعتمادبه‌نفس ارتباط برقرار کنند و از زبان به عنوان ابزاری برای پیشرفت تحصیلی، شغلی و شخصی استفاده کنند.
-                    </p>
-                    </div>
-                </div>
-            </div>
-    </section>
-    <!-- End popular-course Area -->
-
-
-    <!-- Start search-course Area -->
-    <section class="search-course-area relative">
-        <div class="overlay overlay-bg"></div>
-        <div class="container">
-            <div class="row justify-content-between align-items-center">
-                <div class="col-lg-6 col-md-6 search-course-left">
-                    <h1 class="text-white">
-                        تخفیف ویژه شهریه <br>
-                        در طول تابستان امسال!
-                    </h1>
-                    <p>
-                        در حالی که رفتارهای نامناسب اغلب به عنوان «پسرها همین‌طور هستند» نادیده گرفته می‌شوند، زنان با
-                        استانداردهای رفتاری بالاتری به ویژه در محیط کار روبرو هستند. به همین دلیل بسیار مهم است که رفتار
-                        ما در کار بی‌نقص باشد.
-                    </p>
-                    <div class="row details-content">
-                        <div class="col single-detials">
-                            <span class="lnr lnr-graduation-hat"></span>
-                            <a href="#">
-                                <h4>مربیان مجرب</h4>
-                            </a>
-                            <p>
-                                استفاده از اینترنت به دلیل پیشرفت سریع تکنولوژی و قدرت، هر روز رایج‌تر می‌شود.
-                            </p>
-                        </div>
-                        <div class="col single-detials">
-                            <span class="lnr lnr-license"></span>
-                            <a href="#">
-                                <h4>گواهینامه معتبر</h4>
-                            </a>
-                            <p>
-                                استفاده از اینترنت به دلیل پیشرفت سریع تکنولوژی و قدرت، هر روز رایج‌تر می‌شود.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 search-course-right section-gap">
-                    <form class="form-wrap" action="#">
-                        <h4 class="text-white pb-20 text-center mb-30">جستجوی دوره‌های موجود</h4>
-                        <input type="text" class="form-control" name="name" placeholder="نام شما"
-                            onfocus="this.placeholder = ''" onblur="this.placeholder = 'نام شما'">
-                        <input type="phone" class="form-control" name="phone" placeholder="شماره تماس شما"
-                            onfocus="this.placeholder = ''" onblur="this.placeholder = 'شماره تماس شما'">
-                        <input type="email" class="form-control" name="email" placeholder="آدرس ایمیل شما"
-                            onfocus="this.placeholder = ''" onblur="this.placeholder = 'آدرس ایمیل شما'">
-                        <div class="form-select" id="service-select">
-                            <select>
-                                <option datd-display="">انتخاب دوره</option>
-                                <option value="1">دوره یک</option>
-                                <option value="2">دوره دو</option>
-                                <option value="3">دوره سه</option>
-                                <option value="4">دوره چهار</option>
-                            </select>
-                        </div>
-                        <button class="primary-btn text-uppercase">ارسال درخواست</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End search-course Area -->
-
-
-    <!-- Start upcoming-event Area -->
-    <section class="upcoming-event-area section-gap">
-        <div class="container">
-            <div class="row d-flex justify-content-center">
-                <div class="menu-content pb-70 col-lg-8">
-                    <div class="title text-center">
-                        <h1 class="mb-10">رویدادهای آینده موسسه ما</h1>
-                        <p>اگر شما یک طرفدار جدی نجوم هستید</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="active-upcoming-event-carusel" dir="ltr">
-                    <div class="single-carusel row align-items-center">
-                        <div class="col-12 col-md-6 thumb">
-                            <img class="img-fluid" src="img/e1.jpg" alt="" loading="lazy" decoding="async">
-                        </div>
-                        <div class="detials col-12 col-md-6">
-                            <p>۲۵ فوریه ۲۰۱۸</p>
-                            <a href="#">
-                                <h4>جهان از دریچه چشم یک کودک</h4>
-                            </a>
-                            <p>
-                                برای اکثر ما، ایده نجوم چیزی است که مستقیماً به «تماشای ستارگان»، تلسکوپ‌ها و دیدن
-                                نمایش‌های باشکوه در آسمان‌ها متصل می‌کنیم.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="single-carusel row align-items-center">
-                        <div class="col-12 col-md-6 thumb">
-                            <img class="img-fluid" src="{% static 'img/e2.jpg' %}" alt="" loading="lazy"
-                                decoding="async">
-                        </div>
-                        <div class="detials col-12 col-md-6">
-                            <p>۲۵ فوریه ۲۰۱۸</p>
-                            <a href="#">
-                                <h4>جهان از دریچه چشم یک کودک</h4>
-                            </a>
-                            <p>
-                                برای اکثر ما، ایده نجوم چیزی است که مستقیماً به «تماشای ستارگان»، تلسکوپ‌ها و دیدن
-                                نمایش‌های باشکوه در آسمان‌ها متصل می‌کنیم.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End upcoming-event Area -->
-
-    <!-- Start review Area -->
-    <section class="review-area section-gap relative">
-        <div class="overlay overlay-bg"></div>
-        <div class="container">
-            <div class="row">
-                <div class="active-review-carusel" dir="ltr">
-                    <div class="single-review item">
-                        <div class="title justify-content-start d-flex">
-                            <a href="#">
-                                <h4>فانی رو</h4>
-                            </a>
-                            <div class="star">
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star"></span>
-                                <span class="fa fa-star"></span>
-                            </div>
-                        </div>
-                        <p>
-                            در اینجا می‌توانید بهترین لوازم جانبی کامپیوتر را برای لپ‌تاپ، مانیتور، پرینتر، اسکنر و
-                            اسپیکر خود پیدا کنید.
-                        </p>
-                    </div>
-                    <div class="single-review item">
-                        <div class="title justify-content-start d-flex">
-                            <a href="#">
-                                <h4>هولدا ساتون</h4>
-                            </a>
-                            <div class="star">
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star"></span>
-                                <span class="fa fa-star"></span>
-                            </div>
-                        </div>
-                        <p>
-                            در اینجا می‌توانید بهترین لوازم جانبی کامپیوتر را برای لپ‌تاپ، مانیتور، پرینتر، اسکنر و
-                            اسپیکر خود پیدا کنید.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End review Area -->
-
-    <!-- Start cta-one Area -->
-    <section class="cta-one-area relative section-gap">
-        <div class="container">
-            <div class="overlay overlay-bg"></div>
-            <div class="row justify-content-center">
-                <div class="wrap">
-                    <h1 class="text-white">مدرس شوید</h1>
-                    <p>
-                        لحظه‌ای در زندگی هر ستاره‌شناس مشتاق وجود دارد که وقت خرید اولین تلسکوپ فرا می‌رسد. فکر کردن به
-                        راه‌اندازی ایستگاه مشاهده شخصی بسیار هیجان‌انگیز است.
-                    </p>
-                    <a class="primary-btn wh" href="#">ارسال رزومه</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End cta-one Area -->
-
-    <!-- Start blog Area -->
-    <section class="blog-area section-gap" id="blog">
-        <div class="container">
-            <div class="row d-flex justify-content-center">
-                <div class="menu-content pb-70 col-lg-8">
-                    <div class="title text-center">
-                        <h1 class="mb-10">آخرین مطالب وبلاگ ما</h1>
-                        <p>در تاریخ نجوم مدرن همیشه وجود دارد.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 single-blog">
-                    <div class="thumb">
-                        <img class="img-fluid" src="{% static 'img/b1.jpg' %}" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <p class="meta">۲۵ آوریل ۲۰۱۸ | توسط <a href="#">مارک وینز</a></p>
-                    <a href="blog-single.html">
-                        <h5>اعتیاد وقتی قمار به یک مشکل تبدیل می‌شود</h5>
-                    </a>
-                    <p>کامپیوترها در تقریباً تمام جنبه‌های زندگی ما فراگیر شده‌اند.</p>
-                    <a href="#" class="details-btn d-flex justify-content-center align-items-center"><span
-                            class="details">جزئیات</span><span class="lnr lnr-arrow-left"></span></a>
-                </div>
-                <div class="col-lg-3 col-md-6 single-blog">
-                    <div class="thumb">
-                        <img class="img-fluid" src="{% static 'img/b2.jpg' %}" alt="" loading="lazy" decoding="async">
-                    </div>
-                    <p class="meta">۲۵ آوریل ۲۰۱۸ | توسط <a href="#">مارک وینز</a></p>
-                    <a href="blog-single.html">
-                        <h5>سخت‌افزار کامپیوتر: دسکتاپ و نوت‌بوک</h5>
-                    </a>
-                    <p>مصاحبه فنی؛ هیچ‌چیز شبیه آن نیست. نه تنها باعث اضطراب می‌شود، بلکه دلایل مختلفی دارد.</p>
-                    <a href="#" class="details-btn d-flex justify-content-center align-items-center"><span
-                            class="details">جزئیات</span><span class="lnr lnr-arrow-left"></span></a>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End blog Area -->
-
-
-    <!-- Start cta-two Area -->
-    <section class="cta-two-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 cta-left">
-                    <h1>هنوز از روند ما راضی نیستید؟</h1>
-                </div>
-                <div class="col-lg-4 cta-right">
-                    <a class="primary-btn wh" href="#">مشاهده وبلاگ</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End cta-two Area -->
-
-    <!-- start footer Area -->
-    <footer class="footer-area section-gap">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="single-footer-widget">
-                        <h4>محصولات برتر</h4>
-                        <ul>
-                            <li><a href="#">وب‌سایت مدیریت شده</a></li>
-                            <li><a href="#">مدیریت اعتبار</a></li>
-                            <li><a href="#">ابزارهای قدرت</a></li>
-                            <li><a href="#">خدمات بازاریابی</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="single-footer-widget">
-                        <h4>لینک‌های سریع</h4>
-                        <ul>
-                            <li><a href="#">فرصت‌های شغلی</a></li>
-                            <li><a href="#">دارایی‌های برند</a></li>
-                            <li><a href="#">روابط با سرمایه‌گذاران</a></li>
-                            <li><a href="#">شرایط خدمات</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="single-footer-widget">
-                        <h4>ویژگی‌ها</h4>
-                        <ul>
-                            <li><a href="#">مشاغل</a></li>
-                            <li><a href="#">برندینگ</a></li>
-                            <li><a href="#">سرمایه‌گذاری</a></li>
-                            <li><a href="#">قوانین</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 col-sm-6">
-                    <div class="single-footer-widget">
-                        <h4>منابع</h4>
-                        <ul>
-                            <li><a href="#">راهنماها</a></li>
-                            <li><a href="#">تحقیقات</a></li>
-                            <li><a href="#">کارشناسان</a></li>
-                            <li><a href="#">آژانس‌ها</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4  col-md-6 col-sm-6">
-                    <div class="single-footer-widget">
-                        <h4>خبرنامه</h4>
-                        <p>با آخرین اخبار ما به‌روز باشید</p>
-                        <div class="" id="mc_embed_signup">
-                            <form target="_blank" action="#" method="get">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="EMAIL"
-                                        placeholder="ایمیل خود را وارد کنید" onfocus="this.placeholder = ''"
-                                        onblur="this.placeholder = 'ایمیل خود را وارد کنید '" required="" type="email">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-default" type="submit">
-                                            <span class="lnr lnr-arrow-left"></span>
-                                        </button>
-                                    </div>
-                                    <div class="info"></div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom row align-items-center justify-content-between">
-                <p class="footer-text m-0 col-lg-6 col-md-12">
-                    کپی‌رایت &copy;
-                    <script>document.write(new Date().getFullYear());</script> تمامی حقوق محفوظ است | این قالب توسط <a
-                        href="https://colorlib.com" target="_blank">Colorlib</a> طراحی شده است.
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+<section class="banner-area relative" id="home">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row fullscreen d-flex align-items-center justify-content-between ">
+            <div class="banner-content col-lg-9 col-md-12">
+                <h1 class="text-uppercase">
+                    آمادگی واقعی برای تافل و <br>
+                    یادگیری حرفه‌ای زبان انگلیسی
+                </h1>
+                <p class="pt-10 pb-10">
+                    در لینگونیک، از دوره‌های آموزش زبان انگلیسی از سطح A1 تا C1 تا کلاس‌های تخصصی تافل، ماک تافل و
+                    تحلیل نمونه سوال‌های آزمون را با رویکردی علمی و هدفمند ارائه می‌کنیم.
                 </p>
-                <div class="col-lg-6 col-sm-12 footer-social">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-dribbble"></i></a>
-                    <a href="#"><i class="fa fa-behance"></i></a>
+                <a href="#" class="primary-btn text-uppercase">شروع کنید</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End banner Area -->
+
+<!-- Start feature Area -->
+<section class="feature-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="single-feature">
+                    <div class="title">
+                        <h4>کلاس‌های Free Discussion</h4>
+                    </div>
+                    <div class="desc-wrap">
+                        <p>
+                            در کلاس‌های Free Discussion مهارت مکالمه، تفکر به زبان انگلیسی و اعتمادبه‌نفس در ارتباط
+                            واقعی را تقویت می‌کنید.
+                        </p>
+                        <a href="free_discussion">همین حالا بپیوندید</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="single-feature">
+                    <div class="title">
+                        <h4>دوره‌های آموزش زبان A1 تا C1</h4>
+                    </div>
+                    <div class="desc-wrap">
+                        <p>
+                            دوره‌های جامع زبان انگلیسی از سطح مبتدی تا پیشرفته طراحی شده‌اند تا زبان‌آموزان قدم‌به‌قدم
+                            و اصولی پیشرفت کنند.
+                        </p>
+                        <a href="private_course">همین حالا بپیوندید</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="single-feature">
+                    <div class="title">
+                        <h4>دوره تخصصی تافل</h4>
+                    </div>
+                    <div class="desc-wrap">
+                        <p>
+                            با آموزش تکنیک‌های Listening، Reading، Speaking و Writing، همراه با ماک تافل و نمونه
+                            سوال‌های استاندارد، برای آزمون آماده شوید.
+                        </p>
+                        <a href="toefl">همین حالا بپیوندید</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </footer>
-    <!-- End footer Area -->
+    </div>
+</section>
+<!-- End feature Area -->
+
+<!-- Start popular-course Area -->
+<section class="section-gap">
+
+    <div class="container home-about">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-lg-6 col-md-6">
+                <img src="{% static 'img/about.png '%}" alt="" class="img-fluid">
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <h2>
+                    درباره ما
+                </h2>
+                <p class="pt-10">
+                    <b>
+                        به لینگونیک خوش آمدید.
+
+                    </b>
+                </p>
+                <p>
+                    لینگونیک یک آکادمی آنلاین آموزش زبان انگلیسی است که با یک باور ساده اما عمیق شکل گرفته است: یادگیری
+                    زبان انگلیسی فقط یادگیری یک زبان نیست؛ بلکه مسیری برای رشد فردی، توسعه ذهن و ایجاد فرصت‌های جدید در
+                    زندگی است.
+                </p>
+                <p>
+                    هدف ما این نیست که تنها واژگان و قواعد گرامری را آموزش دهیم؛ بلکه می‌خواهیم زبان‌آموزان بتوانند به
+                    انگلیسی فکر کنند، با اعتمادبه‌نفس ارتباط برقرار کنند و از زبان به عنوان ابزاری برای پیشرفت تحصیلی،
+                    شغلی و شخصی استفاده کنند.
+                </p>
+                <p>
+                    در لینگونیک، آموزش زبان را بر پایه‌ی علم بنا کرده‌ایم، نه بر اساس روش‌های تبلیغاتی یا تکنیک‌های
+                    زودگذر. تمامی دوره‌های ما بر اساس یافته‌های روز زبان‌شناسی، اکتساب زبان دوم، روان‌شناسی یادگیری و
+                    اصول علمی آموزش زبان (TEFL)طراحی شده‌اند. ما معتقدیم هر روشی که پشتوانه علمی نداشته باشد، هرچقدر هم
+                    محبوب یا پرطرفدار باشد، نمی‌تواند یادگیری عمیق و ماندگار ایجاد کند.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End popular-course Area -->
 
 
-    <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
-    <script src="{% static 'js/easing.min.js' %}"></script>
-    <script src="{% static 'js/hoverIntent.js' %}"></script>
-    <script src="{% static 'js/superfish.min.js' %}"></script>
-    <script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
-    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-    <script src="{% static 'js/jquery.tabs.min.js' %}"></script>
-    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
-    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'js/mail-script.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
+<!-- Start search-course Area -->
+<section class="search-course-area relative">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-lg-6 col-md-6 search-course-left">
+                <h1 class="text-white">
+                    ثبت‌نام دوره تخصصی تافل <br>
+                    همراه با ماک و آزمون آزمایشی
+                </h1>
+                <p>
+                    اگر هدف شما کسب نمره بالا در آزمون تافل است، این دوره برای شما طراحی شده است. با برنامه‌ریزی
+                    دقیق، آموزش مهارت‌های چهارگانه، تحلیل نمونه سوال‌ها و برگزاری ماک تافل، آمادگی کامل برای روز
+                    آزمون به دست می‌آورید.
+                </p>
+                <div class="row details-content">
+                    <div class="col single-detials">
+                        <span class="lnr lnr-graduation-hat"></span>
+                        <a href="#">
+                            <h4>مدرس تخصصی تافل</h4>
+                        </a>
+                        <p>
+                            آموزش هدفمند برای بخش‌های Reading، Listening، Speaking و Writing بر اساس ساختار واقعی
+                            آزمون.
+                        </p>
+                    </div>
+                    <div class="col single-detials">
+                        <span class="lnr lnr-license"></span>
+                        <a href="#">
+                            <h4>ماک تافل و نمونه سوال</h4>
+                        </a>
+                        <p>
+                            برگزاری آزمون‌های آزمایشی، بررسی عملکرد و ارائه نمونه سوال‌های استاندارد برای آشنایی کامل
+                            با فضای امتحان.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 search-course-right section-gap" id="consultation">
+
+                <form class="form-wrap" action="{% url 'website:consultation_request' %}" method="post" >
+                    {% csrf_token %}
+
+                    <h4 class="text-white pb-20 text-center mb-30">
+                        درخواست مشاوره
+                    </h4>
+                    {% if messages %}
+                    <div class="consultation-messages">
+                        {% for message in messages %}
+                        <div class="consultation-message {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <input type="text" class="form-control" name="name" placeholder="نام شما" autocomplete="name"
+                        minlength="2" required onfocus="this.placeholder = ''" onblur="this.placeholder = 'نام شما'">
+
+                    <input type="tel" class="form-control" name="phone" placeholder="شماره تماس شما" autocomplete="tel"
+                        inputmode="tel" dir="ltr" required onfocus="this.placeholder = ''"
+                        onblur="this.placeholder = 'شماره تماس شما'">
+
+                    <input type="email" class="form-control" name="email" placeholder="آدرس ایمیل شما (اختیاری)"
+                        autocomplete="email" dir="ltr" onfocus="this.placeholder = ''"
+                        onblur="this.placeholder = 'آدرس ایمیل شما (اختیاری)'">
+
+                    <div class="form-select" id="service-select">
+                        <select name="course" required>
+                            <option value="" selected disabled>
+                                انتخاب دوره
+                            </option>
+
+                            <option value="free_discussion">
+                                Free Discussion
+                            </option>
+
+                            <option value="a1_c1">
+                                دوره‌های A1 تا C1
+                            </option>
+
+                            <option value="toefl_course">
+                                دوره تخصصی تافل
+                            </option>
+
+                            <option value="mock_toefl">
+                                ماک تافل
+                            </option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="primary-btn text-uppercase">
+                        ارسال درخواست
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End search-course Area -->
 
 
-</body>
+<!-- Start upcoming-event Area -->
+<!-- <section class="upcoming-event-area section-gap">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="menu-content pb-70 col-lg-8">
+                <div class="title text-center">
+                    <h1 class="mb-10">رویدادهای آینده موسسه ما</h1>
+                    <p>کارگاه‌ها و آزمون‌های آزمایشی ویژه زبان‌آموزان تافل</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="active-upcoming-event-carusel" dir="ltr">
+                <div class="single-carusel row align-items-center">
+                    <div class="col-12 col-md-6 thumb">
+                        <img class="img-fluid" src="img/e1.jpg" alt="" loading="lazy" decoding="async">
+                    </div>
+                    <div class="detials col-12 col-md-6">
+                        <p>۲۵ فوریه ۲۰۱۸</p>
+                        <a href="#">
+                            <h4>ماک تافل شبیه‌سازی‌شده</h4>
+                        </a>
+                        <p>
+                            در این رویداد، زبان‌آموزان در شرایطی نزدیک به آزمون واقعی تافل شرکت می‌کنند و پس از آن
+                            تحلیل کامل عملکرد و نقاط ضعف و قوت خود را دریافت می‌کنند.
+                        </p>
+                    </div>
+                </div>
+                <div class="single-carusel row align-items-center">
+                    <div class="col-12 col-md-6 thumb">
+                        <img class="img-fluid" src="{% static 'img/e2.jpg' %}" alt="" loading="lazy"
+                            decoding="async">
+                    </div>
+                    <div class="detials col-12 col-md-6">
+                        <p>۲۵ فوریه ۲۰۱۸</p>
+                        <a href="#">
+                            <h4>کارگاه تحلیل نمونه سوال‌های تافل</h4>
+                        </a>
+                        <p>
+                            در این کارگاه، ساختار سوالات بخش‌های مختلف تافل بررسی می‌شود و تکنیک‌های پاسخ‌گویی سریع،
+                            دقیق و هدفمند آموزش داده می‌شود.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+<!-- End upcoming-event Area -->
 
-</html>
+<!-- Start review Area -->
+<section class="review-area section-gap relative">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row">
+            <div class="active-review-carusel" dir="ltr">
+                <div class="single-review item">
+                    <div class="title justify-content-start d-flex">
+                        <a href="#">
+                            <h4>فانی رو</h4>
+                        </a>
+                        <div class="star">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                    </div>
+                    <p>
+                        دوره تافل لینگونیک به من کمک کرد تا با ساختار واقعی آزمون آشنا شوم. ماک تافل‌ها و تحلیل دقیق
+                        پاسخ‌ها باعث شد با آمادگی و اعتمادبه‌نفس بیشتری در آزمون شرکت کنم.
+                    </p>
+                </div>
+                <div class="single-review item">
+                    <div class="title justify-content-start d-flex">
+                        <a href="#">
+                            <h4>هولدا ساتون</h4>
+                        </a>
+                        <div class="star">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                    </div>
+                    <p>
+                        از کلاس‌های Free Discussion تا دوره تخصصی تافل، همه‌چیز منظم و کاربردی بود. نمونه سوال‌های
+                        استاندارد و بازخورد مدرس واقعاً در پیشرفت من تاثیر زیادی داشت.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End review Area -->
+
+<!-- Start cta-one Area -->
+<!-- <section class="cta-one-area relative section-gap">
+    <div class="container">
+        <div class="overlay overlay-bg"></div>
+        <div class="row justify-content-center">
+            <div class="wrap">
+                <h1 class="text-white">به جمع مدرسان ما بپیوندید</h1>
+                <p>
+                    اگر در زمینه آموزش زبان انگلیسی، تدریس دوره‌های تافل، برگزاری ماک آزمون یا تحلیل نمونه سوال‌های
+                    استاندارد تجربه دارید، خوشحال می‌شویم رزومه شما را بررسی کنیم.
+                </p>
+                <a class="primary-btn wh" href="#">ارسال رزومه</a>
+            </div>
+        </div>
+    </div>
+</section> -->
+<!-- End cta-one Area -->
+
+<!-- Start blog Area -->
+<!-- <section class="blog-area section-gap" id="blog">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="menu-content pb-70 col-lg-8">
+                <div class="title text-center">
+                    <h1 class="mb-10">آخرین مطالب وبلاگ ما</h1>
+                    <p>آموزش، تکنیک و نکات کاربردی برای موفقیت در تافل و یادگیری زبان</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 single-blog">
+                <div class="thumb">
+                    <img class="img-fluid" src="{% static 'img/b1.jpg' %}" alt="" loading="lazy" decoding="async">
+                </div>
+                <p class="meta">۲۵ آوریل ۲۰۱۸ | توسط <a href="#">مارک وینز</a></p>
+                <a href="blog-single.html">
+                    <h5>چگونه در بخش Speaking تافل نمره بالاتری بگیریم؟</h5>
+                </a>
+                <p>تکنیک‌های کاربردی برای سازماندهی پاسخ، مدیریت زمان و افزایش روانی گفتار در آزمون تافل.</p>
+                <a href="#" class="details-btn d-flex justify-content-center align-items-center"><span
+                        class="details">جزئیات</span><span class="lnr lnr-arrow-left"></span></a>
+            </div>
+            <div class="col-lg-3 col-md-6 single-blog">
+                <div class="thumb">
+                    <img class="img-fluid" src="{% static 'img/b2.jpg' %}" alt="" loading="lazy" decoding="async">
+                </div>
+                <p class="meta">۲۵ آوریل ۲۰۱۸ | توسط <a href="#">مارک وینز</a></p>
+                <a href="blog-single.html">
+                    <h5>بهترین روش حل نمونه سوال‌های Reading تافل</h5>
+                </a>
+                <p>با شناخت انواع سوالات و تمرین هدفمند، می‌توانید سرعت و دقت خود را در بخش Reading افزایش دهید.</p>
+                <a href="#" class="details-btn d-flex justify-content-center align-items-center"><span
+                        class="details">جزئیات</span><span class="lnr lnr-arrow-left"></span></a>
+            </div>
+        </div>
+    </div>
+</section>
+End blog Area -->
+
+
+<!-- Start cta-two Area -->
+<section class="cta-two-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 cta-left">
+                <h1>هنوز برای شروع مسیر تافل مردد هستید؟</h1>
+            </div>
+            <div class="col-lg-4 cta-right">
+                <a class="primary-btn wh" href="#">مشاهده وبلاگ</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End cta-two Area -->
+
+{% endblock %}

@@ -41,10 +41,10 @@ $(document).ready(function() {
 
     //------- Datepicker  js --------//  
 
-      $( function() {
-        $( "#datepicker" ).datepicker();
-        $( "#datepicker2" ).datepicker();
-      } );
+    //   $( function() {
+    //     $( "#datepicker" ).datepicker();
+    //     $( "#datepicker2" ).datepicker();
+    //   } );
 
 
     //------- Superfist nav menu  js --------//  

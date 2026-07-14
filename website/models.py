@@ -39,3 +39,118 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+class ConsultationRequest(models.Model):
+    COURSE_CHOICES = [
+        ("free_discussion", "Free Discussion"),
+        ("a1_c1", "دوره‌های A1 تا C1"),
+        ("toefl_course", "دوره تخصصی تافل"),
+        ("mock_toefl", "ماک تافل"),
+    ]
+
+    STATUS_CHOICES = [
+        ("new", "جدید"),
+        ("contacted", "تماس گرفته شد"),
+        ("completed", "تکمیل شد"),
+        ("cancelled", "لغو شد"),
+    ]
+
+    name = models.CharField(
+        max_length=150,
+        verbose_name="نام"
+    )
+
+    phone = models.CharField(
+        max_length=20,
+        verbose_name="شماره تماس"
+    )
+
+    email = models.EmailField(
+        blank=True,
+        verbose_name="ایمیل"
+    )
+
+    course = models.CharField(
+        max_length=30,
+        choices=COURSE_CHOICES,
+        verbose_name="دوره موردنظر"
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="new",
+        verbose_name="وضعیت"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="زمان ثبت"
+    )
+
+    class Meta:
+        verbose_name = "درخواست مشاوره"
+        verbose_name_plural = "درخواست‌های مشاوره"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} - {self.phone}"
+    
+    
+class ContactMessage(models.Model):
+    STATUS_CHOICES = [
+        ("new", "جدید"),
+        ("reviewing", "در حال بررسی"),
+        ("answered", "پاسخ داده شده"),
+        ("closed", "بسته شده"),
+    ]
+
+    name = models.CharField(
+        max_length=150,
+        verbose_name="نام و نام خانوادگی",
+    )
+
+    email = models.EmailField(
+        verbose_name="آدرس ایمیل",
+    )
+
+    subject = models.CharField(
+        max_length=200,
+        verbose_name="موضوع",
+    )
+
+    message = models.TextField(
+        verbose_name="متن پیام",
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="new",
+        verbose_name="وضعیت",
+    )
+
+    admin_note = models.TextField(
+        blank=True,
+        verbose_name="یادداشت مدیر",
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="زمان ارسال",
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="آخرین تغییر",
+    )
+
+    class Meta:
+        verbose_name = "پیام تماس"
+        verbose_name_plural = "پیام‌های تماس"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} - {self.subject}"

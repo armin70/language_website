@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="no-js">
+
+<head>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="{% static 'img/logo_main.png '%}">
+    <!-- Author Meta -->
+    <meta name="author" content="colorlib">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Site Title -->
+    <title>{% block title %}My Site{% endblock %}</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"
+        media="print" onload="this.media='all';this.onload=null;">
+    <!--
+    CSS
+    ============================================= -->
+    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}" fetchpriority="high">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main-rtl.css' %}">
+</head>
+
+<body>
+    <header id="header" id="home">
+
+        <div class="container main-menu">
+            <div class="row align-items-center justify-content-between d-flex">
+
+                <nav id="nav-menu-container">
+                    <ul class="nav-menu">
+                        <li><a href="/">خانه</a></li>
+                        <li><a href="about">درباره ما</a></li>
+                        <li><a href="toefl">تافل</a></li>
+
+                        <!-- <li class="menu-has-children"><a href="">وبلاگ</a>
+                            <ul>
+                                <li><a href="blog-home.html">خانه وبلاگ</a></li>
+                                <li><a href="blog-single.html">جزئیات وبلاگ</a></li>
+                            </ul>
+                        </li> -->
+      
+                        <li><a href="contact">تماس با ما</a></li>
+                    </ul>
+                </nav><!-- #nav-menu-container -->
+                <div id="logo">
+                    <a href="index.html"><img src="{% static 'img/logo_main.png' %}" alt="" title=""
+                            fetchpriority="high" decoding="sync" /></a>
+                </div>
+            </div>
+        </div>
+    </header><!-- #header -->
+
+    <!-- start banner Area -->
+    {% block content %}
+    {% endblock %}
+
+
+
+
+    <!-- start footer Area -->
+    <footer class="footer-area section-gap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>محصولات برتر</h4>
+                        <ul>
+                            <li><a href="#">وب‌سایت مدیریت شده</a></li>
+                            <li><a href="#">مدیریت اعتبار</a></li>
+                            <li><a href="#">ابزارهای قدرت</a></li>
+                            <li><a href="#">خدمات بازاریابی</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>لینک‌های سریع</h4>
+                        <ul>
+                            <li><a href="#">فرصت‌های شغلی</a></li>
+                            <li><a href="#">دارایی‌های برند</a></li>
+                            <li><a href="#">روابط با سرمایه‌گذاران</a></li>
+                            <li><a href="#">شرایط خدمات</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>ویژگی‌ها</h4>
+                        <ul>
+                            <li><a href="#">مشاغل</a></li>
+                            <li><a href="#">برندینگ</a></li>
+                            <li><a href="#">سرمایه‌گذاری</a></li>
+                            <li><a href="#">قوانین</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>منابع</h4>
+                        <ul>
+                            <li><a href="#">راهنماها</a></li>
+                            <li><a href="#">تحقیقات</a></li>
+                            <li><a href="#">کارشناسان</a></li>
+                            <li><a href="#">آژانس‌ها</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4  col-md-6 col-sm-6">
+                    <div class="single-footer-widget">
+                        <h4>خبرنامه</h4>
+                        <p>با آخرین اخبار ما به‌روز باشید</p>
+                        <div class="" id="mc_embed_signup">
+                            <form target="_blank" action="#" method="get">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="EMAIL"
+                                        placeholder="ایمیل خود را وارد کنید" onfocus="this.placeholder = ''"
+                                        onblur="this.placeholder = 'ایمیل خود را وارد کنید '" required="" type="email">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" type="submit">
+                                            <span class="lnr lnr-arrow-left"></span>
+                                        </button>
+                                    </div>
+                                    <div class="info"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom row align-items-center justify-content-between">
+                <p class="footer-text m-0 col-lg-6 col-md-12">
+                    کپی‌رایت &copy;
+                    <script>document.write(new Date().getFullYear());</script> تمامی حقوق محفوظ است 
+                </p>
+                <div class="col-lg-6 col-sm-12 footer-social">
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-dribbble"></i></a>
+                    <a href="#"><i class="fa fa-behance"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End footer Area -->
+
+
+    <script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
+    <script src="{% static 'js/easing.min.js' %}"></script>
+    <script src="{% static 'js/hoverIntent.js' %}"></script>
+    <script src="{% static 'js/superfish.min.js' %}"></script>
+    <script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/jquery.tabs.min.js' %}"></script>
+    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/mail-script.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ mock_test.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+        }
+
+        .module-section {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .block-section {
+            background: #fafafa;
+            border: 1px solid #eef0f2;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .passage-text {
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* استایل‌های مربوط به کلمات ناقص */
+        .word-wrapper {
+            display: inline-flex;
+            align-items: baseline;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            margin: 0 2px;
+        }
+
+        .start {
+            color: #333;
+        }
+
+        .dashes {
+            color: #999;
+            letter-spacing: 2px;
+            white-space: pre;
+        }
+
+        .blank-area {
+            position: relative;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        .blank-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+
+            /* ظاهر تایپ */
+            color: #2c3e50;
+            font-weight: bold;
+            letter-spacing: 2px;
+
+            /* این مهم است که متن دقیقا روی دَش‌ها بنشیند */
+            padding: 0;
+            margin: 0;
+        }
+
+        .blank-input:focus {
+            color: #e67e22;
+        }
+
+        /* استایل‌های سوالات تستی */
+        .question-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+
+        .choice-option {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        .submit-btn:hover {
+            background: #219150;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>{{ mock_test.title }}</h1>
+        <p>{{ mock_test.description }}</p>
+        <hr>
+
+        <form method="POST" action="{% url 'toefl:submit_mock_test' mock_test.slug attempt.id %}">
+            {% csrf_token %}
+
+            {% for module in modules %}
+            <div class="module-section">
+                <h2>{{ module.title }}</h2>
+                <p><i>{{ module.instructions }}</i></p>
+
+                {% for block in module.blocks.all %}
+                <div class="block-section">
+                    <h3>{{ block.title }}</h3>
+                    <p><strong>Instructions:</strong> {{ block.instructions }}</p>
+
+                    <!-- بررسی نوع بلاک برای رندر مناسب -->
+                    {% if block.block_type == 'complete_words' %}
+                    <div class="passage-text">
+                        {% for part in block.get_processed_content %}
+                        {% if part.type == 'text' %}
+                        {{ part.content|linebreaksbr }}
+                        {% else %}
+                        <span class="word-wrapper">
+                            <span class="start">{{ part.start_part }}</span>
+
+                            <span class="blank-area">
+                                <span class="dashes">{{ part.dashes }}</span>
+                                <input type="text" name="q_{{ part.q_number }}" class="blank-input"
+                                    maxlength="{{ part.remaining_len }}" autocomplete="off" spellcheck="false">
+                            </span>
+                        </span>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <!-- نمایش متن عادی برای ایمیل، نوتیس یا پسج -->
+                    <div class="passage-text">
+                        {{ block.text|linebreaksbr }}
+                    </div>
+
+                    <!-- نمایش سوالات ۴ گزینه‌ای متصل به این بلاک -->
+                    {% for question in block.questions.all %}
+                    <div class="question-box">
+                        <p><strong>Q{{ question.question_number }}. {{ question.question_text }}</strong></p>
+                        {% for choice in question.choices.all %}
+                        <label class="choice-option">
+                            <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}">
+                            {{ choice.text }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="submit-btn">Submit Test</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
