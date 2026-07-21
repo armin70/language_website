@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- در حال انجام -->
     <div class="col-12 col-sm-6 col-xl-3">
         <div class="card shadow-sm p-3">
@@ -58,11 +58,27 @@
                             <span class="fw-bold">{{ attempt.mock_test.title }}</span>
                         </td>
                         <td>{{ attempt.started_at|date:"M d, Y" }}</td>
+                        {% for mock_test in mock_tests %}
+
+                        {% if mock_test.slug %}
                         <td class="text-end pe-4">
-                            <a href="{% url 'toefl:reading_block' slug=attempt.mock_test.slug block_id=1 %}" class="btn btn-sm btn-primary">
-                                Resume
+
+                            <a href="{% url 'toefl:take_reading_test' slug=mock_test.slug %}">
+                                Start Reading
                             </a>
                         </td>
+
+                        {% else %}
+                        <td class="text-end pe-4">
+
+                            <button type="button" disabled>
+                                Missing test slug
+                            </button>
+
+                        </td>
+                        {% endif %}
+
+                        {% endfor %}
                     </tr>
                     {% empty %}
                     <tr>

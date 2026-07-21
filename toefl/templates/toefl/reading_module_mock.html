@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ mock_test.title }} - {{ module.title }}
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #222222;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        /* =========================================
+   Small top information bar
+========================================= */
+
+        .reading-info-bar {
+            display: flex;
+            min-height: 32px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 18px;
+            border-bottom: 1px solid #d7d7d7;
+            background: #f7f7f7;
+            color: #4e4e4e;
+            font-size: 13px;
+        }
+
+        .reading-info-left,
+        .reading-info-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .divider {
+            color: #aaaaaa;
+        }
+
+        .text-button {
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: #286b93;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .text-button:hover {
+            text-decoration: underline;
+        }
+
+        #module-timer {
+            min-width: 48px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* =========================================
+   Main blue header
+========================================= */
+
+        .mock-header {
+            display: flex;
+            min-height: 72px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+            padding: 12px 24px;
+            background: #087ca8;
+            color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.14);
+        }
+
+        .brand-area {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .test-title {
+            overflow: hidden;
+            font-size: 18px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .module-title {
+            overflow: hidden;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .header-actions {
+            display: flex;
+            flex: 0 0 auto;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-button {
+            min-width: 78px;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            border-radius: 4px;
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .header-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .header-button:disabled {
+            border-color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.45);
+            cursor: default;
+            background: transparent;
+        }
+
+        .next-button {
+            background: #ffffff;
+            color: #087ca8;
+        }
+
+        .next-button:hover {
+            background: #edf8fc;
+        }
+
+        .next-button:disabled {
+            border-color: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .exit-button {
+            border-color: transparent;
+        }
+
+        /* =========================================
+   Reading page
+========================================= */
+
+        .reading-main {
+            width: min(100%, 1250px);
+            margin: 0 auto;
+            padding: 34px 26px 80px;
+        }
+
+        .reading-screen[hidden] {
+            display: none;
+        }
+
+        .reading-block-content {
+            width: 100%;
+        }
+
+        .block-title {
+            margin: 0 0 22px;
+            font-size: 24px;
+        }
+
+        .block-instructions {
+            margin-bottom: 20px;
+            color: #5d5d5d;
+            line-height: 1.6;
+        }
+
+        .block-body {
+            margin-bottom: 35px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .reading-question {
+            margin: 28px 0;
+            padding-top: 24px;
+            border-top: 1px solid #e3e3e3;
+        }
+
+        .question-text {
+            margin: 0 0 18px;
+            font-size: 17px;
+            line-height: 1.55;
+        }
+
+        .choice-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 14px 0;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .choice-row input {
+            width: 19px;
+            height: 19px;
+            margin-top: 1px;
+        }
+
+        /* =========================================
+   Complete the Words - exact visual style
+========================================= */
+
+        .complete-words-task {
+            width: min(100%, 980px);
+            margin: 0 auto;
+            padding-top: 10px;
+        }
+
+        .complete-words-title {
+            margin: 0 0 90px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2a2a2a;
+        }
+
+        .complete-words-content {
+            display: block;
+            width: 100%;
+            color: #222222;
+            font-size: 18px;
+            line-height: 2.35;
+            text-align: left;
+            white-space: normal;
+        }
+
+        .complete-text {
+            display: inline;
+            white-space: normal;
+        }
+
+        .complete-word-answer {
+            display: inline-flex;
+            align-items: baseline;
+            vertical-align: baseline;
+            white-space: nowrap;
+            margin: 0 1px;
+        }
+
+        .complete-word-start {
+            display: inline;
+            color: #1f1f1f;
+        }
+
+        .missing-letter-boxes {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 2px;
+            margin-left: 1px;
+            vertical-align: baseline;
+        }
+
+        .complete-letter-input {
+            width: 19px;
+            height: 24px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            border-bottom: 2px solid #b7b7b7;
+            background: #d7d7d7;
+            color: transparent;
+            outline: none;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 24px;
+            box-shadow: none;
+            border-radius: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            caret-color: #222222;
+            transition:
+                background 0.15s ease,
+                color 0.15s ease,
+                border-bottom-color 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+        /* وقتی کاربر روی یک خانه می‌رود */
+        .complete-letter-input:focus {
+            background: #ececec;
+            color: #222222;
+            border-bottom-color: #6d6d6d;
+        }
+
+        /* وقتی داخل باکس حرف وارد شده */
+        .complete-letter-input.has-value {
+            background: #efefef;
+            color: #222222;
+            border-bottom-color: transparent;
+        }
+
+        /* وقتی کل کلمه کامل شده */
+        .complete-word-answer.is-complete .complete-letter-input {
+            background: #f2f2f2;
+            color: #222222;
+        }
+
+        /* اگر خواستی کلمه کامل‌شده کمی تمیزتر دیده شود */
+        .complete-word-answer.is-complete .complete-word-start {
+            color: #222222;
+        }
+
+        /* موبایل */
+        @media (max-width: 760px) {
+            .complete-words-content {
+                font-size: 16px;
+                line-height: 2.2;
+            }
+
+            .complete-letter-input {
+                width: 17px;
+                height: 22px;
+                font-size: 14px;
+            }
+        }
+
+
+        /* =========================================
+           Reading Email task
+        ========================================= */
+
+        .email-reading-task {
+            width: min(100%, 1120px);
+            margin: 0 auto;
+            padding-top: 8px;
+        }
+
+        .email-reading-title {
+            margin: 0 0 62px;
+            text-align: center;
+            color: #292929;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .email-reading-layout {
+            display: grid;
+            grid-template-columns: minmax(430px, 1fr) minmax(390px, 0.95fr);
+            gap: 74px;
+            align-items: start;
+        }
+
+        .email-message-frame {
+            overflow: hidden;
+            padding: 8px;
+            border: 1px solid #7d7d7d;
+            border-radius: 3px;
+            background: #cfcfcf;
+        }
+
+        .email-header-row {
+            display: grid;
+            grid-template-columns: 66px minmax(0, 1fr);
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .email-header-label,
+        .email-header-value {
+            min-height: 27px;
+            padding: 4px 8px;
+            border: 1px solid #909090;
+            background: #f8f8f8;
+            color: #222222;
+            font-size: 15px;
+            line-height: 17px;
+        }
+
+        .email-header-label {
+            white-space: nowrap;
+        }
+
+        .email-message-body {
+            height: 290px;
+            overflow-y: auto;
+            padding: 22px 18px;
+            border: 1px solid #909090;
+            background: #ffffff;
+            color: #111111;
+            font-size: 16px;
+            line-height: 1.65;
+        }
+
+        .email-message-body p:first-child {
+            margin-top: 0;
+        }
+
+        .email-message-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .email-question-panel {
+            padding-top: 2px;
+        }
+
+        .email-question-panel .reading-question {
+            margin: 0 0 30px;
+            padding: 0;
+            border-top: none;
+        }
+
+        .email-question-panel .question-text {
+            margin: 0 0 20px;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.55;
+        }
+
+        .email-question-panel .choice-row {
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .email-question-panel .choice-row input {
+            flex: 0 0 auto;
+            width: 22px;
+            height: 22px;
+            margin: 0;
+        }
+
+        @media (max-width: 900px) {
+            .email-reading-title {
+                margin-bottom: 38px;
+            }
+
+            .email-reading-layout {
+                grid-template-columns: 1fr;
+                gap: 34px;
+            }
+
+            .email-message-body {
+                height: 260px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .email-header-row {
+                grid-template-columns: 58px minmax(0, 1fr);
+            }
+
+            .email-header-label,
+            .email-header-value {
+                padding: 4px 6px;
+                font-size: 14px;
+            }
+
+            .email-message-body {
+                height: 240px;
+                padding: 18px 14px;
+                font-size: 15px;
+            }
+        }
+
+
+        /* =========================================
+           Reading Notice task
+        ========================================= */
+
+        .notice-reading-task {
+            width: min(100%, 1120px);
+            margin: 0 auto;
+            padding-top: 8px;
+        }
+
+        .notice-reading-title {
+            margin: 0 0 62px;
+            text-align: center;
+            color: #292929;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .notice-reading-layout {
+            display: grid;
+            grid-template-columns: minmax(430px, 1fr) minmax(390px, 0.95fr);
+            gap: 74px;
+            align-items: start;
+        }
+
+        .notice-document-frame {
+            padding: 10px;
+            border: 2px solid #666666;
+            background: #ffffff;
+        }
+
+        .notice-document-inner {
+            min-height: 420px;
+            padding: 26px 30px 22px;
+            border: 2px solid #777777;
+            background: #ffffff;
+            color: #111111;
+        }
+
+        .notice-document-heading {
+            margin: 0 0 5px;
+            text-align: center;
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .notice-document-subheading {
+            margin: 0 0 24px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .notice-document-body {
+            font-size: 16px;
+            line-height: 1.52;
+        }
+
+        .notice-document-body p:first-child {
+            margin-top: 0;
+        }
+
+        .notice-document-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .notice-signature {
+            margin-top: 24px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .notice-question-panel {
+            padding-top: 2px;
+        }
+
+        .notice-question-panel .reading-question {
+            margin: 0 0 30px;
+            padding: 0;
+            border-top: none;
+        }
+
+        .notice-question-panel .question-text {
+            margin: 0 0 20px;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.55;
+        }
+
+        .notice-question-panel .choice-row {
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .notice-question-panel .choice-row input {
+            flex: 0 0 auto;
+            width: 22px;
+            height: 22px;
+            margin: 0;
+        }
+
+        @media (max-width: 900px) {
+            .notice-reading-title {
+                margin-bottom: 38px;
+            }
+
+            .notice-reading-layout {
+                grid-template-columns: 1fr;
+                gap: 34px;
+            }
+
+            .notice-document-inner {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .notice-document-frame {
+                padding: 7px;
+            }
+
+            .notice-document-inner {
+                padding: 22px 18px 18px;
+            }
+
+            .notice-document-heading {
+                font-size: 18px;
+            }
+
+            .notice-document-subheading,
+            .notice-document-body,
+            .notice-signature {
+                font-size: 15px;
+            }
+        }
+
+
+
+        /* =========================================
+           Academic passage task
+        ========================================= */
+
+        .academic-reading-task {
+            width: min(100%, 1160px);
+            margin: 0 auto;
+            padding-top: 34px;
+        }
+
+        .academic-reading-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 72px;
+            align-items: start;
+        }
+
+        .academic-passage-body {
+            color: #111111;
+            font-size: 16px;
+            line-height: 1.48;
+        }
+
+        .academic-passage-body p {
+            margin: 0 0 17px;
+        }
+
+        .academic-passage-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .insertion-marker {
+            display: inline-block;
+            margin: 0 2px;
+            color: #111111;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .academic-question-panel {
+            padding-top: 1px;
+        }
+
+        .academic-question-panel .reading-question {
+            margin: 0 0 34px;
+            padding: 0;
+            border-top: none;
+        }
+
+        .academic-question-panel .question-text {
+            margin: 0 0 20px;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.62;
+            white-space: pre-line;
+        }
+
+        .academic-question-panel .question-focus-sentence {
+            display: block;
+            margin-top: 18px;
+            font-weight: 700;
+            line-height: 1.55;
+        }
+
+        .academic-question-panel .choice-row {
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+
+        .academic-question-panel .choice-row input {
+            flex: 0 0 auto;
+            width: 22px;
+            height: 22px;
+            margin: 0;
+        }
+
+        @media (max-width: 900px) {
+            .academic-reading-task {
+                padding-top: 20px;
+            }
+
+            .academic-reading-layout {
+                grid-template-columns: 1fr;
+                gap: 38px;
+            }
+        }
+
+        /* =========================================
+           Highlighted words/phrases in Reading text
+           Admin syntax: [[word or phrase]]
+        ========================================= */
+
+        .reading-highlight {
+            display: inline;
+            padding: 0 2px;
+            background: #168bd2;
+            color: #ffffff;
+            border-radius: 1px;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        /* =========================================
+   Mobile
+========================================= */
+
+        @media (max-width: 760px) {
+            .reading-info-bar {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .mock-header {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .header-actions {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header-button {
+                width: 100%;
+            }
+
+            .reading-main {
+                padding: 25px 18px 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- =========================================
+     Top information bar
+========================================== -->
+
+    <div class="reading-info-bar">
+
+        <div class="reading-info-left">
+            <strong>Reading</strong>
+
+            <span class="divider">|</span>
+
+            <span id="question-range">
+                Question
+                <span id="current-start-question">1</span>
+                –
+                <span id="current-end-question">1</span>
+
+                of
+
+                <span id="total-question-count">
+                    {{ total_test_questions }}
+                </span>
+            </span>
+        </div>
+
+        <div class="reading-info-right">
+
+            <span id="module-timer">
+                00:00
+            </span>
+
+            <span class="divider">|</span>
+
+            <button type="button" id="toggle-time-button" class="text-button">
+                Hide Time
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+     Main blue mock-test header
+========================================== -->
+
+    <header class="mock-header">
+
+        <div class="brand-area">
+
+            <strong class="test-title">
+                {{ mock_test.title }}
+            </strong>
+
+            <span class="module-title">
+                {{ module.title }}
+            </span>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button type="button" id="exit-button" class="header-button exit-button">
+                Exit
+            </button>
+
+            <button type="button" id="fullscreen-button" class="header-button">
+                Fullscreen
+            </button>
+
+            <button type="button" id="back-button" class="header-button">
+                Back
+            </button>
+
+            <button type="button" id="next-button" class="header-button next-button">
+                Next
+            </button>
+
+        </div>
+
+    </header>
+    <form id="csrf-form" hidden>
+        {% csrf_token %}
+    </form>
+    <!-- Header دقیقاً اینجا قرار می‌گیرد -->
+    <main class="reading-main">
+
+        <div id="reading-screens">
+
+            {% for block in blocks %}
+
+            <section class="reading-screen" data-index="{{ forloop.counter0 }}"
+                data-start-question="{{ block.start_question_number }}"
+                data-end-question="{{ block.end_question_number }}" {% if forloop.counter0 != current_block_index %}
+                hidden {% endif %}>
+
+                <div class="reading-block-content">
+                    {% if block.block_type == "complete_words" %}
+
+                    <div class="complete-words-task">
+
+                        <h1 class="complete-words-title">
+                            {% if block.title %}
+                            {{ block.title }}
+                            {% else %}
+                            Fill in the missing letters in the paragraph
+                            {% endif %}
+                        </h1>
+
+                        {% if block.instructions %}
+                        <div class="block-instructions">
+                            {{ block.instructions }}
+                        </div>
+                        {% endif %}
+
+                        <div class="complete-words-content">
+
+                            {% for part in block.processed_content %}
+
+                            {% if part.type == "text" %}
+
+                            <span class="complete-text">
+                                {{ part.display_text }}
+                            </span>
+
+                            {% elif part.type == "input" %}
+
+                            <span class="complete-word-answer" data-global-question-number="{{ part.q_number }}">
+                                <span class="complete-word-start">
+                                    {{ part.start_part }}
+                                </span>
+
+                                <span class="missing-letter-boxes">
+
+                                    {% for slot in part.letter_slots %}
+
+                                    <input type="text" class="complete-letter-input" value="{{ slot.value }}"
+                                        maxlength="1" autocomplete="off" autocapitalize="none" spellcheck="false"
+                                        aria-label="Missing letter">
+
+                                    {% endfor %}
+
+                                </span>
+                            </span>
+
+                            {% endif %}
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    {% elif block.block_type == "email" %}
+
+                    <div class="email-reading-task">
+
+                        <h1 class="email-reading-title">
+                            {% if block.title %}
+                            {{ block.title }}
+                            {% else %}
+                            Read an email
+                            {% endif %}
+                        </h1>
+
+                        {% if block.instructions %}
+                        <div class="block-instructions">
+                            {{ block.instructions }}
+                        </div>
+                        {% endif %}
+
+                        <div class="email-reading-layout">
+
+                            <article class="email-message-frame" aria-label="Email message">
+
+                                <div class="email-header-row">
+                                    <div class="email-header-label">To:</div>
+                                    <div class="email-header-value">
+                                        {{ block.recipient|default:"" }}
+                                    </div>
+                                </div>
+
+                                <div class="email-header-row">
+                                    <div class="email-header-label">From:</div>
+                                    <div class="email-header-value">
+                                        {{ block.sender|default:"" }}
+                                    </div>
+                                </div>
+
+                                <div class="email-header-row">
+                                    <div class="email-header-label">Date:</div>
+                                    <div class="email-header-value">
+                                        {{ block.sent_at_text|default:"" }}
+                                    </div>
+                                </div>
+
+                                <div class="email-header-row">
+                                    <div class="email-header-label">Subject:</div>
+                                    <div class="email-header-value">
+                                        {{ block.subject|default:"" }}
+                                    </div>
+                                </div>
+
+                                <div class="email-message-body highlightable-reading-text">
+                                    {{ block.text|linebreaks }}
+                                </div>
+
+                            </article>
+
+                            <div class="email-question-panel">
+
+                                {% for question in block.questions.all %}
+
+                                <div class="reading-question" data-question-id="{{ question.id }}">
+
+                                    <h2 class="question-text">
+                                        {{ question.question_text }}
+                                    </h2>
+
+                                    {% for choice in question.choices.all %}
+
+                                    <label class="choice-row">
+
+                                        <input type="radio" name="question_{{ question.id }}"
+                                            value="{{ choice.id }}" data-question-id="{{ question.id }}"
+                                            {% if question.saved_choice_id == choice.id %}checked{% endif %}>
+
+                                        <span>
+                                            {{ choice.text }}
+                                        </span>
+
+                                    </label>
+
+                                    {% endfor %}
+
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% elif block.block_type == "notice" %}
+
+                    <div class="notice-reading-task">
+
+                        <h1 class="notice-reading-title">
+                            {% if block.title %}
+                            {{ block.title }}
+                            {% else %}
+                            Read a notice
+                            {% endif %}
+                        </h1>
+
+                        {% if block.instructions %}
+                        <div class="block-instructions">
+                            {{ block.instructions }}
+                        </div>
+                        {% endif %}
+
+                        <div class="notice-reading-layout">
+
+                            <article class="notice-document-frame" aria-label="Notice">
+
+                                <div class="notice-document-inner">
+
+                                    {% if block.subject %}
+                                    <h2 class="notice-document-heading">
+                                        {{ block.subject }}
+                                    </h2>
+                                    {% endif %}
+
+                                    {% if block.sent_at_text %}
+                                    <div class="notice-document-subheading">
+                                        {{ block.sent_at_text }}
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="notice-document-body highlightable-reading-text">
+                                        {{ block.text|linebreaks }}
+                                    </div>
+
+                                    {% if block.sender %}
+                                    <div class="notice-signature">
+                                        — {{ block.sender }}
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+
+                            </article>
+
+                            <div class="notice-question-panel">
+
+                                {% for question in block.questions.all %}
+
+                                <div class="reading-question" data-question-id="{{ question.id }}">
+
+                                    <h2 class="question-text">
+                                        {{ question.question_text }}
+                                    </h2>
+
+                                    {% for choice in question.choices.all %}
+
+                                    <label class="choice-row">
+
+                                        <input type="radio" name="question_{{ question.id }}"
+                                            value="{{ choice.id }}" data-question-id="{{ question.id }}"
+                                            {% if question.saved_choice_id == choice.id %}checked{% endif %}>
+
+                                        <span>
+                                            {{ choice.text }}
+                                        </span>
+
+                                    </label>
+
+                                    {% endfor %}
+
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% elif block.block_type == "academic_passage" %}
+
+                    <div class="academic-reading-task" aria-label="{{ block.title }}">
+
+                        {% if block.instructions %}
+                        <div class="block-instructions">
+                            {{ block.instructions|linebreaks }}
+                        </div>
+                        {% endif %}
+
+                        <div class="academic-reading-layout">
+
+                            <article
+                                class="academic-passage-body highlightable-reading-text insertion-marker-text"
+                            >
+                                {{ block.text|linebreaks }}
+                            </article>
+
+                            <div class="academic-question-panel">
+
+                                {% for question in block.questions.all %}
+
+                                <div
+                                    class="reading-question"
+                                    data-question-id="{{ question.id }}"
+                                >
+
+                                    <div class="question-text rich-question-text">
+                                        {{ question.question_text }}
+                                    </div>
+
+                                    {% for choice in question.choices.all %}
+
+                                    <label class="choice-row">
+
+                                        <input
+                                            type="radio"
+                                            name="question_{{ question.id }}"
+                                            value="{{ choice.id }}"
+                                            data-question-id="{{ question.id }}"
+                                            {% if question.saved_choice_id == choice.id %}checked{% endif %}
+                                        >
+
+                                        <span>
+                                            {{ choice.text }}
+                                        </span>
+
+                                    </label>
+
+                                    {% endfor %}
+
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% else %}
+
+                    <h1 class="block-title">
+                        {{ block.title }}
+                    </h1>
+
+                    {% if block.instructions %}
+                    <div class="block-instructions">
+                        {{ block.instructions }}
+                    </div>
+                    {% endif %}
+
+                    <div class="block-body highlightable-reading-text">
+                        {{ block.text|linebreaks }}
+                    </div>
+
+                    {% for question in block.questions.all %}
+
+                    <div class="reading-question" data-question-id="{{ question.id }}">
+
+                        <h2 class="question-text">
+                            {{ question.question_number }}.
+                            {{ question.question_text }}
+                        </h2>
+
+                        {% for choice in question.choices.all %}
+
+                        <label class="choice-row">
+
+                            <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}"
+                                data-question-id="{{ question.id }}" {% if question.saved_choice_id == choice.id %}
+                                checked {% endif %}>
+
+                            <span>
+                                {{ choice.text }}
+                            </span>
+
+                        </label>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% endfor %}
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+    <!-- محتوای Reading بعد از Header می‌آید -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            "use strict";
+
+            const screens = Array.from(
+                document.querySelectorAll(
+                    ".reading-screen"
+                )
+            );
+
+            /*
+             * Highlight syntax for Reading passages:
+             *     [[strengthening]]
+             *     [[a longer phrase]]
+             *
+             * Only text inside .highlightable-reading-text is processed.
+             * Complete the Words is not touched.
+             */
+            function applyReadingHighlights(rootElement) {
+                if (!rootElement) {
+                    return;
+                }
+
+                const markerPattern = /\[\[([\s\S]*?)\]\]/g;
+
+                function processTextNode(textNode) {
+                    const originalText = textNode.nodeValue || "";
+
+                    if (!markerPattern.test(originalText)) {
+                        markerPattern.lastIndex = 0;
+                        return;
+                    }
+
+                    markerPattern.lastIndex = 0;
+
+                    const fragment = document.createDocumentFragment();
+                    let lastIndex = 0;
+                    let match;
+
+                    while ((match = markerPattern.exec(originalText)) !== null) {
+                        const beforeText = originalText.slice(
+                            lastIndex,
+                            match.index
+                        );
+
+                        if (beforeText) {
+                            fragment.appendChild(
+                                document.createTextNode(beforeText)
+                            );
+                        }
+
+                        const markElement =
+                            document.createElement("mark");
+
+                        markElement.className =
+                            "reading-highlight";
+
+                        markElement.textContent =
+                            match[1];
+
+                        fragment.appendChild(markElement);
+
+                        lastIndex =
+                            markerPattern.lastIndex;
+                    }
+
+                    const remainingText =
+                        originalText.slice(lastIndex);
+
+                    if (remainingText) {
+                        fragment.appendChild(
+                            document.createTextNode(remainingText)
+                        );
+                    }
+
+                    textNode.parentNode.replaceChild(
+                        fragment,
+                        textNode
+                    );
+                }
+
+                const walker = document.createTreeWalker(
+                    rootElement,
+                    NodeFilter.SHOW_TEXT
+                );
+
+                const textNodes = [];
+                let currentNode;
+
+                while ((currentNode = walker.nextNode())) {
+                    textNodes.push(currentNode);
+                }
+
+                textNodes.forEach(processTextNode);
+            }
+
+            document
+                .querySelectorAll(
+                    ".highlightable-reading-text"
+                )
+                .forEach(applyReadingHighlights);
+
+            /*
+             * Academic-passage formatting:
+             *
+             * Passage insertion markers:
+             *     [A] [B] [C] [D]
+             *
+             * Bold focus sentence in ReadingQuestion.question_text:
+             *     **This entire sentence will be bold.**
+             *
+             * Blank lines in block.text create separate paragraphs because
+             * Django's linebreaks filter is used in the template.
+             */
+            function applyInsertionMarkers(rootElement) {
+                if (!rootElement) {
+                    return;
+                }
+
+                const markerPattern = /\[([A-D])\]/g;
+                const walker = document.createTreeWalker(
+                    rootElement,
+                    NodeFilter.SHOW_TEXT
+                );
+
+                const textNodes = [];
+                let currentNode;
+
+                while ((currentNode = walker.nextNode())) {
+                    textNodes.push(currentNode);
+                }
+
+                textNodes.forEach(function (textNode) {
+                    const originalText =
+                        textNode.nodeValue || "";
+
+                    markerPattern.lastIndex = 0;
+
+                    if (!markerPattern.test(originalText)) {
+                        markerPattern.lastIndex = 0;
+                        return;
+                    }
+
+                    markerPattern.lastIndex = 0;
+
+                    const fragment =
+                        document.createDocumentFragment();
+
+                    let lastIndex = 0;
+                    let match;
+
+                    while (
+                        (match = markerPattern.exec(originalText))
+                        !== null
+                    ) {
+                        const beforeText =
+                            originalText.slice(
+                                lastIndex,
+                                match.index
+                            );
+
+                        if (beforeText) {
+                            fragment.appendChild(
+                                document.createTextNode(
+                                    beforeText
+                                )
+                            );
+                        }
+
+                        const marker =
+                            document.createElement("span");
+
+                        marker.className =
+                            "insertion-marker";
+
+                        marker.textContent =
+                            "[" + match[1] + "]";
+
+                        fragment.appendChild(marker);
+
+                        lastIndex =
+                            markerPattern.lastIndex;
+                    }
+
+                    const remainingText =
+                        originalText.slice(lastIndex);
+
+                    if (remainingText) {
+                        fragment.appendChild(
+                            document.createTextNode(
+                                remainingText
+                            )
+                        );
+                    }
+
+                    textNode.parentNode.replaceChild(
+                        fragment,
+                        textNode
+                    );
+                });
+            }
+
+            function applyQuestionFormatting(rootElement) {
+                if (!rootElement) {
+                    return;
+                }
+
+                const originalText =
+                    rootElement.textContent || "";
+
+                const boldPattern =
+                    /\*\*([\s\S]*?)\*\*/g;
+
+                rootElement.textContent = "";
+
+                let lastIndex = 0;
+                let match;
+
+                while (
+                    (match = boldPattern.exec(originalText))
+                    !== null
+                ) {
+                    const beforeText =
+                        originalText.slice(
+                            lastIndex,
+                            match.index
+                        );
+
+                    if (beforeText) {
+                        rootElement.appendChild(
+                            document.createTextNode(
+                                beforeText
+                            )
+                        );
+                    }
+
+                    const strongElement =
+                        document.createElement("strong");
+
+                    strongElement.className =
+                        "question-focus-sentence";
+
+                    strongElement.textContent =
+                        match[1];
+
+                    rootElement.appendChild(
+                        strongElement
+                    );
+
+                    lastIndex =
+                        boldPattern.lastIndex;
+                }
+
+                const remainingText =
+                    originalText.slice(lastIndex);
+
+                if (remainingText) {
+                    rootElement.appendChild(
+                        document.createTextNode(
+                            remainingText
+                        )
+                    );
+                }
+            }
+
+            document
+                .querySelectorAll(
+                    ".insertion-marker-text"
+                )
+                .forEach(applyInsertionMarkers);
+
+            document
+                .querySelectorAll(
+                    ".rich-question-text"
+                )
+                .forEach(applyQuestionFormatting);
+
+
+            function updateLetterInputState(input) {
+                const hasValue = (input.value || "").trim().length > 0;
+                input.classList.toggle("has-value", hasValue);
+            }
+
+            function updateWordWrapperState(wordWrapper) {
+                const inputs = Array.from(
+                    wordWrapper.querySelectorAll(".complete-letter-input")
+                );
+
+                const allFilled = inputs.length > 0 && inputs.every(function (input) {
+                    return (input.value || "").trim().length > 0;
+                });
+
+                wordWrapper.classList.toggle("is-complete", allFilled);
+
+                inputs.forEach(function (input) {
+                    updateLetterInputState(input);
+                });
+            }
+            const backButton =
+                document.getElementById(
+                    "back-button"
+                );
+
+            const nextButton =
+                document.getElementById(
+                    "next-button"
+                );
+
+            const exitButton =
+                document.getElementById(
+                    "exit-button"
+                );
+
+            const fullscreenButton =
+                document.getElementById(
+                    "fullscreen-button"
+                );
+
+            const toggleTimeButton =
+                document.getElementById(
+                    "toggle-time-button"
+                );
+
+            const timerElement =
+                document.getElementById(
+                    "module-timer"
+                );
+
+            const startQuestionElement =
+                document.getElementById(
+                    "current-start-question"
+                );
+
+            const endQuestionElement =
+                document.getElementById(
+                    "current-end-question"
+                );
+
+            const saveUrl =
+                "{% url 'toefl:save_reading_module_progress' module_attempt.id %}";
+
+            const submitUrl =
+                "{% url 'toefl:submit_reading_module' module_attempt.id %}";
+
+            const csrfToken =
+                document.querySelector(
+                    "#csrf-form input[name='csrfmiddlewaretoken']"
+                ).value;
+            let navigationBusy = false;
+            let currentIndex = Math.max(
+                0,
+                Math.min(
+                    parseInt(
+                        "{{ current_block_index|default:0 }}",
+                        10
+                    ) || 0,
+                    Math.max(0, screens.length - 1)
+                )
+            );
+
+            let remainingSeconds = Math.max(
+                0,
+                parseInt(
+                    "{{ remaining_seconds|default:0 }}",
+                    10
+                ) || 0
+            );
+            document
+                .querySelectorAll(
+                    ".complete-word-answer"
+                )
+                .forEach(function (wordWrapper) {
+                    const inputs = Array.from(
+                        wordWrapper.querySelectorAll(
+                            ".complete-letter-input"
+                        )
+                    );
+
+                    inputs.forEach(
+                        function (input, index) {
+                            input.addEventListener(
+                                "input",
+                                function () {
+                                    input.value = (
+                                        input.value || ""
+                                    )
+                                        .slice(-1)
+                                        .toLowerCase();
+
+                                    if (
+                                        input.value &&
+                                        index < inputs.length - 1
+                                    ) {
+                                        inputs[
+                                            index + 1
+                                        ].focus();
+                                    }
+                                }
+                            );
+
+                            input.addEventListener(
+                                "keydown",
+                                function (event) {
+                                    if (
+                                        event.key === "Backspace" &&
+                                        !input.value &&
+                                        index > 0
+                                    ) {
+                                        inputs[
+                                            index - 1
+                                        ].focus();
+                                    }
+
+                                    if (
+                                        event.key === "ArrowLeft" &&
+                                        index > 0
+                                    ) {
+                                        event.preventDefault();
+
+                                        inputs[
+                                            index - 1
+                                        ].focus();
+                                    }
+
+                                    if (
+                                        event.key === "ArrowRight" &&
+                                        index <
+                                        inputs.length - 1
+                                    ) {
+                                        event.preventDefault();
+
+                                        inputs[
+                                            index + 1
+                                        ].focus();
+                                    }
+                                }
+                            );
+
+                            input.addEventListener(
+                                "paste",
+                                function (event) {
+                                    event.preventDefault();
+
+                                    const pastedText = (
+                                        event.clipboardData
+                                            .getData("text")
+                                            .replace(
+                                                /[^a-zA-Z]/g,
+                                                ""
+                                            )
+                                            .toLowerCase()
+                                    );
+
+                                    for (
+                                        let offset = 0;
+                                        offset <
+                                        pastedText.length;
+                                        offset += 1
+                                    ) {
+                                        const targetIndex =
+                                            index + offset;
+
+                                        if (
+                                            targetIndex >=
+                                            inputs.length
+                                        ) {
+                                            break;
+                                        }
+
+                                        inputs[
+                                            targetIndex
+                                        ].value =
+                                            pastedText[offset];
+                                    }
+
+                                    const finalIndex =
+                                        Math.min(
+                                            index +
+                                            pastedText.length,
+                                            inputs.length - 1
+                                        );
+
+                                    inputs[
+                                        finalIndex
+                                    ].focus();
+                                }
+                            );
+                        }
+                    );
+                });
+            let timerHidden = false;
+            let timerInterval = null;
+            let moduleSubmitting = false;
+
+            function formatTime(totalSeconds) {
+                const safeSeconds = Math.max(
+                    0,
+                    Math.floor(totalSeconds)
+                );
+
+                const minutes = Math.floor(
+                    safeSeconds / 60
+                );
+
+                const seconds =
+                    safeSeconds % 60;
+
+                return (
+                    String(minutes).padStart(2, "0") +
+                    ":" +
+                    String(seconds).padStart(2, "0")
+                );
+            }
+
+            function renderTimer() {
+                timerElement.textContent =
+                    timerHidden
+                        ? "--:--"
+                        : formatTime(
+                            remainingSeconds
+                        );
+            }
+
+
+            function collectAnswers() {
+                const answers = [];
+
+                /*
+                 * Multiple-choice answers
+                 */
+                document
+                    .querySelectorAll(
+                        ".reading-question"
+                    )
+                    .forEach(function (questionBox) {
+                        const questionId =
+                            questionBox.dataset.questionId;
+
+                        const selectedInput =
+                            questionBox.querySelector(
+                                "input[type='radio']:checked"
+                            );
+
+                        answers.push({
+                            question_id:
+                                parseInt(
+                                    questionId,
+                                    10
+                                ),
+                            global_question_number:
+                                null,
+                            selected_choice_id:
+                                selectedInput
+                                    ? parseInt(
+                                        selectedInput.value,
+                                        10
+                                    )
+                                    : null,
+                            text_answer: ""
+                        });
+                    });
+
+                /*
+                 * Complete Words answers
+                 */
+                document
+                    .querySelectorAll(
+                        ".complete-word-answer"
+                    )
+                    .forEach(function (wordWrapper) {
+                        const questionNumber =
+                            parseInt(
+                                wordWrapper.dataset
+                                    .globalQuestionNumber,
+                                10
+                            );
+
+                        const letterInputs =
+                            Array.from(
+                                wordWrapper.querySelectorAll(
+                                    ".complete-letter-input"
+                                )
+                            );
+
+                        const textAnswer =
+                            letterInputs
+                                .map(function (input) {
+                                    return (
+                                        input.value || ""
+                                    )
+                                        .trim()
+                                        .toLowerCase();
+                                })
+                                .join("");
+
+                        answers.push({
+                            question_id: null,
+                            global_question_number:
+                                questionNumber,
+                            selected_choice_id: null,
+                            text_answer: textAnswer
+                        });
+                    });
+
+                return answers;
+            }
+
+            async function saveProgress() {
+                const response = await fetch(
+                    saveUrl,
+                    {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                            "X-CSRFToken":
+                                csrfToken,
+                            "X-Requested-With":
+                                "XMLHttpRequest"
+                        },
+                        body: JSON.stringify({
+                            current_block_index:
+                                currentIndex,
+                            answers:
+                                collectAnswers()
+                        })
+                    }
+                );
+
+                const data =
+                    await response.json();
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+                    throw new Error(
+                        data.error ||
+                        "Progress could not be saved."
+                    );
+                }
+
+                return data;
+            }
+
+            function updateHeaderInformation() {
+                const currentScreen =
+                    screens[currentIndex];
+
+                if (!currentScreen) {
+                    return;
+                }
+
+                startQuestionElement.textContent =
+                    currentScreen.dataset
+                        .startQuestion || "—";
+
+                endQuestionElement.textContent =
+                    currentScreen.dataset
+                        .endQuestion || "—";
+            }
+
+            function updateButtons() {
+                const isBusy =
+                    navigationBusy ||
+                    moduleSubmitting;
+
+                backButton.disabled =
+                    isBusy ||
+                    currentIndex === 0 ||
+                    screens.length === 0;
+
+                nextButton.disabled =
+                    isBusy ||
+                    screens.length === 0;
+
+                if (
+                    currentIndex ===
+                    screens.length - 1
+                ) {
+                    nextButton.textContent =
+                        "Finish Module";
+                } else {
+                    nextButton.textContent =
+                        "Next";
+                }
+            }
+
+            function showScreen(index) {
+                currentIndex = Math.max(
+                    0,
+                    Math.min(
+                        index,
+                        screens.length - 1
+                    )
+                );
+
+                screens.forEach(
+                    function (screen, screenIndex) {
+                        screen.hidden =
+                            screenIndex !== currentIndex;
+                    }
+                );
+
+                updateHeaderInformation();
+                updateButtons();
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            }
+
+            async function submitModule() {
+                if (moduleSubmitting) {
+                    return;
+                }
+
+                moduleSubmitting = true;
+                updateButtons();
+
+                try {
+                    await saveProgress();
+
+                    const response = await fetch(
+                        submitUrl,
+                        {
+                            method: "POST",
+                            credentials: "same-origin",
+                            headers: {
+                                "X-CSRFToken":
+                                    csrfToken,
+                                "X-Requested-With":
+                                    "XMLHttpRequest",
+                                "Accept":
+                                    "application/json"
+                            }
+                        }
+                    );
+
+                    const data =
+                        await response.json();
+
+                    if (
+                        !response.ok ||
+                        !data.success
+                    ) {
+                        throw new Error(
+                            data.error ||
+                            "Module could not be submitted."
+                        );
+                    }
+
+                    window.location.assign(
+                        data.next_url
+                    );
+
+                } catch (error) {
+                    moduleSubmitting = false;
+
+                    updateButtons();
+
+                    alert(
+                        error.message ||
+                        "Something went wrong."
+                    );
+                }
+            }
+
+            backButton.addEventListener(
+                "click",
+                async function () {
+                    if (
+                        currentIndex <= 0 ||
+                        navigationBusy
+                    ) {
+                        return;
+                    }
+
+                    navigationBusy = true;
+                    updateButtons();
+
+                    try {
+                        await saveProgress();
+
+                        showScreen(
+                            currentIndex - 1
+                        );
+
+                    } catch (error) {
+                        alert(
+                            error.message ||
+                            "Progress could not be saved."
+                        );
+
+                    } finally {
+                        navigationBusy = false;
+                        updateButtons();
+                    }
+                }
+            );
+
+            nextButton.addEventListener(
+                "click",
+                async function () {
+                    if (
+                        navigationBusy ||
+                        moduleSubmitting
+                    ) {
+                        return;
+                    }
+
+                    if (
+                        currentIndex <
+                        screens.length - 1
+                    ) {
+                        navigationBusy = true;
+                        updateButtons();
+
+                        try {
+                            await saveProgress();
+
+                            showScreen(
+                                currentIndex + 1
+                            );
+
+                        } catch (error) {
+                            alert(
+                                error.message ||
+                                "Progress could not be saved."
+                            );
+
+                        } finally {
+                            navigationBusy = false;
+                            updateButtons();
+                        }
+
+                        return;
+                    }
+
+                    await submitModule();
+                }
+            );
+
+            fullscreenButton.addEventListener(
+                "click",
+                async function () {
+                    try {
+                        if (
+                            !document.fullscreenElement
+                        ) {
+                            await document
+                                .documentElement
+                                .requestFullscreen();
+
+                            fullscreenButton.textContent =
+                                "Exit Fullscreen";
+                        } else {
+                            await document
+                                .exitFullscreen();
+
+                            fullscreenButton.textContent =
+                                "Fullscreen";
+                        }
+                    } catch (error) {
+                        alert(
+                            "Fullscreen mode could not be opened."
+                        );
+                    }
+                }
+            );
+
+            document.addEventListener(
+                "fullscreenchange",
+                function () {
+                    fullscreenButton.textContent =
+                        document.fullscreenElement
+                            ? "Exit Fullscreen"
+                            : "Fullscreen";
+                }
+            );
+
+            toggleTimeButton.addEventListener(
+                "click",
+                function () {
+                    timerHidden =
+                        !timerHidden;
+
+                    toggleTimeButton.textContent =
+                        timerHidden
+                            ? "Show Time"
+                            : "Hide Time";
+
+                    renderTimer();
+                }
+            );
+
+            exitButton.addEventListener(
+                "click",
+                async function () {
+                    const confirmed =
+                        window.confirm(
+                            "Do you want to exit the Reading module? Your current progress will be saved."
+                        );
+
+                    if (!confirmed) {
+                        return;
+                    }
+
+                    try {
+                        await saveProgress();
+
+                        /*
+                         * فعلاً کاربر را به صفحه اصلی می‌برد.
+                         * بعداً می‌توانی / را با URL داشبورد عوض کنی.
+                         */
+                        window.location.assign("/");
+
+                    } catch (error) {
+                        alert(error.message);
+                    }
+                }
+            );
+            let autosaveTimeout = null;
+            document
+                .querySelectorAll(".complete-letter-input")
+                .forEach(function (input) {
+                    input.addEventListener("input", function () {
+                        window.clearTimeout(autosaveTimeout);
+
+                        autosaveTimeout = window.setTimeout(function () {
+                            saveProgress().catch(function (error) {
+                                console.error("Autosave failed:", error);
+                            });
+                        }, 350);
+                    });
+                });
+            document
+                .querySelectorAll(
+                    ".reading-question input[type='radio'], .complete-letter-input"
+                )
+                .forEach(function (input) {
+                    const autosaveEvent =
+                        input.classList.contains("complete-letter-input")
+                            ? "input"
+                            : "change";
+
+                    input.addEventListener(
+                        autosaveEvent,
+                        function () {
+                            window.clearTimeout(
+                                autosaveTimeout
+                            );
+
+                            autosaveTimeout =
+                                window.setTimeout(
+                                    function () {
+                                        saveProgress()
+                                            .catch(function (error) {
+                                                console.error(
+                                                    "Autosave failed:",
+                                                    error
+                                                );
+                                            });
+                                    },
+                                    350
+                                );
+                        }
+                    );
+                });
+            timerInterval = window.setInterval(
+                function () {
+                    if (remainingSeconds > 0) {
+                        remainingSeconds -= 1;
+                        renderTimer();
+                        return;
+                    }
+
+                    window.clearInterval(
+                        timerInterval
+                    );
+
+                    submitModule();
+                },
+                1000
+            );
+            document
+                .querySelectorAll(".complete-word-answer")
+                .forEach(function (wordWrapper) {
+
+                    const inputs = Array.from(
+                        wordWrapper.querySelectorAll(".complete-letter-input")
+                    );
+
+                    inputs.forEach(function (input, index) {
+
+                        // وضعیت اولیه
+                        updateLetterInputState(input);
+
+                        input.addEventListener("input", function () {
+                            input.value = (input.value || "")
+                                .slice(-1)
+                                .replace(/[^a-zA-Z]/g, "")
+                                .toLowerCase();
+
+                            updateLetterInputState(input);
+                            updateWordWrapperState(wordWrapper);
+
+                            // حرکت خودکار به خانه بعدی
+                            if (input.value && index < inputs.length - 1) {
+                                inputs[index + 1].focus();
+                            }
+                        });
+
+                        input.addEventListener("keydown", function (event) {
+                            if (event.key === "Backspace") {
+                                if (!input.value && index > 0) {
+                                    inputs[index - 1].focus();
+                                } else {
+                                    setTimeout(function () {
+                                        updateLetterInputState(input);
+                                        updateWordWrapperState(wordWrapper);
+                                    }, 0);
+                                }
+                            }
+
+                            if (event.key === "ArrowLeft" && index > 0) {
+                                event.preventDefault();
+                                inputs[index - 1].focus();
+                            }
+
+                            if (event.key === "ArrowRight" && index < inputs.length - 1) {
+                                event.preventDefault();
+                                inputs[index + 1].focus();
+                            }
+                        });
+
+                        input.addEventListener("paste", function (event) {
+                            event.preventDefault();
+
+                            const pastedText = (
+                                event.clipboardData.getData("text") || ""
+                            )
+                                .replace(/[^a-zA-Z]/g, "")
+                                .toLowerCase();
+
+                            for (let offset = 0; offset < pastedText.length; offset += 1) {
+                                const targetIndex = index + offset;
+
+                                if (targetIndex >= inputs.length) {
+                                    break;
+                                }
+
+                                inputs[targetIndex].value = pastedText[offset];
+                                updateLetterInputState(inputs[targetIndex]);
+                            }
+
+                            updateWordWrapperState(wordWrapper);
+
+                            const nextIndex = Math.min(
+                                index + pastedText.length,
+                                inputs.length - 1
+                            );
+
+                            inputs[nextIndex].focus();
+                        });
+
+                        input.addEventListener("blur", function () {
+                            updateLetterInputState(input);
+                            updateWordWrapperState(wordWrapper);
+                        });
+                    });
+
+                    // وضعیت اولیه کل کلمه
+                    updateWordWrapperState(wordWrapper);
+                });
+            showScreen(currentIndex);
+            renderTimer();
+        });
+    </script>
+
+</body>
+
+</html>

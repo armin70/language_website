@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ mock_test.title }} - Speaking
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+            background: #ffffff;
+            color: #202020;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .speaking-topbar {
+            display: flex;
+            min-height: 48px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 9px 18px;
+            border-bottom: 1px solid #dedede;
+            background: #f8f8f8;
+        }
+
+        .speaking-test-name {
+            overflow: hidden;
+            color: #444444;
+            font-size: 14px;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .speaking-progress {
+            flex: 0 0 auto;
+            color: #555555;
+            font-size: 13px;
+        }
+
+        .speaking-screen[hidden] {
+            display: none;
+        }
+
+        .page {
+            display: flex;
+            width: min(100%, 1100px);
+            min-height: calc(100vh - 48px);
+            margin: 0 auto;
+            padding: 36px 25px 55px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title {
+            margin: 0 0 38px;
+            text-align: center;
+            font-size: 23px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .instructions {
+            max-width: 680px;
+            margin: -25px auto 30px;
+            color: #646464;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .media-area {
+            display: flex;
+            width: 100%;
+            min-height: 260px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 36px;
+        }
+
+        .prompt-image {
+            display: block;
+            max-width: 350px;
+            max-height: 320px;
+            object-fit: contain;
+        }
+
+        .prompt-video {
+            display: block;
+            width: min(100%, 650px);
+            max-height: 380px;
+            background: #000000;
+            object-fit: contain;
+        }
+
+        .image-placeholder {
+            display: flex;
+            width: 260px;
+            height: 220px;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #c9c9c9;
+            background: #fafafa;
+            color: #888888;
+        }
+
+        .response-card {
+            width: 320px;
+            overflow: hidden;
+            border: 1px solid #8b8b8b;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .response-card-header {
+            padding: 10px 15px;
+            background: #818181;
+            color: #ffffff;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .response-card-body {
+            display: flex;
+            min-height: 72px;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+            padding: 10px 16px;
+        }
+
+        .microphone-indicator {
+            position: relative;
+            display: flex;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #eeeeee;
+            color: #b5b5b5;
+        }
+
+        .microphone-indicator.active {
+            background: #3196c8;
+            color: #ffffff;
+            animation: microphone-pulse 1.2s infinite;
+        }
+
+        .microphone-indicator svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        @keyframes microphone-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(49, 150, 200, 0.35);
+            }
+
+            70% {
+                box-shadow: 0 0 0 11px rgba(49, 150, 200, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(49, 150, 200, 0);
+            }
+        }
+
+        .timer-wrapper {
+            position: relative;
+            display: flex;
+            width: 112px;
+            height: 54px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-circle {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+
+        .timer-circle-background {
+            fill: none;
+            stroke: #e1e1e1;
+            stroke-width: 5;
+        }
+
+        .timer-circle-progress {
+            fill: none;
+            stroke: #3196c8;
+            stroke-width: 5;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .timer-text {
+            position: relative;
+            z-index: 2;
+            margin-left: 27px;
+            font-size: 18px;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .phase-status {
+            min-height: 22px;
+            margin-top: 18px;
+            color: #656565;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .phase-status.error {
+            color: #b53333;
+        }
+
+        .phase-status.success {
+            color: #23834e;
+        }
+
+        .start-area,
+        .retry-upload-area {
+            display: none;
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        .start-area.visible,
+        .retry-upload-area.visible {
+            display: block;
+        }
+
+        .start-button,
+        .retry-button {
+            min-width: 145px;
+            padding: 11px 23px;
+            border: 0;
+            border-radius: 6px;
+            background: #328bc0;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .start-button:hover,
+        .retry-button:hover {
+            background: #2876a3;
+        }
+
+        .start-button:disabled,
+        .retry-button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .sound-wave {
+            display: none;
+            height: 27px;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 17px;
+        }
+
+        .sound-wave.visible {
+            display: flex;
+        }
+
+        .sound-wave span {
+            display: block;
+            width: 4px;
+            height: 8px;
+            border-radius: 4px;
+            background: #3994c4;
+            animation: wave 0.8s ease-in-out infinite;
+        }
+
+        .sound-wave span:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .sound-wave span:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .sound-wave span:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .sound-wave span:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes wave {
+            0%,
+            100% {
+                height: 8px;
+            }
+
+            50% {
+                height: 27px;
+            }
+        }
+
+        .processing-cover {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.82);
+        }
+
+        .processing-cover.visible {
+            display: flex;
+        }
+
+        .processing-box {
+            padding: 18px 25px;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #333333;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        @media (max-width: 600px) {
+            .speaking-topbar {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .page {
+                min-height: calc(100vh - 66px);
+                padding-right: 18px;
+                padding-left: 18px;
+            }
+
+            .page-title {
+                margin-bottom: 28px;
+                font-size: 20px;
+            }
+
+            .prompt-image {
+                max-width: 90%;
+                max-height: 270px;
+            }
+
+            .response-card {
+                width: min(100%, 320px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="speaking-topbar">
+        <div class="speaking-test-name">
+            {{ mock_test.title }} — Speaking
+        </div>
+
+        <div class="speaking-progress">
+            Task
+            <span id="current-task-number">1</span>
+            of
+            {{ total_blocks }}
+        </div>
+    </header>
+
+    <form id="csrf-form" hidden>
+        {% csrf_token %}
+    </form>
+
+    <div id="speaking-screens">
+        {% for block in blocks %}
+            <section
+                class="speaking-screen"
+                data-index="{{ forloop.counter0 }}"
+                data-block-id="{{ block.id }}"
+                data-block-type="{{ block.block_type }}"
+                data-response-seconds="{{ block.response_time_seconds }}"
+                data-preparation-seconds="{{ block.preparation_time_seconds }}"
+                data-play-prompt-once="{{ block.play_prompt_once|yesno:'true,false' }}"
+                data-auto-start-recording="{{ block.auto_start_recording|yesno:'true,false' }}"
+                data-completed="{{ block.is_already_completed|yesno:'true,false' }}"
+                data-upload-url="{% url 'toefl:speaking_block' slug=mock_test.slug block_id=block.id %}"
+                {% if forloop.counter0 != current_block_index %}
+                    hidden
+                {% endif %}
+            >
+                <main class="page">
+                    <h1 class="page-title">
+                        {{ block.title }}
+                    </h1>
+
+                    {% if block.instructions %}
+                        <div class="instructions">
+                            {{ block.instructions }}
+                        </div>
+                    {% endif %}
+
+                    <div class="media-area">
+                        {% if block.prompt_video %}
+                            <video
+                                class="prompt-video"
+                                preload="auto"
+                                playsinline
+                                disablepictureinpicture
+                            >
+                                <source src="{{ block.prompt_video.url }}">
+                            </video>
+                        {% elif block.prompt_image %}
+                            <img
+                                src="{{ block.prompt_image.url }}"
+                                alt="Speaking prompt"
+                                class="prompt-image"
+                            >
+                        {% else %}
+                            <div class="image-placeholder">
+                                Speaking task
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <section class="response-card">
+                        <div class="response-card-header">
+                            RESPONSE TIME
+                        </div>
+
+                        <div class="response-card-body">
+                            <div
+                                class="microphone-indicator"
+                                aria-hidden="true"
+                            >
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 1 0-7 0v6a3.5 3.5 0 0 0 3.5 3.5Zm-1.5-9.5a1.5 1.5 0 1 1 3 0v6a1.5 1.5 0 1 1-3 0V6Zm7.5 6a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.91V20H8.5a1 1 0 1 0 0 2h7a1 1 0 1 0 0-2H13v-2.09A6 6 0 0 0 18 12Z"/>
+                                </svg>
+                            </div>
+
+                            <div class="timer-wrapper">
+                                <svg
+                                    class="timer-circle"
+                                    viewBox="0 0 64 64"
+                                    aria-hidden="true"
+                                >
+                                    <circle
+                                        class="timer-circle-background"
+                                        cx="32"
+                                        cy="32"
+                                        r="26"
+                                    ></circle>
+
+                                    <circle
+                                        class="timer-circle-progress"
+                                        cx="32"
+                                        cy="32"
+                                        r="26"
+                                    ></circle>
+                                </svg>
+
+                                <span class="timer-text">
+                                    00:00
+                                </span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div
+                        class="sound-wave"
+                        aria-hidden="true"
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div
+                        class="phase-status"
+                        aria-live="polite"
+                    >
+                        Preparing the question...
+                    </div>
+
+                    <div class="start-area">
+                        <button
+                            type="button"
+                            class="start-button"
+                        >
+                            Start Question
+                        </button>
+                    </div>
+
+                    <div class="retry-upload-area">
+                        <button
+                            type="button"
+                            class="retry-button"
+                        >
+                            Retry Upload
+                        </button>
+                    </div>
+
+                    {% if block.prompt_audio %}
+                        <audio
+                            class="prompt-audio"
+                            preload="auto"
+                        >
+                            <source src="{{ block.prompt_audio.url }}">
+                        </audio>
+                    {% endif %}
+                </main>
+            </section>
+        {% empty %}
+            <main class="page">
+                <p>No Speaking tasks have been added.</p>
+            </main>
+        {% endfor %}
+    </div>
+
+    <div class="processing-cover" id="processing-cover">
+        <div class="processing-box">
+            Saving your recording...
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                "use strict";
+
+                const screens = Array.from(
+                    document.querySelectorAll(
+                        ".speaking-screen"
+                    )
+                );
+
+                const currentTaskNumber =
+                    document.getElementById(
+                        "current-task-number"
+                    );
+
+                const processingCover =
+                    document.getElementById(
+                        "processing-cover"
+                    );
+
+                const csrfToken =
+                    document.querySelector(
+                        "#csrf-form input[name='csrfmiddlewaretoken']"
+                    ).value;
+
+                const attemptId =
+                    "{{ attempt.id }}";
+
+                let currentIndex = Math.max(
+                    0,
+                    Math.min(
+                        parseInt(
+                            "{{ current_block_index|default:0 }}",
+                            10
+                        ) || 0,
+                        Math.max(0, screens.length - 1)
+                    )
+                );
+
+                let activeScreen = null;
+                let activeElements = null;
+                let activeState = null;
+
+                let microphoneStream = null;
+                let mediaRecorder = null;
+                let recordedChunks = [];
+
+                let countdownInterval = null;
+                let countdownTimeout = null;
+                let recordingStartedAt = 0;
+                let actualDurationSeconds = 0;
+
+                let lastRecordedBlob = null;
+                let lastMimeType = "";
+
+                const circleRadius = 26;
+                const circleCircumference =
+                    2 * Math.PI * circleRadius;
+
+                function getScreenElements(screen) {
+                    return {
+                        header: screen.querySelector(
+                            ".response-card-header"
+                        ),
+                        microphone: screen.querySelector(
+                            ".microphone-indicator"
+                        ),
+                        timerText: screen.querySelector(
+                            ".timer-text"
+                        ),
+                        timerCircle: screen.querySelector(
+                            ".timer-circle-progress"
+                        ),
+                        status: screen.querySelector(
+                            ".phase-status"
+                        ),
+                        startArea: screen.querySelector(
+                            ".start-area"
+                        ),
+                        startButton: screen.querySelector(
+                            ".start-button"
+                        ),
+                        retryArea: screen.querySelector(
+                            ".retry-upload-area"
+                        ),
+                        retryButton: screen.querySelector(
+                            ".retry-button"
+                        ),
+                        soundWave: screen.querySelector(
+                            ".sound-wave"
+                        ),
+                        audio: screen.querySelector(
+                            ".prompt-audio"
+                        ),
+                        video: screen.querySelector(
+                            ".prompt-video"
+                        )
+                    };
+                }
+
+                function parseBoolean(value) {
+                    return value === "true";
+                }
+
+                function createState(screen) {
+                    return {
+                        blockId: parseInt(
+                            screen.dataset.blockId,
+                            10
+                        ),
+                        uploadUrl: screen.dataset.uploadUrl,
+                        responseSeconds: Math.max(
+                            1,
+                            parseInt(
+                                screen.dataset.responseSeconds,
+                                10
+                            ) || 1
+                        ),
+                        preparationSeconds: Math.max(
+                            0,
+                            parseInt(
+                                screen.dataset.preparationSeconds,
+                                10
+                            ) || 0
+                        ),
+                        playPromptOnce: parseBoolean(
+                            screen.dataset.playPromptOnce
+                        ),
+                        autoStartRecording: parseBoolean(
+                            screen.dataset.autoStartRecording
+                        ),
+                        flowStarted: false,
+                        recordingFinished: false,
+                        uploadInProgress: false,
+                        startAction: "flow"
+                    };
+                }
+
+                function setStatus(message, type) {
+                    activeElements.status.textContent = message;
+
+                    activeElements.status.classList.remove(
+                        "error",
+                        "success"
+                    );
+
+                    if (type) {
+                        activeElements.status.classList.add(type);
+                    }
+                }
+
+                function formatTime(totalSeconds) {
+                    const safeSeconds = Math.max(
+                        0,
+                        Math.ceil(totalSeconds)
+                    );
+
+                    const minutes = Math.floor(
+                        safeSeconds / 60
+                    );
+
+                    const seconds = safeSeconds % 60;
+
+                    return (
+                        String(minutes).padStart(2, "0")
+                        + ":"
+                        + String(seconds).padStart(2, "0")
+                    );
+                }
+
+                function renderTimer(remaining, total) {
+                    activeElements.timerText.textContent =
+                        formatTime(remaining);
+
+                    const safeTotal = Math.max(1, total);
+                    const ratio = Math.max(
+                        0,
+                        Math.min(
+                            1,
+                            remaining / safeTotal
+                        )
+                    );
+
+                    activeElements.timerCircle.style
+                        .strokeDashoffset = String(
+                            circleCircumference
+                            * (1 - ratio)
+                        );
+                }
+
+                function clearCountdown() {
+                    if (countdownInterval) {
+                        window.clearInterval(
+                            countdownInterval
+                        );
+                        countdownInterval = null;
+                    }
+
+                    if (countdownTimeout) {
+                        window.clearTimeout(
+                            countdownTimeout
+                        );
+                        countdownTimeout = null;
+                    }
+                }
+
+                function runCountdown(totalSeconds, onComplete) {
+                    clearCountdown();
+
+                    const durationMilliseconds =
+                        Math.max(0, totalSeconds) * 1000;
+
+                    if (durationMilliseconds <= 0) {
+                        renderTimer(0, 1);
+                        onComplete();
+                        return;
+                    }
+
+                    const endTime =
+                        Date.now() + durationMilliseconds;
+
+                    renderTimer(
+                        totalSeconds,
+                        totalSeconds
+                    );
+
+                    function update() {
+                        const millisecondsLeft =
+                            endTime - Date.now();
+
+                        const secondsLeft = Math.max(
+                            0,
+                            millisecondsLeft / 1000
+                        );
+
+                        renderTimer(
+                            secondsLeft,
+                            totalSeconds
+                        );
+
+                        if (millisecondsLeft <= 0) {
+                            clearCountdown();
+                            onComplete();
+                        }
+                    }
+
+                    countdownInterval =
+                        window.setInterval(update, 100);
+
+                    countdownTimeout =
+                        window.setTimeout(
+                            function () {
+                                clearCountdown();
+                                onComplete();
+                            },
+                            durationMilliseconds + 80
+                        );
+                }
+
+                function chooseSupportedMimeType() {
+                    if (
+                        typeof MediaRecorder
+                        === "undefined"
+                    ) {
+                        return "";
+                    }
+
+                    const candidates = [
+                        "audio/webm;codecs=opus",
+                        "audio/webm",
+                        "audio/mp4",
+                        "audio/ogg;codecs=opus",
+                        "audio/ogg"
+                    ];
+
+                    for (const candidate of candidates) {
+                        if (
+                            MediaRecorder.isTypeSupported(
+                                candidate
+                            )
+                        ) {
+                            return candidate;
+                        }
+                    }
+
+                    return "";
+                }
+
+                function extensionFromMimeType(mimeType) {
+                    const normalized =
+                        (mimeType || "").toLowerCase();
+
+                    if (normalized.includes("mp4")) {
+                        return "m4a";
+                    }
+
+                    if (normalized.includes("ogg")) {
+                        return "ogg";
+                    }
+
+                    return "webm";
+                }
+
+                async function ensureMicrophone() {
+                    if (microphoneStream) {
+                        return microphoneStream;
+                    }
+
+                    if (
+                        !navigator.mediaDevices
+                        || !navigator.mediaDevices
+                            .getUserMedia
+                    ) {
+                        throw new Error(
+                            "Microphone recording is not supported in this browser."
+                        );
+                    }
+
+                    setStatus(
+                        "Please allow microphone access."
+                    );
+
+                    microphoneStream =
+                        await navigator.mediaDevices
+                            .getUserMedia({
+                                audio: {
+                                    echoCancellation: true,
+                                    noiseSuppression: true,
+                                    autoGainControl: true
+                                },
+                                video: false
+                            });
+
+                    return microphoneStream;
+                }
+
+                function stopMicrophoneTracks() {
+                    if (!microphoneStream) {
+                        return;
+                    }
+
+                    microphoneStream
+                        .getTracks()
+                        .forEach(function (track) {
+                            track.stop();
+                        });
+
+                    microphoneStream = null;
+                }
+
+                function pauseAllPromptMedia() {
+                    screens.forEach(function (screen) {
+                        const elements =
+                            getScreenElements(screen);
+
+                        [elements.audio, elements.video]
+                            .filter(Boolean)
+                            .forEach(function (media) {
+                                try {
+                                    media.pause();
+                                } catch (error) {
+                                    console.debug(error);
+                                }
+                            });
+                    });
+                }
+
+                function promptStorageKey() {
+                    return (
+                        "speaking_"
+                        + attemptId
+                        + "_"
+                        + activeState.blockId
+                        + "_prompt_finished"
+                    );
+                }
+
+                function markPromptFinished() {
+                    if (activeState.playPromptOnce) {
+                        sessionStorage.setItem(
+                            promptStorageKey(),
+                            "1"
+                        );
+                    }
+                }
+
+                function showStartButton(label, action) {
+                    activeState.startAction = action;
+                    activeElements.startButton.textContent = label;
+                    activeElements.startButton.disabled = false;
+                    activeElements.startArea.classList.add(
+                        "visible"
+                    );
+                }
+
+                function hideStartButton() {
+                    activeElements.startArea.classList.remove(
+                        "visible"
+                    );
+                    activeElements.startButton.disabled = true;
+                }
+
+                function getPromptMedia() {
+                    return (
+                        activeElements.video
+                        || activeElements.audio
+                        || null
+                    );
+                }
+
+                async function startRecording() {
+                    if (
+                        activeState.recordingFinished
+                        || activeState.uploadInProgress
+                    ) {
+                        return;
+                    }
+
+                    hideStartButton();
+
+                    try {
+                        const stream =
+                            await ensureMicrophone();
+
+                        recordedChunks = [];
+
+                        const selectedMimeType =
+                            chooseSupportedMimeType();
+
+                        const options = selectedMimeType
+                            ? {
+                                mimeType: selectedMimeType,
+                                audioBitsPerSecond: 128000
+                            }
+                            : undefined;
+
+                        mediaRecorder = options
+                            ? new MediaRecorder(
+                                stream,
+                                options
+                            )
+                            : new MediaRecorder(stream);
+
+                        mediaRecorder.addEventListener(
+                            "dataavailable",
+                            function (event) {
+                                if (
+                                    event.data
+                                    && event.data.size > 0
+                                ) {
+                                    recordedChunks.push(
+                                        event.data
+                                    );
+                                }
+                            }
+                        );
+
+                        mediaRecorder.addEventListener(
+                            "stop",
+                            handleRecordingStopped,
+                            {once: true}
+                        );
+
+                        mediaRecorder.addEventListener(
+                            "error",
+                            function () {
+                                clearCountdown();
+                                activeElements.microphone
+                                    .classList.remove(
+                                        "active"
+                                    );
+
+                                activeState.flowStarted = false;
+
+                                setStatus(
+                                    "Recording failed. Please try again.",
+                                    "error"
+                                );
+
+                                showStartButton(
+                                    "Try Again",
+                                    "recording"
+                                );
+                            },
+                            {once: true}
+                        );
+
+                        recordingStartedAt = Date.now();
+                        mediaRecorder.start(250);
+
+                        activeElements.header.textContent =
+                            "RESPONSE TIME";
+
+                        activeElements.microphone
+                            .classList.add("active");
+
+                        activeElements.soundWave
+                            .classList.remove("visible");
+
+                        setStatus(
+                            "Recording your response..."
+                        );
+
+                        runCountdown(
+                            activeState.responseSeconds,
+                            stopRecording
+                        );
+
+                    } catch (error) {
+                        activeState.flowStarted = false;
+
+                        activeElements.microphone
+                            .classList.remove("active");
+
+                        setStatus(
+                            error.message
+                            || "Microphone access was denied.",
+                            "error"
+                        );
+
+                        showStartButton(
+                            "Enable Microphone",
+                            "recording"
+                        );
+                    }
+                }
+
+                function stopRecording() {
+                    if (
+                        !mediaRecorder
+                        || mediaRecorder.state
+                            === "inactive"
+                    ) {
+                        return;
+                    }
+
+                    clearCountdown();
+
+                    actualDurationSeconds = Math.max(
+                        0,
+                        (
+                            Date.now()
+                            - recordingStartedAt
+                        ) / 1000
+                    );
+
+                    activeElements.microphone
+                        .classList.remove("active");
+
+                    setStatus(
+                        "Processing your recording..."
+                    );
+
+                    mediaRecorder.stop();
+                }
+
+                async function handleRecordingStopped() {
+                    activeState.recordingFinished = true;
+
+                    lastMimeType =
+                        mediaRecorder.mimeType
+                        || chooseSupportedMimeType()
+                        || "audio/webm";
+
+                    lastRecordedBlob = new Blob(
+                        recordedChunks,
+                        {
+                            type: lastMimeType
+                        }
+                    );
+
+                    if (
+                        !lastRecordedBlob
+                        || lastRecordedBlob.size === 0
+                    ) {
+                        activeState.recordingFinished = false;
+                        activeState.flowStarted = false;
+
+                        setStatus(
+                            "The recording was empty. Please record again.",
+                            "error"
+                        );
+
+                        showStartButton(
+                            "Record Again",
+                            "recording"
+                        );
+
+                        return;
+                    }
+
+                    await uploadRecording(
+                        lastRecordedBlob,
+                        lastMimeType
+                    );
+                }
+
+                function findScreenIndexByBlockId(blockId) {
+                    return screens.findIndex(
+                        function (screen) {
+                            return parseInt(
+                                screen.dataset.blockId,
+                                10
+                            ) === blockId;
+                        }
+                    );
+                }
+
+                function findNextIncompleteIndex(
+                    startIndex
+                ) {
+                    for (
+                        let index = startIndex;
+                        index < screens.length;
+                        index += 1
+                    ) {
+                        if (
+                            screens[index].dataset.completed
+                            !== "true"
+                        ) {
+                            return index;
+                        }
+                    }
+
+                    for (
+                        let index = 0;
+                        index < startIndex;
+                        index += 1
+                    ) {
+                        if (
+                            screens[index].dataset.completed
+                            !== "true"
+                        ) {
+                            return index;
+                        }
+                    }
+
+                    return -1;
+                }
+
+                async function uploadRecording(
+                    audioBlob,
+                    mimeType
+                ) {
+                    if (
+                        activeState.uploadInProgress
+                        || !audioBlob
+                    ) {
+                        return;
+                    }
+
+                    activeState.uploadInProgress = true;
+                    processingCover.classList.add("visible");
+                    activeElements.retryArea.classList.remove(
+                        "visible"
+                    );
+
+                    setStatus(
+                        "Saving your response..."
+                    );
+
+                    const safeMimeType =
+                        mimeType || "audio/webm";
+
+                    const extension =
+                        extensionFromMimeType(
+                            safeMimeType
+                        );
+
+                    const fileName =
+                        "speaking_response_"
+                        + activeState.blockId
+                        + "."
+                        + extension;
+
+                    const audioFile = new File(
+                        [audioBlob],
+                        fileName,
+                        {
+                            type: safeMimeType
+                        }
+                    );
+
+                    const formData = new FormData();
+
+                    formData.append(
+                        "csrfmiddlewaretoken",
+                        csrfToken
+                    );
+
+                    formData.append(
+                        "recorded_audio",
+                        audioFile
+                    );
+
+                    formData.append(
+                        "duration_seconds",
+                        actualDurationSeconds.toFixed(2)
+                    );
+
+                    formData.append(
+                        "mime_type",
+                        safeMimeType
+                    );
+
+                    try {
+                        const response = await fetch(
+                            activeState.uploadUrl,
+                            {
+                                method: "POST",
+                                body: formData,
+                                credentials: "same-origin",
+                                headers: {
+                                    "X-CSRFToken": csrfToken,
+                                    "X-Requested-With":
+                                        "XMLHttpRequest",
+                                    "Accept":
+                                        "application/json"
+                                }
+                            }
+                        );
+
+                        const rawResponse =
+                            await response.text();
+
+                        let responseData = null;
+
+                        try {
+                            responseData = JSON.parse(
+                                rawResponse
+                            );
+                        } catch (error) {
+                            throw new Error(
+                                "The server returned an invalid response."
+                            );
+                        }
+
+                        if (
+                            !response.ok
+                            || !responseData.success
+                        ) {
+                            throw new Error(
+                                responseData.error
+                                || "The recording could not be saved."
+                            );
+                        }
+
+                        activeScreen.dataset.completed =
+                            "true";
+
+                        sessionStorage.removeItem(
+                            promptStorageKey()
+                        );
+
+                        setStatus(
+                            "Recording saved successfully.",
+                            "success"
+                        );
+
+                        processingCover.classList.remove(
+                            "visible"
+                        );
+
+                        activeState.uploadInProgress = false;
+
+                        if (
+                            responseData.finished
+                            || !responseData.next_block_id
+                        ) {
+                            stopMicrophoneTracks();
+                            window.location.assign(
+                                responseData.next_url
+                            );
+                            return;
+                        }
+
+                        let nextIndex =
+                            findScreenIndexByBlockId(
+                                parseInt(
+                                    responseData.next_block_id,
+                                    10
+                                )
+                            );
+
+                        if (nextIndex < 0) {
+                            nextIndex =
+                                findNextIncompleteIndex(
+                                    currentIndex + 1
+                                );
+                        }
+
+                        if (nextIndex < 0) {
+                            stopMicrophoneTracks();
+                            window.location.assign(
+                                responseData.next_url
+                            );
+                            return;
+                        }
+
+                        window.setTimeout(
+                            function () {
+                                activateScreen(nextIndex);
+                            },
+                            350
+                        );
+
+                    } catch (error) {
+                        activeState.uploadInProgress = false;
+                        processingCover.classList.remove(
+                            "visible"
+                        );
+
+                        setStatus(
+                            error.message
+                            || "Upload failed. Please try again.",
+                            "error"
+                        );
+
+                        activeElements.retryArea
+                            .classList.add("visible");
+
+                        console.error(
+                            "Speaking upload error:",
+                            error
+                        );
+                    }
+                }
+
+                function beginPreparationOrRecording() {
+                    activeElements.soundWave.classList.remove(
+                        "visible"
+                    );
+
+                    if (
+                        activeState.preparationSeconds > 0
+                    ) {
+                        activeElements.header.textContent =
+                            "PREPARATION TIME";
+
+                        activeElements.microphone
+                            .classList.remove("active");
+
+                        setStatus(
+                            "Prepare your response."
+                        );
+
+                        runCountdown(
+                            activeState.preparationSeconds,
+                            function () {
+                                if (
+                                    activeState
+                                        .autoStartRecording
+                                ) {
+                                    startRecording();
+                                } else {
+                                    setStatus(
+                                        "Press Start Recording when ready."
+                                    );
+
+                                    showStartButton(
+                                        "Start Recording",
+                                        "recording"
+                                    );
+                                }
+                            }
+                        );
+
+                        return;
+                    }
+
+                    if (
+                        activeState.autoStartRecording
+                    ) {
+                        startRecording();
+                    } else {
+                        activeElements.header.textContent =
+                            "RESPONSE TIME";
+
+                        setStatus(
+                            "Press Start Recording when ready."
+                        );
+
+                        showStartButton(
+                            "Start Recording",
+                            "recording"
+                        );
+                    }
+                }
+
+                async function playPrompt() {
+                    const promptMedia = getPromptMedia();
+
+                    if (!promptMedia) {
+                        markPromptFinished();
+                        beginPreparationOrRecording();
+                        return;
+                    }
+
+                    const isVideo =
+                        promptMedia.tagName === "VIDEO";
+
+                    activeElements.header.textContent =
+                        isVideo ? "WATCHING" : "LISTENING";
+
+                    activeElements.microphone
+                        .classList.remove("active");
+
+                    renderTimer(
+                        activeState.responseSeconds,
+                        activeState.responseSeconds
+                    );
+
+                    setStatus(
+                        isVideo
+                            ? "Watch carefully. The video will play only once."
+                            : "Listen carefully. The audio will play only once."
+                    );
+
+                    if (!isVideo) {
+                        activeElements.soundWave
+                            .classList.add("visible");
+                    }
+
+                    promptMedia.currentTime = 0;
+
+                    promptMedia.onended = function () {
+                        markPromptFinished();
+                        beginPreparationOrRecording();
+                    };
+
+                    promptMedia.onerror = function () {
+                        activeElements.soundWave
+                            .classList.remove("visible");
+
+                        activeState.flowStarted = false;
+
+                        setStatus(
+                            "The question media could not be loaded.",
+                            "error"
+                        );
+
+                        showStartButton(
+                            "Try Again",
+                            "flow"
+                        );
+                    };
+
+                    try {
+                        await promptMedia.play();
+                        hideStartButton();
+                    } catch (error) {
+                        activeState.flowStarted = false;
+
+                        activeElements.soundWave
+                            .classList.remove("visible");
+
+                        setStatus(
+                            "Your browser blocked automatic playback. Press Start Question.",
+                            "error"
+                        );
+
+                        showStartButton(
+                            "Start Question",
+                            "flow"
+                        );
+                    }
+                }
+
+                async function startQuestionFlow() {
+                    if (activeState.flowStarted) {
+                        return;
+                    }
+
+                    activeState.flowStarted = true;
+                    hideStartButton();
+
+                    try {
+                        await ensureMicrophone();
+
+                        const promptWasFinished =
+                            activeState.playPromptOnce
+                            && sessionStorage.getItem(
+                                promptStorageKey()
+                            ) === "1";
+
+                        if (promptWasFinished) {
+                            beginPreparationOrRecording();
+                            return;
+                        }
+
+                        await playPrompt();
+
+                    } catch (error) {
+                        activeState.flowStarted = false;
+
+                        setStatus(
+                            error.message
+                            || "Unable to start the question.",
+                            "error"
+                        );
+
+                        showStartButton(
+                            "Try Again",
+                            "flow"
+                        );
+                    }
+                }
+
+                function resetScreenInterface() {
+                    activeElements.header.textContent =
+                        "RESPONSE TIME";
+
+                    activeElements.microphone
+                        .classList.remove("active");
+
+                    activeElements.soundWave
+                        .classList.remove("visible");
+
+                    activeElements.retryArea
+                        .classList.remove("visible");
+
+                    activeElements.startArea
+                        .classList.remove("visible");
+
+                    activeElements.timerCircle.style
+                        .strokeDasharray = String(
+                            circleCircumference
+                        );
+
+                    activeElements.timerCircle.style
+                        .strokeDashoffset = "0";
+
+                    setStatus(
+                        "Preparing the question..."
+                    );
+
+                    renderTimer(
+                        activeState.responseSeconds,
+                        activeState.responseSeconds
+                    );
+
+                    activeElements.startButton.onclick =
+                        async function () {
+                            if (
+                                activeState.startAction
+                                === "recording"
+                            ) {
+                                await startRecording();
+                            } else {
+                                await startQuestionFlow();
+                            }
+                        };
+
+                    activeElements.retryButton.onclick =
+                        async function () {
+                            if (!lastRecordedBlob) {
+                                return;
+                            }
+
+                            await uploadRecording(
+                                lastRecordedBlob,
+                                lastMimeType
+                            );
+                        };
+                }
+
+                function activateScreen(index) {
+                    clearCountdown();
+                    pauseAllPromptMedia();
+
+                    currentIndex = Math.max(
+                        0,
+                        Math.min(
+                            index,
+                            screens.length - 1
+                        )
+                    );
+
+                    screens.forEach(
+                        function (screen, screenIndex) {
+                            screen.hidden =
+                                screenIndex !== currentIndex;
+                        }
+                    );
+
+                    activeScreen = screens[currentIndex];
+                    activeElements =
+                        getScreenElements(activeScreen);
+                    activeState = createState(activeScreen);
+
+                    lastRecordedBlob = null;
+                    lastMimeType = "";
+                    actualDurationSeconds = 0;
+                    mediaRecorder = null;
+                    recordedChunks = [];
+
+                    currentTaskNumber.textContent =
+                        String(currentIndex + 1);
+
+                    resetScreenInterface();
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+                    window.setTimeout(
+                        startQuestionFlow,
+                        250
+                    );
+                }
+
+                window.addEventListener(
+                    "beforeunload",
+                    function () {
+                        clearCountdown();
+                        pauseAllPromptMedia();
+                        stopMicrophoneTracks();
+                    }
+                );
+
+                if (screens.length > 0) {
+                    activateScreen(currentIndex);
+                }
+            }
+        );
+    </script>
+</body>
+</html>

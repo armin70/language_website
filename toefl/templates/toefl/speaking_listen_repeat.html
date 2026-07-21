@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ mock_test.title }} - {{ block.title }}
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #ffffff;
+            color: #202020;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .top-line {
+            height: 26px;
+            border-bottom: 1px solid #e2e2e2;
+            background: #fafafa;
+        }
+
+        .page {
+            display: flex;
+            width: min(100%, 1100px);
+            min-height: calc(100vh - 26px);
+            margin: 0 auto;
+            padding: 36px 25px 55px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title {
+            margin: 0 0 38px;
+            text-align: center;
+            font-size: 23px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .instructions {
+            max-width: 650px;
+            margin: -25px auto 30px;
+            color: #646464;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* =====================================
+           Question image
+        ===================================== */
+
+        .image-area {
+            display: flex;
+            width: 100%;
+            min-height: 260px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 36px;
+        }
+
+        .prompt-image {
+            display: block;
+            max-width: 350px;
+            max-height: 320px;
+            object-fit: contain;
+        }
+
+        .image-placeholder {
+            display: flex;
+            width: 260px;
+            height: 220px;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #c9c9c9;
+            color: #888;
+            background: #fafafa;
+        }
+
+        /* =====================================
+           Response card
+        ===================================== */
+
+        .response-card {
+            width: 320px;
+            overflow: hidden;
+            border: 1px solid #8b8b8b;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .response-card-header {
+            padding: 10px 15px;
+            background: #818181;
+            color: #ffffff;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .response-card-body {
+            display: flex;
+            min-height: 72px;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+            padding: 10px 16px;
+        }
+
+        /* =====================================
+           Microphone indicator
+        ===================================== */
+
+        .microphone-indicator {
+            position: relative;
+            display: flex;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #eeeeee;
+            color: #b5b5b5;
+        }
+
+        .microphone-indicator.active {
+            color: #ffffff;
+            background: #3196c8;
+            animation: microphone-pulse 1.2s infinite;
+        }
+
+        .microphone-indicator svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        @keyframes microphone-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(49, 150, 200, 0.35);
+            }
+
+            70% {
+                box-shadow: 0 0 0 11px rgba(49, 150, 200, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(49, 150, 200, 0);
+            }
+        }
+
+        /* =====================================
+           Circular timer
+        ===================================== */
+
+        .timer-wrapper {
+            position: relative;
+            display: flex;
+            width: 104px;
+            height: 54px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-circle {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+
+        .timer-circle-background {
+            fill: none;
+            stroke: #e1e1e1;
+            stroke-width: 5;
+        }
+
+        .timer-circle-progress {
+            fill: none;
+            stroke: #3196c8;
+            stroke-width: 5;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .timer-text {
+            position: relative;
+            z-index: 2;
+            margin-left: 22px;
+            font-size: 20px;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        /* =====================================
+           Status and controls
+        ===================================== */
+
+        .phase-status {
+            min-height: 22px;
+            margin-top: 18px;
+            color: #656565;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .phase-status.error {
+            color: #b53333;
+        }
+
+        .phase-status.success {
+            color: #23834e;
+        }
+
+        .start-area {
+            display: none;
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        .start-area.visible {
+            display: block;
+        }
+
+        .start-button,
+        .retry-button {
+            min-width: 145px;
+            padding: 11px 23px;
+            border: none;
+            border-radius: 6px;
+            background: #328bc0;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .start-button:hover,
+        .retry-button:hover {
+            background: #2876a3;
+        }
+
+        .start-button:disabled,
+        .retry-button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .retry-upload-area {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .retry-upload-area.visible {
+            display: block;
+        }
+
+        /* =====================================
+           Listening animation
+        ===================================== */
+
+        .sound-wave {
+            display: none;
+            height: 27px;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 17px;
+        }
+
+        .sound-wave.visible {
+            display: flex;
+        }
+
+        .sound-wave span {
+            display: block;
+            width: 4px;
+            height: 8px;
+            border-radius: 4px;
+            background: #3994c4;
+            animation: wave 0.8s ease-in-out infinite;
+        }
+
+        .sound-wave span:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .sound-wave span:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .sound-wave span:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .sound-wave span:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes wave {
+            0%,
+            100% {
+                height: 8px;
+            }
+
+            50% {
+                height: 27px;
+            }
+        }
+
+        /* =====================================
+           Disabled page
+        ===================================== */
+
+        .processing-cover {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.82);
+        }
+
+        .processing-cover.visible {
+            display: flex;
+        }
+
+        .processing-box {
+            padding: 18px 25px;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #333333;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        @media (max-width: 600px) {
+            .page {
+                padding-right: 18px;
+                padding-left: 18px;
+            }
+
+            .page-title {
+                margin-bottom: 28px;
+                font-size: 20px;
+            }
+
+            .prompt-image {
+                max-width: 90%;
+                max-height: 270px;
+            }
+
+            .response-card {
+                width: min(100%, 320px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="top-line"></div>
+
+<main class="page">
+
+    <h1 class="page-title">
+        {{ block.title }}
+    </h1>
+
+    {% if block.instructions %}
+        <div class="instructions">
+            {{ block.instructions }}
+        </div>
+    {% endif %}
+
+    <div class="image-area">
+
+        {% if block.prompt_image %}
+            <img
+                src="{{ block.prompt_image.url }}"
+                alt="Speaking prompt"
+                class="prompt-image"
+            >
+        {% else %}
+            <div class="image-placeholder">
+                No question image
+            </div>
+        {% endif %}
+
+    </div>
+
+    <section class="response-card">
+
+        <div
+            class="response-card-header"
+            id="response-header"
+        >
+            RESPONSE TIME
+        </div>
+
+        <div class="response-card-body">
+
+            <div
+                class="microphone-indicator"
+                id="microphone-indicator"
+                aria-hidden="true"
+            >
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 1 0-7 0v6a3.5 3.5 0 0 0 3.5 3.5Zm-1.5-9.5a1.5 1.5 0 1 1 3 0v6a1.5 1.5 0 1 1-3 0V6Zm7.5 6a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.91V20H8.5a1 1 0 1 0 0 2h7a1 1 0 1 0 0-2H13v-2.09A6 6 0 0 0 18 12Z"/>
+                </svg>
+            </div>
+
+            <div class="timer-wrapper">
+
+                <svg
+                    class="timer-circle"
+                    viewBox="0 0 64 64"
+                    aria-hidden="true"
+                >
+                    <circle
+                        class="timer-circle-background"
+                        cx="32"
+                        cy="32"
+                        r="26"
+                    ></circle>
+
+                    <circle
+                        class="timer-circle-progress"
+                        id="timer-circle-progress"
+                        cx="32"
+                        cy="32"
+                        r="26"
+                    ></circle>
+                </svg>
+
+                <span
+                    class="timer-text"
+                    id="timer-text"
+                >
+                    {{ block.response_time_display }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <div
+        class="sound-wave"
+        id="sound-wave"
+        aria-hidden="true"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div
+        class="phase-status"
+        id="phase-status"
+        aria-live="polite"
+    >
+        Preparing the question...
+    </div>
+
+    <div
+        class="start-area"
+        id="start-area"
+    >
+        <button
+            type="button"
+            class="start-button"
+            id="start-button"
+        >
+            Start Question
+        </button>
+    </div>
+
+    <div
+        class="retry-upload-area"
+        id="retry-upload-area"
+    >
+        <button
+            type="button"
+            class="retry-button"
+            id="retry-upload-button"
+        >
+            Retry Upload
+        </button>
+    </div>
+
+    {% if block.prompt_audio %}
+        <audio
+            id="prompt-audio"
+            preload="auto"
+        >
+            <source src="{{ block.prompt_audio.url }}">
+        </audio>
+    {% endif %}
+
+    <form
+        method="POST"
+        action=""
+        enctype="multipart/form-data"
+        id="speaking-upload-form"
+        hidden
+    >
+        {% csrf_token %}
+    </form>
+
+</main>
+
+<div
+    class="processing-cover"
+    id="processing-cover"
+>
+    <div class="processing-box">
+        Saving your recording...
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    "use strict";
+
+    const promptAudio = document.getElementById(
+        "prompt-audio"
+    );
+
+    const microphoneIndicator = document.getElementById(
+        "microphone-indicator"
+    );
+
+    const responseHeader = document.getElementById(
+        "response-header"
+    );
+
+    const timerText = document.getElementById(
+        "timer-text"
+    );
+
+    const timerCircle = document.getElementById(
+        "timer-circle-progress"
+    );
+
+    const statusElement = document.getElementById(
+        "phase-status"
+    );
+
+    const startArea = document.getElementById(
+        "start-area"
+    );
+
+    const startButton = document.getElementById(
+        "start-button"
+    );
+
+    const soundWave = document.getElementById(
+        "sound-wave"
+    );
+
+    const uploadForm = document.getElementById(
+        "speaking-upload-form"
+    );
+
+    const processingCover = document.getElementById(
+        "processing-cover"
+    );
+
+    const retryUploadArea = document.getElementById(
+        "retry-upload-area"
+    );
+
+    const retryUploadButton = document.getElementById(
+        "retry-upload-button"
+    );
+
+    const csrfToken = uploadForm.querySelector(
+        "[name='csrfmiddlewaretoken']"
+    ).value;
+
+    const responseSeconds = Math.max(
+        1,
+        parseInt(
+            "{{ response_time_seconds|default:8 }}",
+            10
+        ) || 8
+    );
+
+    const preparationSeconds = Math.max(
+        0,
+        parseInt(
+            "{{ preparation_time_seconds|default:0 }}",
+            10
+        ) || 0
+    );
+
+    const playPromptOnce =
+        "{{ block.play_prompt_once|yesno:'true,false' }}"
+        === "true";
+
+    const autoStartRecording =
+        "{{ block.auto_start_recording|yesno:'true,false' }}"
+        === "true";
+
+    const storagePrefix =
+        "speaking_" +
+        "{{ attempt.id }}_" +
+        "{{ block.id }}";
+
+    const promptFinishedKey =
+        storagePrefix + "_prompt_finished";
+
+    const circleRadius = 26;
+    const circleCircumference =
+        2 * Math.PI * circleRadius;
+
+    timerCircle.style.strokeDasharray =
+        String(circleCircumference);
+
+    timerCircle.style.strokeDashoffset = "0";
+
+    let microphoneStream = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+
+    let countdownInterval = null;
+    let recordingStopTimeout = null;
+
+    let recordingStartedAt = 0;
+    let actualDurationSeconds = 0;
+
+    let flowStarted = false;
+    let recordingFinished = false;
+    let uploadInProgress = false;
+
+    let lastRecordedBlob = null;
+    let lastMimeType = "";
+
+    function setStatus(message, type) {
+        statusElement.textContent = message;
+
+        statusElement.classList.remove(
+            "error",
+            "success"
+        );
+
+        if (type) {
+            statusElement.classList.add(type);
+        }
+    }
+
+    function formatTime(totalSeconds) {
+        const safeSeconds = Math.max(
+            0,
+            Math.ceil(totalSeconds)
+        );
+
+        const hours = Math.floor(
+            safeSeconds / 3600
+        );
+
+        const minutes = Math.floor(
+            (safeSeconds % 3600) / 60
+        );
+
+        const seconds = safeSeconds % 60;
+
+        return (
+            String(hours).padStart(2, "0") +
+            ":" +
+            String(minutes).padStart(2, "0") +
+            ":" +
+            String(seconds).padStart(2, "0")
+        );
+    }
+
+    function renderTimer(remaining, total) {
+        timerText.textContent = formatTime(
+            remaining
+        );
+
+        const ratio = Math.max(
+            0,
+            Math.min(
+                1,
+                remaining / total
+            )
+        );
+
+        const offset =
+            circleCircumference *
+            (1 - ratio);
+
+        timerCircle.style.strokeDashoffset =
+            String(offset);
+    }
+
+    function clearCountdown() {
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+        }
+
+        if (recordingStopTimeout) {
+            clearTimeout(recordingStopTimeout);
+            recordingStopTimeout = null;
+        }
+    }
+
+    function runCountdown(
+        totalSeconds,
+        onComplete
+    ) {
+        clearCountdown();
+
+        const totalMilliseconds =
+            totalSeconds * 1000;
+
+        const endTime =
+            Date.now() + totalMilliseconds;
+
+        renderTimer(
+            totalSeconds,
+            totalSeconds
+        );
+
+        function update() {
+            const millisecondsLeft =
+                endTime - Date.now();
+
+            const secondsLeft = Math.max(
+                0,
+                millisecondsLeft / 1000
+            );
+
+            renderTimer(
+                secondsLeft,
+                totalSeconds
+            );
+
+            if (millisecondsLeft <= 0) {
+                clearCountdown();
+                onComplete();
+            }
+        }
+
+        countdownInterval = setInterval(
+            update,
+            100
+        );
+
+        recordingStopTimeout = setTimeout(
+            function () {
+                clearCountdown();
+                onComplete();
+            },
+            totalMilliseconds + 50
+        );
+    }
+
+    function chooseSupportedMimeType() {
+        if (
+            typeof MediaRecorder === "undefined"
+        ) {
+            return "";
+        }
+
+        const candidates = [
+            "audio/webm;codecs=opus",
+            "audio/webm",
+            "audio/mp4",
+            "audio/ogg;codecs=opus",
+            "audio/ogg"
+        ];
+
+        for (const candidate of candidates) {
+            if (
+                MediaRecorder.isTypeSupported(
+                    candidate
+                )
+            ) {
+                return candidate;
+            }
+        }
+
+        return "";
+    }
+
+    function extensionFromMimeType(mimeType) {
+        const normalized =
+            (mimeType || "").toLowerCase();
+
+        if (normalized.includes("mp4")) {
+            return "m4a";
+        }
+
+        if (normalized.includes("ogg")) {
+            return "ogg";
+        }
+
+        return "webm";
+    }
+
+    async function ensureMicrophone() {
+        if (microphoneStream) {
+            return microphoneStream;
+        }
+
+        if (
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ) {
+            throw new Error(
+                "Microphone recording is not supported in this browser."
+            );
+        }
+
+        setStatus(
+            "Please allow microphone access."
+        );
+
+        microphoneStream =
+            await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                },
+                video: false
+            });
+
+        return microphoneStream;
+    }
+
+    function stopMicrophoneTracks() {
+        if (!microphoneStream) {
+            return;
+        }
+
+        microphoneStream
+            .getTracks()
+            .forEach(function (track) {
+                track.stop();
+            });
+
+        microphoneStream = null;
+    }
+
+    async function startRecording() {
+        if (recordingFinished) {
+            return;
+        }
+
+        try {
+            const stream =
+                await ensureMicrophone();
+
+            recordedChunks = [];
+
+            const selectedMimeType =
+                chooseSupportedMimeType();
+
+            const options = selectedMimeType
+                ? {
+                    mimeType: selectedMimeType,
+                    audioBitsPerSecond: 128000
+                }
+                : undefined;
+
+            mediaRecorder = options
+                ? new MediaRecorder(
+                    stream,
+                    options
+                )
+                : new MediaRecorder(stream);
+
+            mediaRecorder.addEventListener(
+                "dataavailable",
+                function (event) {
+                    if (
+                        event.data &&
+                        event.data.size > 0
+                    ) {
+                        recordedChunks.push(
+                            event.data
+                        );
+                    }
+                }
+            );
+
+            mediaRecorder.addEventListener(
+                "stop",
+                handleRecordingStopped,
+                {once: true}
+            );
+
+            mediaRecorder.addEventListener(
+                "error",
+                function () {
+                    clearCountdown();
+                    microphoneIndicator.classList.remove(
+                        "active"
+                    );
+
+                    setStatus(
+                        "Recording failed. Please try again.",
+                        "error"
+                    );
+
+                    startButton.textContent =
+                        "Try Again";
+
+                    startButton.disabled = false;
+                    startArea.classList.add(
+                        "visible"
+                    );
+                }
+            );
+
+            recordingStartedAt = Date.now();
+
+            mediaRecorder.start(250);
+
+            responseHeader.textContent =
+                "RESPONSE TIME";
+
+            microphoneIndicator.classList.add(
+                "active"
+            );
+
+            soundWave.classList.remove(
+                "visible"
+            );
+
+            setStatus(
+                "Recording your response..."
+            );
+
+            runCountdown(
+                responseSeconds,
+                stopRecording
+            );
+
+        } catch (error) {
+            flowStarted = false;
+
+            microphoneIndicator.classList.remove(
+                "active"
+            );
+
+            setStatus(
+                error.message ||
+                "Microphone access was denied.",
+                "error"
+            );
+
+            startButton.textContent =
+                "Enable Microphone";
+
+            startButton.disabled = false;
+
+            startArea.classList.add(
+                "visible"
+            );
+        }
+    }
+
+    function stopRecording() {
+        if (
+            !mediaRecorder ||
+            mediaRecorder.state === "inactive"
+        ) {
+            return;
+        }
+
+        clearCountdown();
+
+        actualDurationSeconds = Math.max(
+            0,
+            (
+                Date.now() -
+                recordingStartedAt
+            ) / 1000
+        );
+
+        microphoneIndicator.classList.remove(
+            "active"
+        );
+
+        setStatus(
+            "Processing your recording..."
+        );
+
+        mediaRecorder.stop();
+    }
+
+    async function handleRecordingStopped() {
+        recordingFinished = true;
+
+        stopMicrophoneTracks();
+
+        lastMimeType =
+            mediaRecorder.mimeType ||
+            chooseSupportedMimeType() ||
+            "audio/webm";
+
+        lastRecordedBlob = new Blob(
+            recordedChunks,
+            {
+                type: lastMimeType
+            }
+        );
+
+        if (
+            !lastRecordedBlob ||
+            lastRecordedBlob.size === 0
+        ) {
+            setStatus(
+                "The recording was empty. Please record again.",
+                "error"
+            );
+
+            recordingFinished = false;
+            flowStarted = false;
+
+            startButton.textContent =
+                "Record Again";
+
+            startButton.disabled = false;
+            startArea.classList.add(
+                "visible"
+            );
+
+            return;
+        }
+
+        await uploadRecording(
+            lastRecordedBlob,
+            lastMimeType
+        );
+    }
+
+async function uploadRecording(
+    audioBlob,
+    mimeType
+) {
+    if (uploadInProgress || !audioBlob) {
+        return;
+    }
+
+    uploadInProgress = true;
+
+    processingCover.classList.add(
+        "visible"
+    );
+
+    retryUploadArea.classList.remove(
+        "visible"
+    );
+
+    setStatus(
+        "Saving your response..."
+    );
+
+    const safeMimeType =
+        mimeType || "audio/webm";
+
+    const extension =
+        extensionFromMimeType(
+            safeMimeType
+        );
+
+    const fileName =
+        "speaking_response_" +
+        "{{ block.id }}." +
+        extension;
+
+    const audioFile = new File(
+        [audioBlob],
+        fileName,
+        {
+            type: safeMimeType
+        }
+    );
+
+    const formData = new FormData();
+
+    formData.append(
+        "csrfmiddlewaretoken",
+        csrfToken
+    );
+
+    formData.append(
+        "recorded_audio",
+        audioFile
+    );
+
+    formData.append(
+        "duration_seconds",
+        actualDurationSeconds.toFixed(2)
+    );
+
+    formData.append(
+        "mime_type",
+        safeMimeType
+    );
+
+    try {
+        const response = await fetch(
+            window.location.href,
+            {
+                method: "POST",
+                body: formData,
+                credentials: "same-origin",
+                redirect: "follow",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "X-Requested-With":
+                        "XMLHttpRequest",
+                    "Accept":
+                        "application/json"
+                }
+            }
+        );
+
+        /*
+         * A response body may only be read once.
+         * Read it as text and then parse the text.
+         */
+        const rawResponse =
+            await response.text();
+
+        let responseData = null;
+
+        try {
+            responseData =
+                JSON.parse(rawResponse);
+        } catch (jsonError) {
+            console.error(
+                "Non-JSON server response:",
+                rawResponse
+            );
+
+            if (
+                response.redirected &&
+                response.url.includes("/login")
+            ) {
+                throw new Error(
+                    "Your login session expired. " +
+                    "Please sign in again."
+                );
+            }
+
+            throw new Error(
+                "The server returned HTML instead " +
+                "of JSON. Make sure the POST part " +
+                "of speaking_block_view returns " +
+                "JsonResponse. Check the Django " +
+                "terminal for the full error."
+            );
+        }
+
+        if (
+            !response.ok ||
+            !responseData.success
+        ) {
+            throw new Error(
+                responseData.error ||
+                (
+                    "Upload failed with HTTP " +
+                    "status " +
+                    response.status +
+                    "."
+                )
+            );
+        }
+
+        if (!responseData.next_url) {
+            throw new Error(
+                "The recording was saved, but " +
+                "the server did not return the " +
+                "next page URL."
+            );
+        }
+
+        sessionStorage.removeItem(
+            promptFinishedKey
+        );
+
+        setStatus(
+            "Recording saved successfully.",
+            "success"
+        );
+
+        window.location.assign(
+            responseData.next_url
+        );
+
+    } catch (error) {
+        uploadInProgress = false;
+
+        processingCover.classList.remove(
+            "visible"
+        );
+
+        setStatus(
+            error.message ||
+            "Upload failed. Please try again.",
+            "error"
+        );
+
+        retryUploadArea.classList.add(
+            "visible"
+        );
+
+        console.error(
+            "Speaking upload error:",
+            error
+        );
+    }
+}
+
+
+    function beginPreparationOrRecording() {
+        soundWave.classList.remove(
+            "visible"
+        );
+
+        if (preparationSeconds > 0) {
+            responseHeader.textContent =
+                "PREPARATION TIME";
+
+            microphoneIndicator.classList.remove(
+                "active"
+            );
+
+            setStatus(
+                "Prepare to repeat the sentence."
+            );
+
+            runCountdown(
+                preparationSeconds,
+                function () {
+                    if (autoStartRecording) {
+                        startRecording();
+                    } else {
+                        startButton.textContent =
+                            "Start Recording";
+
+                        startButton.disabled = false;
+
+                        startArea.classList.add(
+                            "visible"
+                        );
+
+                        setStatus(
+                            "Press Start Recording when ready."
+                        );
+                    }
+                }
+            );
+
+            return;
+        }
+
+        if (autoStartRecording) {
+            startRecording();
+        } else {
+            responseHeader.textContent =
+                "RESPONSE TIME";
+
+            startButton.textContent =
+                "Start Recording";
+
+            startButton.disabled = false;
+
+            startArea.classList.add(
+                "visible"
+            );
+
+            setStatus(
+                "Press Start Recording when ready."
+            );
+        }
+    }
+
+    function markPromptFinished() {
+        if (playPromptOnce) {
+            sessionStorage.setItem(
+                promptFinishedKey,
+                "1"
+            );
+        }
+    }
+
+    async function playPrompt() {
+        if (!promptAudio) {
+            markPromptFinished();
+            beginPreparationOrRecording();
+            return;
+        }
+
+        responseHeader.textContent =
+            "LISTENING";
+
+        microphoneIndicator.classList.remove(
+            "active"
+        );
+
+        renderTimer(
+            responseSeconds,
+            responseSeconds
+        );
+
+        setStatus(
+            "Listen carefully. The audio will play only once."
+        );
+
+        soundWave.classList.add(
+            "visible"
+        );
+
+        promptAudio.currentTime = 0;
+
+        try {
+            await promptAudio.play();
+
+            startArea.classList.remove(
+                "visible"
+            );
+
+        } catch (error) {
+            flowStarted = false;
+
+            soundWave.classList.remove(
+                "visible"
+            );
+
+            setStatus(
+                "Your browser blocked automatic playback. Press Start Question.",
+                "error"
+            );
+
+            startButton.textContent =
+                "Start Question";
+
+            startButton.disabled = false;
+
+            startArea.classList.add(
+                "visible"
+            );
+        }
+    }
+
+    async function startQuestionFlow() {
+        if (flowStarted) {
+            return;
+        }
+
+        flowStarted = true;
+
+        startButton.disabled = true;
+        startArea.classList.remove(
+            "visible"
+        );
+
+        try {
+            await ensureMicrophone();
+
+            const promptWasFinished =
+                playPromptOnce &&
+                sessionStorage.getItem(
+                    promptFinishedKey
+                ) === "1";
+
+            if (promptWasFinished) {
+                beginPreparationOrRecording();
+                return;
+            }
+
+            await playPrompt();
+
+        } catch (error) {
+            flowStarted = false;
+
+            setStatus(
+                error.message ||
+                "Unable to start the question.",
+                "error"
+            );
+
+            startButton.textContent =
+                "Try Again";
+
+            startButton.disabled = false;
+
+            startArea.classList.add(
+                "visible"
+            );
+        }
+    }
+
+    if (promptAudio) {
+        promptAudio.addEventListener(
+            "ended",
+            function () {
+                markPromptFinished();
+                beginPreparationOrRecording();
+            },
+            {once: true}
+        );
+
+        promptAudio.addEventListener(
+            "error",
+            function () {
+                soundWave.classList.remove(
+                    "visible"
+                );
+
+                setStatus(
+                    "The question audio could not be loaded.",
+                    "error"
+                );
+
+                startButton.textContent =
+                    "Try Again";
+
+                startButton.disabled = false;
+
+                startArea.classList.add(
+                    "visible"
+                );
+
+                flowStarted = false;
+            }
+        );
+    }
+
+    startButton.addEventListener(
+        "click",
+        async function () {
+            if (
+                !autoStartRecording &&
+                sessionStorage.getItem(
+                    promptFinishedKey
+                ) === "1"
+            ) {
+                startArea.classList.remove(
+                    "visible"
+                );
+
+                await startRecording();
+                return;
+            }
+
+            await startQuestionFlow();
+        }
+    );
+
+    retryUploadButton.addEventListener(
+        "click",
+        async function () {
+            if (!lastRecordedBlob) {
+                return;
+            }
+
+            await uploadRecording(
+                lastRecordedBlob,
+                lastMimeType
+            );
+        }
+    );
+
+    window.addEventListener(
+        "beforeunload",
+        function () {
+            clearCountdown();
+            stopMicrophoneTracks();
+        }
+    );
+
+    renderTimer(
+        responseSeconds,
+        responseSeconds
+    );
+
+    /*
+     * Try automatic startup. If the browser blocks
+     * microphone or audio autoplay, the Start Question
+     * button will appear.
+     */
+    window.setTimeout(
+        startQuestionFlow,
+        250
+    );
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ mock_test.title }} -
+        Write for an Academic Discussion
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 12px;
+            background: #f5f5f5;
+            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button,
+        textarea {
+            font: inherit;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .discussion-layout {
+            display: grid;
+            grid-template-columns: 34% 66%;
+            gap: 12px;
+            align-items: start;
+        }
+
+        /* =====================================
+           Left prompt panel
+        ===================================== */
+
+        .prompt-panel {
+            padding: 15px 14px 13px;
+            border: 1px solid #d8d8d8;
+            border-radius: 16px;
+            background: #ffffff;
+        }
+
+        .class-introduction {
+            margin: 0 0 14px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .requirements-title {
+            margin: 0 0 7px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .requirements-list {
+            margin: 0 0 18px 18px;
+            padding-left: 15px;
+        }
+
+        .requirements-list li {
+            margin-bottom: 5px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .minimum-words {
+            margin: 0 0 18px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .professor {
+            margin-top: 10px;
+        }
+
+        .professor-identity {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .avatar {
+            display: flex;
+            width: 58px;
+            height: 58px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 50%;
+            background: #d9dde0;
+            color: #333;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .professor-name {
+            margin-top: 5px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .professor-prompt {
+            font-size: 14px;
+            line-height: 1.75;
+        }
+
+        /* =====================================
+           Right discussion side
+        ===================================== */
+
+        .response-side {
+            min-width: 0;
+        }
+
+        .student-posts {
+            margin-bottom: 14px;
+        }
+
+        .student-post {
+            display: grid;
+            grid-template-columns: 70px minmax(0, 1fr);
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding: 8px 12px;
+        }
+
+        .student-avatar-area {
+            display: flex;
+            justify-content: center;
+        }
+
+        .student-post-content {
+            padding-top: 2px;
+        }
+
+        .student-name {
+            margin-bottom: 4px;
+            color: #555;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .student-text {
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* =====================================
+           Writing editor
+        ===================================== */
+
+        .editor-wrapper {
+            overflow: hidden;
+            border: 1px solid #d6d6d6;
+            border-radius: 15px;
+            background: #ffffff;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            min-height: 39px;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 10px;
+            border-bottom: 1px solid #e2e2e2;
+            background: #f3f3f3;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .toolbar-button {
+            min-width: 48px;
+            height: 30px;
+            padding: 0 14px;
+            border: none;
+            border-radius: 9px;
+            background: #d9d9d9;
+            color: #222;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .toolbar-button:hover {
+            background: #cacaca;
+        }
+
+        .word-count {
+            color: #111;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .discussion-textarea {
+            display: block;
+            width: 100%;
+            min-height: 170px;
+            padding: 12px;
+            border: none;
+            outline: none;
+            resize: vertical;
+            background: #ffffff;
+            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .discussion-textarea::placeholder {
+            color: #9b9b9b;
+        }
+
+        .form-message {
+            min-height: 19px;
+            margin-top: 8px;
+            color: #c0392b;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .submit-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .submit-button {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 7px;
+            background: #2e86c1;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .submit-button:hover {
+            background: #2674a7;
+        }
+
+        .submit-button:disabled {
+            opacity: 0.65;
+            cursor: default;
+        }
+
+        @media (max-width: 900px) {
+            .discussion-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .student-post {
+                grid-template-columns: 55px minmax(0, 1fr);
+                padding-right: 0;
+                padding-left: 0;
+            }
+
+            .avatar {
+                width: 48px;
+                height: 48px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <div class="discussion-layout">
+
+        <!-- ==================================
+             Left side
+        =================================== -->
+
+        <section class="prompt-panel">
+
+            <p class="class-introduction">
+                Your professor is teaching a class on
+                <strong>
+                    {{ block.discussion_class_title }}
+                </strong>.
+                Write a post responding to the
+                professor's question.
+            </p>
+
+            <h2 class="requirements-title">
+                In your response you should:
+            </h2>
+
+            {% if discussion_requirements %}
+                <ul class="requirements-list">
+
+                    {% for requirement in discussion_requirements %}
+                        <li>
+                            {{ requirement }}
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            {% endif %}
+
+            <p class="minimum-words">
+                An effective response will contain at
+                least {{ minimum_words }} words.
+            </p>
+
+            <div class="professor">
+
+                <div class="professor-identity">
+
+                    <div class="avatar">
+
+                        {% if block.professor_avatar %}
+                            <img
+                                src="{{ block.professor_avatar }}"
+                                alt="{{ block.professor_name }}"
+                            >
+                        {% else %}
+                            {{ block.professor_name|slice:":1"|upper }}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="professor-name">
+                        {{ block.professor_name }}
+                    </div>
+
+                </div>
+
+                <div class="professor-prompt">
+                    {{ block.professor_prompt|linebreaksbr }}
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==================================
+             Right side
+        =================================== -->
+
+        <section class="response-side">
+
+            <div class="student-posts">
+
+                {% for post in discussion_posts %}
+
+                    <article class="student-post">
+
+                        <div class="student-avatar-area">
+
+                            <div class="avatar">
+
+                                {% if post.avatar %}
+                                    <img
+                                        src="{{ post.avatar }}"
+                                        alt="{{ post.author_name }}"
+                                    >
+                                {% else %}
+                                    {{ post.author_name|slice:":1"|upper }}
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        <div class="student-post-content">
+
+                            {% if post.author_name %}
+                                <div class="student-name">
+                                    {{ post.author_name }}
+                                </div>
+                            {% endif %}
+
+                            <div class="student-text">
+                                {{ post.text|linebreaksbr }}
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <p>
+                        No student discussion posts
+                        have been added.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+            <form
+                method="POST"
+                action=""
+                id="discussion-form"
+            >
+                {% csrf_token %}
+
+                <div class="editor-wrapper">
+
+                    <div class="editor-toolbar">
+
+                        <div class="toolbar-actions">
+
+                            <button
+                                type="button"
+                                class="toolbar-button"
+                                id="cut-button"
+                            >
+                                Cut
+                            </button>
+
+                            <button
+                                type="button"
+                                class="toolbar-button"
+                                id="paste-button"
+                            >
+                                Paste
+                            </button>
+
+                        </div>
+
+                        <div
+                            class="word-count"
+                            id="word-count"
+                        >
+                            Word Count: 0
+                        </div>
+
+                    </div>
+
+                    <textarea
+                        name="discussion_text"
+                        id="discussion-text"
+                        class="discussion-textarea"
+                        placeholder="Write your essay here..."
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                    >{{ saved_discussion_text }}</textarea>
+
+                </div>
+
+                <div
+                    class="form-message"
+                    id="form-message"
+                ></div>
+
+                <div class="submit-row">
+
+                    <button
+                        type="submit"
+                        class="submit-button"
+                        id="submit-button"
+                    >
+                        {% if next_block %}
+                            Next
+                        {% else %}
+                            Submit Writing
+                        {% endif %}
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById(
+        "discussion-form"
+    );
+
+    const textarea = document.getElementById(
+        "discussion-text"
+    );
+
+    const cutButton = document.getElementById(
+        "cut-button"
+    );
+
+    const pasteButton = document.getElementById(
+        "paste-button"
+    );
+
+    const wordCountElement =
+        document.getElementById("word-count");
+
+    const messageElement =
+        document.getElementById("form-message");
+
+    const submitButton =
+        document.getElementById("submit-button");
+
+    const draftKey =
+        "academicDiscussionDraft_" +
+        "{{ attempt.id }}_" +
+        "{{ block.id }}";
+
+    /*
+     * Restore unsaved draft after refresh.
+     */
+    const serverText = textarea.value.trim();
+
+    const savedDraft =
+        sessionStorage.getItem(draftKey);
+
+    if (!serverText && savedDraft !== null) {
+        textarea.value = savedDraft;
+    }
+
+    function countWords(text) {
+        const words = text
+            .trim()
+            .match(/\S+/g);
+
+        return words ? words.length : 0;
+    }
+
+    function updateWordCount() {
+        const count = countWords(
+            textarea.value
+        );
+
+        wordCountElement.textContent =
+            "Word Count: " + count;
+    }
+
+    function saveDraft() {
+        sessionStorage.setItem(
+            draftKey,
+            textarea.value
+        );
+    }
+
+    textarea.addEventListener(
+        "input",
+        function () {
+            updateWordCount();
+            saveDraft();
+            messageElement.textContent = "";
+        }
+    );
+
+    /*
+     * Cut selected text.
+     */
+    cutButton.addEventListener(
+        "click",
+        async function () {
+            textarea.focus();
+
+            const start =
+                textarea.selectionStart;
+
+            const end =
+                textarea.selectionEnd;
+
+            if (start === end) {
+                messageElement.textContent =
+                    "Please select text to cut.";
+
+                return;
+            }
+
+            const selectedText =
+                textarea.value.substring(
+                    start,
+                    end
+                );
+
+            try {
+                await navigator.clipboard.writeText(
+                    selectedText
+                );
+
+                textarea.value =
+                    textarea.value.substring(0, start) +
+                    textarea.value.substring(end);
+
+                textarea.setSelectionRange(
+                    start,
+                    start
+                );
+
+                updateWordCount();
+                saveDraft();
+
+                messageElement.textContent = "";
+
+            } catch (error) {
+                messageElement.textContent =
+                    "Clipboard access is blocked. " +
+                    "Please use Ctrl+X.";
+            }
+        }
+    );
+
+    /*
+     * Paste clipboard text at cursor position.
+     */
+    pasteButton.addEventListener(
+        "click",
+        async function () {
+            textarea.focus();
+
+            try {
+                const clipboardText =
+                    await navigator.clipboard.readText();
+
+                const start =
+                    textarea.selectionStart;
+
+                const end =
+                    textarea.selectionEnd;
+
+                textarea.value =
+                    textarea.value.substring(0, start) +
+                    clipboardText +
+                    textarea.value.substring(end);
+
+                const newCursorPosition =
+                    start + clipboardText.length;
+
+                textarea.setSelectionRange(
+                    newCursorPosition,
+                    newCursorPosition
+                );
+
+                updateWordCount();
+                saveDraft();
+
+                messageElement.textContent = "";
+
+            } catch (error) {
+                messageElement.textContent =
+                    "Clipboard access is blocked. " +
+                    "Please use Ctrl+V.";
+            }
+        }
+    );
+
+    form.addEventListener(
+        "submit",
+        function () {
+            submitButton.disabled = true;
+
+            sessionStorage.removeItem(
+                draftKey
+            );
+        }
+    );
+
+    updateWordCount();
+});
+</script>
+
+</body>
+
+</html>

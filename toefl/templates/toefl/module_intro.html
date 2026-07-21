@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>
+        {{ mock_test.title }} - {{ module.title }}
+    </title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: #ffffff;
+            color: #202020;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .exam-header {
+            display: flex;
+            min-height: 48px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 8px 4px 12px;
+            background: #176a8b;
+            color: #ffffff;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 31px;
+            height: 31px;
+            place-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            font-size: 17px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-button {
+            min-height: 36px;
+            padding: 4px 9px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 2px;
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .continue-button {
+            min-width: 70px;
+        }
+
+        .section-strip {
+            display: flex;
+            height: 31px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            border-bottom: 1px solid #dddddd;
+            background: #fafafa;
+            color: #555555;
+            font-size: 11px;
+        }
+
+        .page {
+            width: min(100%, 980px);
+            margin: 0 auto;
+            padding: 48px 28px 90px;
+        }
+
+        .content-card {
+            width: min(100%, 650px);
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 27px;
+            font-size: 24px;
+            line-height: 1.25;
+        }
+
+        p {
+            margin: 0 0 19px;
+            line-height: 1.55;
+        }
+
+        .module-instructions {
+            margin: 22px 0;
+            padding: 14px 17px;
+            border-left: 4px solid #176a8b;
+            background: #f5f9fb;
+            white-space: pre-line;
+        }
+
+        @media (max-width: 650px) {
+            .brand-text {
+                display: none;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+
+            .page {
+                padding: 30px 18px 70px;
+            }
+
+            h1 {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="exam-header">
+        <div class="brand">
+            <div class="brand-mark">✓</div>
+            <div class="brand-text">
+                {{ mock_test.title }}<br>
+                TOEFL Test
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button
+                type="button"
+                class="header-button"
+                id="exit-button"
+            >
+                Exit
+            </button>
+
+            <button
+                type="button"
+                class="header-button"
+                id="fullscreen-button"
+            >
+                Fullscreen
+            </button>
+
+            <form method="post">
+                {% csrf_token %}
+                <button
+                    type="submit"
+                    class="header-button continue-button"
+                >
+                    Continue →
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <div class="section-strip">
+        <span>{{ section_display_name }}</span>
+        <span>◷ Hide Time</span>
+    </div>
+
+    <main class="page">
+        <section class="content-card">
+            <h1>{{ module.title }}</h1>
+
+            <p>
+                The clock will show you how much time you have to complete
+                {{ module.title }}.
+            </p>
+
+            {% if module.instructions %}
+                <div class="module-instructions">
+                    {{ module.instructions }}
+                </div>
+            {% endif %}
+
+            <p>
+                You can use <strong>Next</strong> and
+                <strong>Back</strong> to move to the next question or return
+                to previous questions within the same module.
+            </p>
+
+            <p>
+                You <strong>will not</strong> be able to return to
+                {{ module.title }} after you begin the next module or section.
+            </p>
+
+            <p>
+                Click <strong>Continue</strong> when you are ready. The module
+                timer begins only after you continue from this screen.
+            </p>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("exit-button").addEventListener(
+            "click",
+            function () {
+                const shouldExit = window.confirm(
+                    "Exit this test screen?"
+                );
+
+                if (shouldExit) {
+                    window.history.back();
+                }
+            }
+        );
+
+        document.getElementById("fullscreen-button").addEventListener(
+            "click",
+            async function () {
+                try {
+                    if (!document.fullscreenElement) {
+                        await document.documentElement.requestFullscreen();
+                    } else {
+                        await document.exitFullscreen();
+                    }
+                } catch (error) {
+                    console.error("Fullscreen request failed.", error);
+                }
+            }
+        );
+    </script>
+</body>
+</html>

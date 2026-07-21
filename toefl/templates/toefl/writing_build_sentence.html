@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ mock_test.title }} - {{ block.title }}
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 28px;
+            background: #f2f5f8;
+            color: #17212b;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .test-card {
+            width: min(100%, 1050px);
+            min-height: 680px;
+            margin: 0 auto;
+            padding: 42px 70px 32px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(24, 48, 72, 0.08);
+        }
+
+        .question-title {
+            margin: 0;
+            text-align: center;
+            font-size: 25px;
+            font-weight: 700;
+            color: #1b2733;
+        }
+
+        .instructions {
+            max-width: 700px;
+            margin: 12px auto 0;
+            text-align: center;
+            color: #6d7985;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .conversation {
+            width: min(100%, 760px);
+            margin: 62px auto 0;
+        }
+
+        .speaker-row {
+            display: grid;
+            grid-template-columns: 64px minmax(0, 1fr);
+            column-gap: 18px;
+            align-items: flex-start;
+            margin-bottom: 34px;
+        }
+
+        .avatar {
+            display: flex;
+            width: 62px;
+            height: 62px;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #3c9dd3;
+            border-radius: 50%;
+            background: #eef8fe;
+            color: #2379aa;
+            font-size: 21px;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .speaker-content {
+            min-width: 0;
+            padding-top: 6px;
+        }
+
+        .speaker-name {
+            margin-bottom: 7px;
+            color: #65717d;
+            font-size: 14px;
+        }
+
+        .speaker-text {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           Answer sentence
+        ========================================= */
+
+        .answer-line {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 14px 7px;
+            width: 100%;
+            min-height: 55px;
+            padding-top: 2px;
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        /*
+        مهم:
+        از pre-wrap استفاده نکن؛ چون فاصله‌ها و Enterهای Admin
+        را به خط‌های بزرگ تبدیل می‌کند.
+        */
+        .fixed-text {
+            display: inline;
+            margin: 0 1px;
+            white-space: normal;
+        }
+
+        .answer-slot {
+            position: relative;
+            display: inline-flex;
+
+            /* عرض جای خالی وقتی هنوز خالی است */
+            width: 125px;
+            min-width: 125px;
+            min-height: 28px;
+
+            align-items: flex-end;
+            justify-content: center;
+
+            padding: 0 2px 3px;
+
+            border: none;
+            border-bottom: 2px solid #aeb3b7;
+
+            background: transparent;
+            vertical-align: baseline;
+
+            transition:
+                border-color 0.15s,
+                background-color 0.15s;
+        }
+
+        .answer-slot::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: -2px;
+            left: 0;
+            height: 2px;
+            background: transparent;
+        }
+
+        .answer-slot.drag-over {
+            border-bottom-color: #2d93c8;
+            background: #eef8fd;
+        }
+
+        .answer-slot.filled {
+            width: auto;
+            min-width: 0;
+            padding: 0;
+
+            border-bottom: none;
+        }
+
+        .slot-word {
+            display: inline-flex;
+            width: 100%;
+            min-height: 36px;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 13px;
+            border: 1px solid #58a9d8;
+            border-radius: 5px;
+            background: #eaf6fd;
+            color: #153e57;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.25;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .slot-word:active {
+            cursor: grabbing;
+        }
+
+        .slot-word.dragging {
+            opacity: 0.4;
+        }
+
+        /* =========================================
+           Word bank
+        ========================================= */
+
+        .word-bank-wrapper {
+            width: min(100%, 760px);
+            margin: 54px auto 0;
+            padding-top: 25px;
+            border-top: 1px solid #dfe4e8;
+        }
+
+        .word-bank-title {
+            margin-bottom: 15px;
+            text-align: center;
+            color: #7d8791;
+            font-size: 13px;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px 13px;
+            min-height: 58px;
+            padding: 8px;
+            border: 2px dashed transparent;
+            border-radius: 8px;
+            transition:
+                border-color 0.15s,
+                background-color 0.15s;
+        }
+
+        .word-bank.drag-over {
+            border-color: #75b8dc;
+            background: #f1f9fd;
+        }
+
+        .word-chip {
+            padding: 8px 11px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            background: transparent;
+            color: #16212b;
+            font-size: 16px;
+            cursor: grab;
+            transition:
+                border-color 0.15s,
+                background-color 0.15s,
+                opacity 0.15s;
+            user-select: none;
+        }
+
+        .word-chip:hover {
+            border-color: #85bede;
+            background: #f0f8fd;
+        }
+
+        .word-chip:active {
+            cursor: grabbing;
+        }
+
+        .word-chip.dragging {
+            opacity: 0.4;
+        }
+
+        .word-chip.used {
+            opacity: 0.22;
+            pointer-events: none;
+        }
+
+        .error-message {
+            min-height: 23px;
+            margin: 18px 0 0;
+            text-align: center;
+            color: #c0392b;
+            font-size: 14px;
+        }
+
+        /* =========================================
+           Bottom controls
+        ========================================= */
+
+        .controls {
+            display: flex;
+            width: min(100%, 760px);
+            justify-content: space-between;
+            align-items: center;
+            margin: 38px auto 0;
+        }
+
+        .clear-button {
+            padding: 10px 21px;
+            border: 1px solid #b8c2cb;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #4e5a65;
+            cursor: pointer;
+        }
+
+        .clear-button:hover {
+            background: #f5f7f9;
+        }
+
+        .submit-button {
+            padding: 13px 31px;
+            border: none;
+            border-radius: 6px;
+            background: #278ec7;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background: #207cad;
+        }
+
+        .drag-help {
+            margin: 14px 0 0;
+            text-align: center;
+            color: #8a949d;
+            font-size: 12px;
+        }
+
+        @media (max-width: 750px) {
+            body {
+                padding: 0;
+            }
+
+            .test-card {
+                min-height: 100vh;
+                padding: 30px 20px;
+                border-radius: 0;
+            }
+
+            .conversation {
+                margin-top: 42px;
+            }
+
+            .speaker-row {
+                grid-template-columns: 52px minmax(0, 1fr);
+                column-gap: 13px;
+            }
+
+            .avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+
+            .answer-slot {
+                width: 105px;
+                min-width: 105px;
+            }
+
+            .answer-slot.filled {
+                min-width: 105px;
+            }
+
+            .word-chip {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="test-card">
+
+        <h1 class="question-title">
+            {{ block.title }}
+        </h1>
+
+        {% if block.instructions %}
+        <div class="instructions">
+            {{ block.instructions }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="" id="writing-form">
+            {% csrf_token %}
+
+            <input type="hidden" name="selected_words" id="selected-words" value="{{ saved_word_ids_csv }}">
+
+            <div class="conversation">
+
+                <!-- Speaker 1 -->
+                <div class="speaker-row">
+
+                    <div class="avatar">
+                        {% if block.speaker_one_name %}
+                        {{ block.speaker_one_name|slice:":1"|upper }}
+                        {% else %}
+                        A
+                        {% endif %}
+                    </div>
+
+                    <div class="speaker-content">
+
+                        {% if block.speaker_one_name %}
+                        <div class="speaker-name">
+                            {{ block.speaker_one_name }}
+                        </div>
+                        {% endif %}
+
+                        <div class="speaker-text">
+                            {{ block.speaker_one_text }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Speaker 2 -->
+                <div class="speaker-row">
+
+                    <div class="avatar">
+                        {% if block.speaker_two_name %}
+                        {{ block.speaker_two_name|slice:":1"|upper }}
+                        {% else %}
+                        B
+                        {% endif %}
+                    </div>
+
+                    <div class="speaker-content">
+
+                        {% if block.speaker_two_name %}
+                        <div class="speaker-name">
+                            {{ block.speaker_two_name }}
+                        </div>
+                        {% endif %}
+
+                        <div class="answer-line" id="answer-line">
+                            {% for part in answer_parts %}
+
+                            {% if part.type == "text" %}
+
+                            <span class="fixed-text">{{ part.content }}</span>
+
+                            {% else %}
+
+                            <div class="answer-slot" data-slot-index="{{ part.index }}" role="button" tabindex="0"
+                                aria-label="Answer blank {{ part.index|add:1 }}"></div>
+
+                            {% endif %}
+
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="word-bank-wrapper">
+
+                <div class="word-bank-title">
+                    Drag the words into the blanks
+                </div>
+
+                <div class="word-bank" id="word-bank">
+                    {% for word in words %}
+
+                    <button type="button" class="word-chip" draggable="true" data-word-id="{{ word.id }}">
+                        {{ word.text }}
+                    </button>
+
+                    {% empty %}
+
+                    <p>No words have been added.</p>
+
+                    {% endfor %}
+                </div>
+
+                <div class="drag-help">
+                    You can also click a word to place it in the next empty blank.
+                </div>
+
+            </div>
+
+            <div class="error-message" id="error-message"></div>
+
+            <div class="controls">
+
+                <button type="button" class="clear-button" id="clear-button">
+                    Clear
+                </button>
+
+                <button type="submit" class="submit-button">
+                    {% if next_block %}
+                    Next
+                    {% else %}
+                    Submit Writing
+                    {% endif %}
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("writing-form");
+            const hiddenInput = document.getElementById("selected-words");
+            const wordBank = document.getElementById("word-bank");
+            const errorMessage = document.getElementById("error-message");
+            const clearButton = document.getElementById("clear-button");
+
+            const slots = Array.from(
+                document.querySelectorAll(".answer-slot")
+            );
+
+            const bankButtons = Array.from(
+                document.querySelectorAll(".word-chip")
+            );
+
+            /*
+            Store information about every available word.
+            */
+            const words = new Map();
+
+            bankButtons.forEach(function (button) {
+                words.set(
+                    button.dataset.wordId,
+                    {
+                        id: button.dataset.wordId,
+                        text: button.textContent.trim(),
+                        button: button
+                    }
+                );
+            });
+
+            /*
+            Each array position represents one blank.
+            Example:
+            ["12", "14", null, "19"]
+            */
+            let selectedWords = new Array(slots.length).fill(null);
+
+            /*
+            Drag information:
+            sourceType is either "bank" or "slot".
+            */
+            let dragState = {
+                wordId: null,
+                sourceType: null,
+                sourceIndex: null
+            };
+
+            /*
+            Restore a previously saved answer.
+            */
+            const savedWordIds = hiddenInput.value
+                .split(",")
+                .map(function (value) {
+                    return value.trim();
+                })
+                .filter(Boolean);
+
+            savedWordIds
+                .slice(0, slots.length)
+                .forEach(function (wordId, index) {
+                    if (words.has(wordId)) {
+                        selectedWords[index] = wordId;
+                    }
+                });
+
+            function resetDragState() {
+                dragState = {
+                    wordId: null,
+                    sourceType: null,
+                    sourceIndex: null
+                };
+
+                document
+                    .querySelectorAll(".drag-over")
+                    .forEach(function (element) {
+                        element.classList.remove("drag-over");
+                    });
+
+                document
+                    .querySelectorAll(".dragging")
+                    .forEach(function (element) {
+                        element.classList.remove("dragging");
+                    });
+            }
+
+            function startDragging(
+                event,
+                wordId,
+                sourceType,
+                sourceIndex
+            ) {
+                dragState.wordId = String(wordId);
+                dragState.sourceType = sourceType;
+                dragState.sourceIndex = sourceIndex;
+
+                event.currentTarget.classList.add("dragging");
+
+                event.dataTransfer.effectAllowed = "move";
+
+                event.dataTransfer.setData(
+                    "text/plain",
+                    String(wordId)
+                );
+            }
+
+            function render() {
+                const usedIds = new Set(
+                    selectedWords.filter(Boolean)
+                );
+
+                /*
+                Render all answer slots.
+                */
+                slots.forEach(function (slot, index) {
+                    const wordId = selectedWords[index];
+
+                    slot.innerHTML = "";
+                    slot.classList.toggle(
+                        "filled",
+                        Boolean(wordId)
+                    );
+
+                    if (!wordId || !words.has(wordId)) {
+                        return;
+                    }
+
+                    const wordData = words.get(wordId);
+
+                    const wordElement = document.createElement("div");
+
+                    wordElement.className = "slot-word";
+                    wordElement.draggable = true;
+                    wordElement.dataset.wordId = wordId;
+                    wordElement.textContent = wordData.text;
+
+                    wordElement.addEventListener(
+                        "dragstart",
+                        function (event) {
+                            startDragging(
+                                event,
+                                wordId,
+                                "slot",
+                                index
+                            );
+                        }
+                    );
+
+                    wordElement.addEventListener(
+                        "dragend",
+                        resetDragState
+                    );
+
+                    /*
+                    Click a filled slot to remove its word.
+                    This also works as a mobile fallback.
+                    */
+                    wordElement.addEventListener(
+                        "click",
+                        function () {
+                            selectedWords[index] = null;
+                            errorMessage.textContent = "";
+                            render();
+                        }
+                    );
+
+                    slot.appendChild(wordElement);
+                });
+
+                /*
+                Gray out words already used in a blank.
+                */
+                bankButtons.forEach(function (button) {
+                    const isUsed = usedIds.has(
+                        button.dataset.wordId
+                    );
+
+                    button.classList.toggle(
+                        "used",
+                        isUsed
+                    );
+
+                    button.draggable = !isUsed;
+                });
+
+                /*
+                The current Django view expects comma-separated IDs.
+                */
+                hiddenInput.value = selectedWords
+                    .filter(Boolean)
+                    .join(",");
+            }
+
+            /*
+            Drag from the word bank.
+            */
+            bankButtons.forEach(function (button) {
+                button.addEventListener(
+                    "dragstart",
+                    function (event) {
+                        if (
+                            button.classList.contains("used")
+                        ) {
+                            event.preventDefault();
+                            return;
+                        }
+
+                        startDragging(
+                            event,
+                            button.dataset.wordId,
+                            "bank",
+                            null
+                        );
+                    }
+                );
+
+                button.addEventListener(
+                    "dragend",
+                    resetDragState
+                );
+
+                /*
+                Click fallback:
+                place word into the first empty blank.
+                */
+                button.addEventListener(
+                    "click",
+                    function () {
+                        if (
+                            button.classList.contains("used")
+                        ) {
+                            return;
+                        }
+
+                        const firstEmptyIndex =
+                            selectedWords.findIndex(
+                                function (wordId) {
+                                    return wordId === null;
+                                }
+                            );
+
+                        if (firstEmptyIndex === -1) {
+                            errorMessage.textContent =
+                                "All blanks are already filled.";
+
+                            return;
+                        }
+
+                        selectedWords[firstEmptyIndex] =
+                            button.dataset.wordId;
+
+                        errorMessage.textContent = "";
+
+                        render();
+                    }
+                );
+            });
+
+            /*
+            Drop into an answer slot.
+            */
+            slots.forEach(function (slot, targetIndex) {
+                slot.addEventListener(
+                    "dragover",
+                    function (event) {
+                        event.preventDefault();
+
+                        event.dataTransfer.dropEffect = "move";
+
+                        slot.classList.add("drag-over");
+                    }
+                );
+
+                slot.addEventListener(
+                    "dragleave",
+                    function () {
+                        slot.classList.remove("drag-over");
+                    }
+                );
+
+                slot.addEventListener(
+                    "drop",
+                    function (event) {
+                        event.preventDefault();
+
+                        slot.classList.remove("drag-over");
+
+                        if (!dragState.wordId) {
+                            return;
+                        }
+
+                        /*
+                        Word is coming from the word bank.
+                        If the target slot already contains a word,
+                        that old word automatically returns to the bank.
+                        */
+                        if (dragState.sourceType === "bank") {
+                            selectedWords[targetIndex] =
+                                dragState.wordId;
+                        }
+
+                        /*
+                        Word is moving from one answer slot
+                        to another. Swap both slot values.
+                        */
+                        if (dragState.sourceType === "slot") {
+                            const sourceIndex =
+                                dragState.sourceIndex;
+
+                            if (sourceIndex === targetIndex) {
+                                resetDragState();
+                                return;
+                            }
+
+                            const targetWord =
+                                selectedWords[targetIndex];
+
+                            selectedWords[targetIndex] =
+                                selectedWords[sourceIndex];
+
+                            selectedWords[sourceIndex] =
+                                targetWord;
+                        }
+
+                        errorMessage.textContent = "";
+
+                        resetDragState();
+                        render();
+                    }
+                );
+            });
+
+            /*
+            Drag a selected answer back to the word bank.
+            */
+            wordBank.addEventListener(
+                "dragover",
+                function (event) {
+                    if (dragState.sourceType !== "slot") {
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    event.dataTransfer.dropEffect = "move";
+                    wordBank.classList.add("drag-over");
+                }
+            );
+
+            wordBank.addEventListener(
+                "dragleave",
+                function (event) {
+                    if (
+                        !wordBank.contains(event.relatedTarget)
+                    ) {
+                        wordBank.classList.remove("drag-over");
+                    }
+                }
+            );
+
+            wordBank.addEventListener(
+                "drop",
+                function (event) {
+                    event.preventDefault();
+
+                    wordBank.classList.remove("drag-over");
+
+                    if (
+                        dragState.sourceType === "slot" &&
+                        dragState.sourceIndex !== null
+                    ) {
+                        selectedWords[
+                            dragState.sourceIndex
+                        ] = null;
+                    }
+
+                    errorMessage.textContent = "";
+
+                    resetDragState();
+                    render();
+                }
+            );
+
+            clearButton.addEventListener(
+                "click",
+                function () {
+                    selectedWords = new Array(
+                        slots.length
+                    ).fill(null);
+
+                    errorMessage.textContent = "";
+
+                    render();
+                }
+            );
+
+            form.addEventListener(
+                "submit",
+                function (event) {
+                    const completedCount =
+                        selectedWords.filter(Boolean).length;
+
+                    if (completedCount !== slots.length) {
+                        event.preventDefault();
+
+                        errorMessage.textContent =
+                            "Please complete all blanks before continuing.";
+
+                        return;
+                    }
+
+                    hiddenInput.value = selectedWords.join(",");
+                }
+            );
+
+            render();
+        });
+    </script>
+
+</body>
+
+</html>

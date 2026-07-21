@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ mock_test.title }} - Write an Email</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 12px;
+            background: #f5f5f5;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #111;
+        }
+
+        button,
+        textarea {
+            font: inherit;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 34% 66%;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            border-radius: 16px;
+            padding: 14px 14px 12px;
+        }
+
+        /* =========================
+           LEFT PANEL
+        ========================= */
+
+        .prompt-text {
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0 0 12px 0;
+        }
+
+        .prompt-heading {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 8px 0 10px;
+        }
+
+        .prompt-list {
+            margin: 0 0 18px 18px;
+            padding-left: 14px;
+        }
+
+        .prompt-list li {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 4px;
+        }
+
+        .prompt-footer {
+            font-size: 14px;
+            line-height: 1.7;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           RIGHT PANEL
+        ========================= */
+
+        .response-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+        }
+
+        .response-meta {
+            margin-bottom: 12px;
+        }
+
+        .response-meta-row {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 2px;
+        }
+
+        .response-meta-label {
+            font-weight: 700;
+        }
+
+        .editor-wrapper {
+            border: 1px solid #d7d7d7;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 38px;
+            padding: 6px 10px;
+            background: #f7f7f7;
+            border-bottom: 1px solid #e2e2e2;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tool-btn {
+            min-width: 46px;
+            height: 30px;
+            padding: 0 14px;
+            border: none;
+            border-radius: 9px;
+            background: #d9d9d9;
+            color: #222;
+            cursor: pointer;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .tool-btn:hover {
+            background: #cfcfcf;
+        }
+
+        .word-count {
+            font-size: 12px;
+            color: #111;
+            white-space: nowrap;
+        }
+
+        .email-textarea {
+            display: block;
+            width: 100%;
+            min-height: 170px;
+            padding: 12px 12px;
+            border: none;
+            outline: none;
+            resize: vertical;
+            background: #fff;
+            color: #111;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .email-textarea::placeholder {
+            color: #9a9a9a;
+        }
+
+        .form-message {
+            min-height: 18px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #c0392b;
+        }
+
+        .submit-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .submit-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #2e86c1;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .submit-btn:hover {
+            background: #2674a7;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <div class="layout">
+
+            <!-- LEFT PANEL -->
+            <div class="panel">
+                {% if block.email_scenario %}
+                <p class="prompt-text">
+                    {{ block.email_scenario|linebreaksbr }}
+                </p>
+                {% endif %}
+
+                <div class="prompt-heading">
+                    Write an email to {{ block.email_recipient }}. In your email, do the following.
+                </div>
+
+                {% if email_requirements %}
+                <ul class="prompt-list">
+                    {% for requirement in email_requirements %}
+                    <li>{{ requirement }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <div class="prompt-footer">
+                    Write as much as you can and complete the sentences.
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL -->
+            <div class="panel">
+                <div class="response-title">Your response:</div>
+
+                <form method="POST" action="" id="email-form">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="is_timeout" id="is-timeout" value="0">
+
+                    <div class="response-meta">
+                        <div class="response-meta-row">
+                            <span class="response-meta-label">To:</span>
+                            {{ block.email_recipient }}
+                        </div>
+
+                        <div class="response-meta-row">
+                            <span class="response-meta-label">Subject:</span>
+                            {{ block.email_subject }}
+                        </div>
+                    </div>
+
+                    <div class="editor-wrapper">
+                        <div class="editor-toolbar">
+                            <div class="toolbar-left">
+                                <button type="button" class="tool-btn" id="cut-btn">Cut</button>
+                                <button type="button" class="tool-btn" id="paste-btn">Paste</button>
+                            </div>
+
+                            <div class="word-count" id="word-count">
+                                Word Count: 0
+                            </div>
+                        </div>
+
+                        <textarea
+                            name="email_text"
+                            id="email-text"
+                            class="email-textarea"
+                            placeholder="Write your email here..."
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                        >{{ saved_email_text }}</textarea>
+                    </div>
+
+                    <div class="form-message" id="form-message"></div>
+
+                    <div class="submit-row">
+                        <button type="submit" class="submit-btn" id="submit-btn">
+                            {% if next_block %}
+                                Next
+                            {% else %}
+                                Submit Writing
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("email-form");
+            const textarea = document.getElementById("email-text");
+            const cutBtn = document.getElementById("cut-btn");
+            const pasteBtn = document.getElementById("paste-btn");
+            const wordCountEl = document.getElementById("word-count");
+            const formMessage = document.getElementById("form-message");
+            const submitBtn = document.getElementById("submit-btn");
+
+            const draftKey = "writingEmailDraft_{{ attempt.id }}_{{ block.id }}";
+
+            // -------------------------
+            // Restore saved draft
+            // -------------------------
+            const localDraft = sessionStorage.getItem(draftKey);
+            const serverText = textarea.value.trim();
+
+            if (!serverText && localDraft !== null) {
+                textarea.value = localDraft;
+            }
+
+            // -------------------------
+            // Word count
+            // -------------------------
+            function countWords(text) {
+                const matches = text.trim().match(/\b[\w’'-]+\b/g);
+                return matches ? matches.length : 0;
+            }
+
+            function updateWordCount() {
+                const count = countWords(textarea.value);
+                wordCountEl.textContent = "Word Count: " + count;
+            }
+
+            function saveDraft() {
+                sessionStorage.setItem(draftKey, textarea.value);
+            }
+
+            textarea.addEventListener("input", function () {
+                updateWordCount();
+                saveDraft();
+                formMessage.textContent = "";
+            });
+
+            // -------------------------
+            // CUT
+            // -------------------------
+            async function handleCut() {
+                textarea.focus();
+
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+
+                if (start === end) {
+                    formMessage.textContent = "Please select text to cut.";
+                    return;
+                }
+
+                const selectedText = textarea.value.substring(start, end);
+
+                try {
+                    await navigator.clipboard.writeText(selectedText);
+
+                    const before = textarea.value.substring(0, start);
+                    const after = textarea.value.substring(end);
+
+                    textarea.value = before + after;
+                    textarea.setSelectionRange(start, start);
+
+                    updateWordCount();
+                    saveDraft();
+                    formMessage.textContent = "";
+                } catch (error) {
+                    formMessage.textContent = "Clipboard access is blocked. Please use Ctrl+X.";
+                }
+            }
+
+            // -------------------------
+            // PASTE
+            // -------------------------
+            async function handlePaste() {
+                textarea.focus();
+
+                try {
+                    const pastedText = await navigator.clipboard.readText();
+
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+
+                    const before = textarea.value.substring(0, start);
+                    const after = textarea.value.substring(end);
+
+                    textarea.value = before + pastedText + after;
+
+                    const newPos = start + pastedText.length;
+                    textarea.setSelectionRange(newPos, newPos);
+
+                    updateWordCount();
+                    saveDraft();
+                    formMessage.textContent = "";
+                } catch (error) {
+                    formMessage.textContent = "Clipboard access is blocked. Please use Ctrl+V.";
+                }
+            }
+
+            cutBtn.addEventListener("click", handleCut);
+            pasteBtn.addEventListener("click", handlePaste);
+
+            // -------------------------
+            // Submit
+            // -------------------------
+            form.addEventListener("submit", function () {
+                saveDraft();
+                submitBtn.disabled = true;
+                sessionStorage.removeItem(draftKey);
+            });
+
+            updateWordCount();
+        });
+    </script>
+
+</body>
+
+</html>

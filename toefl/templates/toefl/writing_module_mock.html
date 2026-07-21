@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ mock_test.title }} - {{ module.title }}
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #222222;
+        }
+
+        button,
+        textarea {
+            font: inherit;
+        }
+
+        .mock-header {
+            display: flex;
+            min-height: 58px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 8px 14px;
+            background: #0b7fa7;
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.14);
+        }
+
+        .brand-area {
+            min-width: 0;
+        }
+
+        .test-title,
+        .module-title {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .test-title {
+            font-size: 15px;
+        }
+
+        .module-title {
+            margin-top: 3px;
+            color: rgba(255, 255, 255, 0.82);
+            font-size: 12px;
+        }
+
+        .header-actions {
+            display: flex;
+            flex: 0 0 auto;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .header-button {
+            min-width: 72px;
+            padding: 9px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .header-button:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .header-button:disabled {
+            opacity: 0.42;
+            cursor: default;
+        }
+
+        .next-button {
+            background: #ffffff;
+            color: #087ca8;
+        }
+
+        .next-button:hover:not(:disabled) {
+            background: #f1f8fb;
+        }
+
+        .info-bar {
+            display: flex;
+            min-height: 32px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 6px 14px;
+            border-bottom: 1px solid #dedede;
+            background: #f7f7f7;
+            color: #535353;
+            font-size: 12px;
+        }
+
+        .info-side {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .divider {
+            color: #aaaaaa;
+        }
+
+        #module-timer {
+            min-width: 48px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .text-button {
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: #286b93;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .writing-main {
+            width: min(100%, 1120px);
+            margin: 0 auto;
+            padding: 36px 24px 80px;
+        }
+
+        .writing-screen[hidden] {
+            display: none;
+        }
+
+        .task-card {
+            width: min(100%, 920px);
+            margin: 0 auto;
+        }
+
+        .task-title {
+            margin: 0 0 12px;
+            text-align: center;
+            font-size: 23px;
+        }
+
+        .task-instructions {
+            margin: 0 auto 28px;
+            color: #555555;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .panel {
+            margin: 22px 0;
+            padding: 22px;
+            border: 1px solid #dddddd;
+            background: #ffffff;
+        }
+
+        .speaker {
+            margin: 12px 0;
+            padding: 14px 16px;
+            border-left: 4px solid #0b7fa7;
+            background: #f5f9fb;
+            line-height: 1.55;
+        }
+
+        .speaker-name {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .sentence-answer {
+            display: flex;
+            min-height: 70px;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 7px;
+            margin: 22px 0;
+            padding: 18px;
+            border: 1px solid #d6d6d6;
+            background: #fafafa;
+            line-height: 2.1;
+        }
+
+        .sentence-text {
+            white-space: pre-wrap;
+        }
+
+        .sentence-blank {
+            min-width: 105px;
+            min-height: 36px;
+            padding: 6px 10px;
+            border: 1px dashed #999999;
+            background: #ffffff;
+            color: #222222;
+            cursor: pointer;
+        }
+
+        .sentence-blank.filled {
+            border-style: solid;
+            border-color: #0b7fa7;
+            background: #eaf6fa;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .word-button {
+            padding: 9px 13px;
+            border: 1px solid #9d9d9d;
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        .word-button:hover:not(:disabled) {
+            border-color: #0b7fa7;
+            background: #f0f9fc;
+        }
+
+        .word-button:disabled {
+            opacity: 0.38;
+            cursor: default;
+        }
+
+        .email-meta {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 8px 14px;
+            margin: 18px 0;
+            padding: 16px;
+            background: #f6f6f6;
+        }
+
+        .meta-label {
+            font-weight: 700;
+        }
+
+        .requirements {
+            margin: 18px 0;
+            padding: 16px 20px;
+            border-left: 4px solid #0b7fa7;
+            background: #f5f9fb;
+        }
+
+        .requirements ul {
+            margin: 8px 0 0;
+            padding-left: 22px;
+        }
+
+        .writing-textarea {
+            width: 100%;
+            min-height: 300px;
+            resize: vertical;
+            padding: 16px;
+            border: 1px solid #bcbcbc;
+            outline: none;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .writing-textarea:focus {
+            border-color: #0b7fa7;
+            box-shadow: 0 0 0 2px rgba(11, 127, 167, 0.12);
+        }
+
+        .word-count-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+            color: #666666;
+            font-size: 13px;
+        }
+
+        .discussion-prompt {
+            padding: 18px;
+            border: 1px solid #dddddd;
+            background: #fafafa;
+            line-height: 1.65;
+        }
+
+        .discussion-post {
+            margin: 14px 0;
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+            background: #ffffff;
+        }
+
+        .post-author {
+            margin-bottom: 7px;
+            font-weight: 700;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #777777;
+        }
+
+        @media (max-width: 760px) {
+            .mock-header {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .header-actions {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header-button {
+                width: 100%;
+            }
+
+            .info-bar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .writing-main {
+                padding: 28px 15px 60px;
+            }
+
+            .email-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="mock-header">
+        <div class="brand-area">
+            <strong class="test-title">
+                {{ mock_test.title }}
+            </strong>
+
+            <span class="module-title">
+                {{ module.title }}
+            </span>
+        </div>
+
+        <div class="header-actions">
+            <button
+                type="button"
+                id="exit-button"
+                class="header-button"
+            >
+                Exit
+            </button>
+
+            <button
+                type="button"
+                id="fullscreen-button"
+                class="header-button"
+            >
+                Fullscreen
+            </button>
+
+            <button
+                type="button"
+                id="back-button"
+                class="header-button"
+            >
+                Back
+            </button>
+
+            <button
+                type="button"
+                id="next-button"
+                class="header-button next-button"
+            >
+                Next
+            </button>
+        </div>
+    </header>
+
+    <div class="info-bar">
+        <div class="info-side">
+            <strong>Writing</strong>
+            <span class="divider">|</span>
+            <span>
+                Task
+                <span id="current-task-number">1</span>
+                of
+                {{ blocks|length }}
+            </span>
+        </div>
+
+        <div class="info-side">
+            <span id="module-timer">00:00</span>
+            <span class="divider">|</span>
+            <button
+                type="button"
+                id="toggle-time-button"
+                class="text-button"
+            >
+                Hide Time
+            </button>
+        </div>
+    </div>
+
+    <form id="csrf-form" hidden>
+        {% csrf_token %}
+    </form>
+
+    <main class="writing-main">
+        <div id="writing-screens">
+            {% for block in blocks %}
+                <section
+                    class="writing-screen"
+                    data-index="{{ forloop.counter0 }}"
+                    data-block-id="{{ block.id }}"
+                    data-block-type="{{ block.block_type }}"
+                    data-saved-word-ids="{{ block.saved_word_ids_json }}"
+                    {% if forloop.counter0 != current_block_index %}
+                        hidden
+                    {% endif %}
+                >
+                    <div class="task-card">
+                        <h1 class="task-title">
+                            {{ block.title }}
+                        </h1>
+
+                        {% if block.instructions %}
+                            <div class="task-instructions">
+                                {{ block.instructions }}
+                            </div>
+                        {% endif %}
+
+                        {% if block.block_type == "build_sentence" %}
+                            <div class="panel">
+                                {% if block.speaker_one_name or block.speaker_one_text %}
+                                    <div class="speaker">
+                                        {% if block.speaker_one_name %}
+                                            <span class="speaker-name">
+                                                {{ block.speaker_one_name }}
+                                            </span>
+                                        {% endif %}
+                                        {{ block.speaker_one_text }}
+                                    </div>
+                                {% endif %}
+
+                                {% if block.speaker_two_name %}
+                                    <div class="speaker">
+                                        <span class="speaker-name">
+                                            {{ block.speaker_two_name }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+
+                                <div class="sentence-answer">
+                                    {% for part in block.answer_parts %}
+                                        {% if part.type == "text" %}
+                                            <span class="sentence-text">{{ part.content }}</span>
+                                        {% elif part.type == "blank" %}
+                                            <button
+                                                type="button"
+                                                class="sentence-blank"
+                                                data-blank-index="{{ part.index }}"
+                                                aria-label="Sentence blank"
+                                            >
+                                                &nbsp;
+                                            </button>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <div class="word-bank">
+                                    {% for word in block.display_words %}
+                                        <button
+                                            type="button"
+                                            class="word-button"
+                                            data-word-id="{{ word.id }}"
+                                            data-word-text="{{ word.text }}"
+                                        >
+                                            {{ word.text }}
+                                        </button>
+                                    {% empty %}
+                                        <p class="empty-message">
+                                            No words have been added.
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        {% elif block.block_type == "write_email" %}
+                            <div class="panel">
+                                {% if block.email_scenario %}
+                                    <div class="discussion-prompt">
+                                        {{ block.email_scenario|linebreaks }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="email-meta">
+                                    <span class="meta-label">To</span>
+                                    <span>{{ block.email_recipient }}</span>
+
+                                    <span class="meta-label">Subject</span>
+                                    <span>{{ block.email_subject }}</span>
+                                </div>
+
+                                {% if block.email_requirements_list %}
+                                    <div class="requirements">
+                                        <strong>Your email should:</strong>
+                                        <ul>
+                                            {% for requirement in block.email_requirements_list %}
+                                                <li>{{ requirement }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
+                                <textarea
+                                    class="writing-textarea"
+                                    data-writing-answer
+                                    placeholder="Write your email here..."
+                                >{{ block.saved_text }}</textarea>
+
+                                <div class="word-count-row">
+                                    Words:
+                                    <span class="word-count">0</span>
+                                </div>
+                            </div>
+
+                        {% elif block.block_type == "academic_discussion" %}
+                            <div class="panel">
+                                {% if block.discussion_class_title %}
+                                    <h2>
+                                        {{ block.discussion_class_title }}
+                                    </h2>
+                                {% endif %}
+
+                                <div class="discussion-prompt">
+                                    {% if block.professor_name %}
+                                        <strong>
+                                            {{ block.professor_name }}
+                                        </strong>
+                                    {% endif %}
+                                    {{ block.professor_prompt|linebreaks }}
+                                </div>
+
+                                {% for post in block.discussion_posts_list %}
+                                    <div class="discussion-post">
+                                        <div class="post-author">
+                                            {{ post.author_name }}
+                                        </div>
+                                        <div>{{ post.text|linebreaks }}</div>
+                                    </div>
+                                {% endfor %}
+
+                                {% if block.discussion_requirements_list %}
+                                    <div class="requirements">
+                                        <strong>Your response should:</strong>
+                                        <ul>
+                                            {% for requirement in block.discussion_requirements_list %}
+                                                <li>{{ requirement }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+
+                                <textarea
+                                    class="writing-textarea"
+                                    data-writing-answer
+                                    placeholder="Write your response here..."
+                                >{{ block.saved_text }}</textarea>
+
+                                <div class="word-count-row">
+                                    Words:
+                                    <span class="word-count">0</span>
+                                    &nbsp;/ recommended minimum
+                                    {{ block.display_minimum_words }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="empty-message">
+                                Unsupported Writing task type.
+                            </p>
+                        {% endif %}
+                    </div>
+                </section>
+            {% empty %}
+                <p class="empty-message">
+                    No Writing blocks have been added to this module.
+                </p>
+            {% endfor %}
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                "use strict";
+
+                const screens = Array.from(
+                    document.querySelectorAll(
+                        ".writing-screen"
+                    )
+                );
+
+                const backButton =
+                    document.getElementById(
+                        "back-button"
+                    );
+
+                const nextButton =
+                    document.getElementById(
+                        "next-button"
+                    );
+
+                const exitButton =
+                    document.getElementById(
+                        "exit-button"
+                    );
+
+                const fullscreenButton =
+                    document.getElementById(
+                        "fullscreen-button"
+                    );
+
+                const toggleTimeButton =
+                    document.getElementById(
+                        "toggle-time-button"
+                    );
+
+                const timerElement =
+                    document.getElementById(
+                        "module-timer"
+                    );
+
+                const currentTaskElement =
+                    document.getElementById(
+                        "current-task-number"
+                    );
+
+                const csrfToken =
+                    document.querySelector(
+                        "#csrf-form input[name='csrfmiddlewaretoken']"
+                    ).value;
+
+                const saveUrl =
+                    "{% url 'toefl:save_writing_module_progress' module_attempt.id %}";
+
+                const submitUrl =
+                    "{% url 'toefl:submit_writing_module' module_attempt.id %}";
+
+                let currentIndex = Math.max(
+                    0,
+                    Math.min(
+                        parseInt(
+                            "{{ current_block_index|default:0 }}",
+                            10
+                        ) || 0,
+                        Math.max(
+                            0,
+                            screens.length - 1
+                        )
+                    )
+                );
+
+                let remainingSeconds = Math.max(
+                    0,
+                    parseInt(
+                        "{{ remaining_seconds|default:0 }}",
+                        10
+                    ) || 0
+                );
+
+                let timerHidden = false;
+                let timerInterval = null;
+                let navigationBusy = false;
+                let moduleSubmitting = false;
+                let autosaveTimeout = null;
+
+                function formatTime(totalSeconds) {
+                    const safeSeconds = Math.max(
+                        0,
+                        Math.floor(totalSeconds)
+                    );
+
+                    const minutes = Math.floor(
+                        safeSeconds / 60
+                    );
+
+                    const seconds =
+                        safeSeconds % 60;
+
+                    return (
+                        String(minutes).padStart(2, "0")
+                        + ":"
+                        + String(seconds).padStart(2, "0")
+                    );
+                }
+
+                function renderTimer() {
+                    timerElement.textContent =
+                        timerHidden
+                            ? "--:--"
+                            : formatTime(
+                                remainingSeconds
+                            );
+                }
+
+                function countWords(text) {
+                    const matches = (
+                        text || ""
+                    ).trim().match(
+                        /\b[\w’'-]+\b/g
+                    );
+
+                    return matches
+                        ? matches.length
+                        : 0;
+                }
+
+                function updateWordCount(section) {
+                    const textarea =
+                        section.querySelector(
+                            "[data-writing-answer]"
+                        );
+
+                    const counter =
+                        section.querySelector(
+                            ".word-count"
+                        );
+
+                    if (!textarea || !counter) {
+                        return;
+                    }
+
+                    counter.textContent = String(
+                        countWords(textarea.value)
+                    );
+                }
+
+                function getBuildState(section) {
+                    if (!section._selectedWordIds) {
+                        let parsed = [];
+
+                        try {
+                            parsed = JSON.parse(
+                                section.dataset
+                                    .savedWordIds
+                                || "[]"
+                            );
+                        } catch (error) {
+                            parsed = [];
+                        }
+
+                        section._selectedWordIds =
+                            Array.isArray(parsed)
+                                ? parsed.map(Number)
+                                : [];
+                    }
+
+                    return section._selectedWordIds;
+                }
+
+                function renderBuildSentence(section) {
+                    const selectedIds =
+                        getBuildState(section);
+
+                    const wordButtons = Array.from(
+                        section.querySelectorAll(
+                            ".word-button"
+                        )
+                    );
+
+                    const wordMap = new Map(
+                        wordButtons.map(
+                            function (button) {
+                                return [
+                                    Number(
+                                        button.dataset.wordId
+                                    ),
+                                    button.dataset.wordText
+                                ];
+                            }
+                        )
+                    );
+
+                    const blanks = Array.from(
+                        section.querySelectorAll(
+                            ".sentence-blank"
+                        )
+                    );
+
+                    blanks.forEach(
+                        function (blank, index) {
+                            const wordId =
+                                selectedIds[index];
+
+                            const wordText =
+                                wordMap.get(wordId);
+
+                            blank.textContent =
+                                wordText || "\u00a0";
+
+                            blank.classList.toggle(
+                                "filled",
+                                Boolean(wordText)
+                            );
+                        }
+                    );
+
+                    wordButtons.forEach(
+                        function (button) {
+                            const wordId = Number(
+                                button.dataset.wordId
+                            );
+
+                            button.disabled =
+                                selectedIds.includes(
+                                    wordId
+                                );
+                        }
+                    );
+                }
+
+                function initializeBuildSentence(
+                    section
+                ) {
+                    if (
+                        section.dataset.blockType
+                        !== "build_sentence"
+                    ) {
+                        return;
+                    }
+
+                    renderBuildSentence(section);
+
+                    section
+                        .querySelectorAll(
+                            ".word-button"
+                        )
+                        .forEach(
+                            function (button) {
+                                button.addEventListener(
+                                    "click",
+                                    function () {
+                                        const selectedIds =
+                                            getBuildState(
+                                                section
+                                            );
+
+                                        const blankCount =
+                                            section
+                                                .querySelectorAll(
+                                                    ".sentence-blank"
+                                                ).length;
+
+                                        if (
+                                            selectedIds.length
+                                            >= blankCount
+                                        ) {
+                                            return;
+                                        }
+
+                                        const wordId = Number(
+                                            button.dataset.wordId
+                                        );
+
+                                        if (
+                                            selectedIds.includes(
+                                                wordId
+                                            )
+                                        ) {
+                                            return;
+                                        }
+
+                                        selectedIds.push(
+                                            wordId
+                                        );
+
+                                        renderBuildSentence(
+                                            section
+                                        );
+
+                                        scheduleAutosave();
+                                    }
+                                );
+                            }
+                        );
+
+                    section
+                        .querySelectorAll(
+                            ".sentence-blank"
+                        )
+                        .forEach(
+                            function (blank) {
+                                blank.addEventListener(
+                                    "click",
+                                    function () {
+                                        const index = Number(
+                                            blank.dataset
+                                                .blankIndex
+                                        );
+
+                                        const selectedIds =
+                                            getBuildState(
+                                                section
+                                            );
+
+                                        if (
+                                            index
+                                            >= selectedIds.length
+                                        ) {
+                                            return;
+                                        }
+
+                                        selectedIds.splice(
+                                            index,
+                                            1
+                                        );
+
+                                        renderBuildSentence(
+                                            section
+                                        );
+
+                                        scheduleAutosave();
+                                    }
+                                );
+                            }
+                        );
+                }
+
+                function collectAnswers() {
+                    return screens.map(
+                        function (section) {
+                            const blockId = Number(
+                                section.dataset.blockId
+                            );
+
+                            const blockType =
+                                section.dataset.blockType;
+
+                            if (
+                                blockType
+                                === "build_sentence"
+                            ) {
+                                return {
+                                    block_id: blockId,
+                                    selected_word_ids:
+                                        getBuildState(
+                                            section
+                                        ),
+                                    text_answer: ""
+                                };
+                            }
+
+                            const textarea =
+                                section.querySelector(
+                                    "[data-writing-answer]"
+                                );
+
+                            return {
+                                block_id: blockId,
+                                selected_word_ids: [],
+                                text_answer:
+                                    textarea
+                                        ? textarea.value
+                                        : ""
+                            };
+                        }
+                    );
+                }
+
+                async function saveProgress(
+                    indexToSave = currentIndex
+                ) {
+                    const response = await fetch(
+                        saveUrl,
+                        {
+                            method: "POST",
+                            credentials: "same-origin",
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
+                                "X-CSRFToken":
+                                    csrfToken,
+                                "X-Requested-With":
+                                    "XMLHttpRequest"
+                            },
+                            body: JSON.stringify({
+                                current_block_index:
+                                    indexToSave,
+                                answers:
+                                    collectAnswers()
+                            })
+                        }
+                    );
+
+                    const raw =
+                        await response.text();
+
+                    let data = {};
+
+                    try {
+                        data = JSON.parse(raw);
+                    } catch (error) {
+                        throw new Error(
+                            "The server returned an invalid response."
+                        );
+                    }
+
+                    if (
+                        !response.ok
+                        || !data.success
+                    ) {
+                        throw new Error(
+                            data.error
+                            || "Progress could not be saved."
+                        );
+                    }
+
+                    return data;
+                }
+
+                function scheduleAutosave() {
+                    window.clearTimeout(
+                        autosaveTimeout
+                    );
+
+                    autosaveTimeout =
+                        window.setTimeout(
+                            function () {
+                                saveProgress()
+                                    .catch(
+                                        function (error) {
+                                            console.error(
+                                                "Autosave failed:",
+                                                error
+                                            );
+                                        }
+                                    );
+                            },
+                            450
+                        );
+                }
+
+                function updateButtons() {
+                    const isBusy =
+                        navigationBusy
+                        || moduleSubmitting;
+
+                    backButton.disabled =
+                        isBusy
+                        || currentIndex === 0
+                        || screens.length === 0;
+
+                    nextButton.disabled =
+                        isBusy
+                        || screens.length === 0;
+
+                    nextButton.textContent =
+                        currentIndex
+                        === screens.length - 1
+                            ? "Finish Module"
+                            : "Next";
+                }
+
+                function showScreen(index) {
+                    currentIndex = Math.max(
+                        0,
+                        Math.min(
+                            index,
+                            screens.length - 1
+                        )
+                    );
+
+                    screens.forEach(
+                        function (
+                            screen,
+                            screenIndex
+                        ) {
+                            screen.hidden =
+                                screenIndex
+                                !== currentIndex;
+                        }
+                    );
+
+                    currentTaskElement.textContent =
+                        String(currentIndex + 1);
+
+                    updateButtons();
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                }
+
+                async function submitModule() {
+                    if (moduleSubmitting) {
+                        return;
+                    }
+
+                    moduleSubmitting = true;
+                    updateButtons();
+
+                    try {
+                        await saveProgress(
+                            currentIndex
+                        );
+
+                        const response =
+                            await fetch(
+                                submitUrl,
+                                {
+                                    method: "POST",
+                                    credentials:
+                                        "same-origin",
+                                    headers: {
+                                        "X-CSRFToken":
+                                            csrfToken,
+                                        "X-Requested-With":
+                                            "XMLHttpRequest",
+                                        "Accept":
+                                            "application/json"
+                                    }
+                                }
+                            );
+
+                        const raw =
+                            await response.text();
+
+                        let data = {};
+
+                        try {
+                            data = JSON.parse(raw);
+                        } catch (error) {
+                            throw new Error(
+                                "The server returned an invalid response."
+                            );
+                        }
+
+                        if (
+                            !response.ok
+                            || !data.success
+                        ) {
+                            throw new Error(
+                                data.error
+                                || "Module could not be submitted."
+                            );
+                        }
+
+                        window.location.assign(
+                            data.next_url
+                        );
+                    } catch (error) {
+                        moduleSubmitting = false;
+                        updateButtons();
+
+                        alert(
+                            error.message
+                            || "Something went wrong."
+                        );
+                    }
+                }
+
+                backButton.addEventListener(
+                    "click",
+                    async function () {
+                        if (
+                            currentIndex <= 0
+                            || navigationBusy
+                            || moduleSubmitting
+                        ) {
+                            return;
+                        }
+
+                        const targetIndex =
+                            currentIndex - 1;
+
+                        navigationBusy = true;
+                        updateButtons();
+
+                        try {
+                            await saveProgress(
+                                targetIndex
+                            );
+
+                            showScreen(
+                                targetIndex
+                            );
+                        } catch (error) {
+                            alert(error.message);
+                        } finally {
+                            navigationBusy = false;
+                            updateButtons();
+                        }
+                    }
+                );
+
+                nextButton.addEventListener(
+                    "click",
+                    async function () {
+                        if (
+                            navigationBusy
+                            || moduleSubmitting
+                        ) {
+                            return;
+                        }
+
+                        if (
+                            currentIndex
+                            < screens.length - 1
+                        ) {
+                            const targetIndex =
+                                currentIndex + 1;
+
+                            navigationBusy = true;
+                            updateButtons();
+
+                            try {
+                                await saveProgress(
+                                    targetIndex
+                                );
+
+                                showScreen(
+                                    targetIndex
+                                );
+                            } catch (error) {
+                                alert(error.message);
+                            } finally {
+                                navigationBusy = false;
+                                updateButtons();
+                            }
+
+                            return;
+                        }
+
+                        await submitModule();
+                    }
+                );
+
+                fullscreenButton.addEventListener(
+                    "click",
+                    async function () {
+                        try {
+                            if (
+                                !document
+                                    .fullscreenElement
+                            ) {
+                                await document
+                                    .documentElement
+                                    .requestFullscreen();
+                            } else {
+                                await document
+                                    .exitFullscreen();
+                            }
+                        } catch (error) {
+                            alert(
+                                "Fullscreen mode could not be opened."
+                            );
+                        }
+                    }
+                );
+
+                document.addEventListener(
+                    "fullscreenchange",
+                    function () {
+                        fullscreenButton.textContent =
+                            document.fullscreenElement
+                                ? "Exit Fullscreen"
+                                : "Fullscreen";
+                    }
+                );
+
+                toggleTimeButton.addEventListener(
+                    "click",
+                    function () {
+                        timerHidden = !timerHidden;
+
+                        toggleTimeButton.textContent =
+                            timerHidden
+                                ? "Show Time"
+                                : "Hide Time";
+
+                        renderTimer();
+                    }
+                );
+
+                exitButton.addEventListener(
+                    "click",
+                    async function () {
+                        const confirmed =
+                            window.confirm(
+                                "Exit Writing? Your current progress will be saved."
+                            );
+
+                        if (!confirmed) {
+                            return;
+                        }
+
+                        try {
+                            await saveProgress();
+                            window.location.assign("/");
+                        } catch (error) {
+                            alert(error.message);
+                        }
+                    }
+                );
+
+                screens.forEach(
+                    function (section) {
+                        initializeBuildSentence(
+                            section
+                        );
+
+                        const textarea =
+                            section.querySelector(
+                                "[data-writing-answer]"
+                            );
+
+                        if (textarea) {
+                            updateWordCount(section);
+
+                            textarea.addEventListener(
+                                "input",
+                                function () {
+                                    updateWordCount(
+                                        section
+                                    );
+                                    scheduleAutosave();
+                                }
+                            );
+                        }
+                    }
+                );
+
+                timerInterval = window.setInterval(
+                    function () {
+                        if (remainingSeconds > 0) {
+                            remainingSeconds -= 1;
+                            renderTimer();
+                            return;
+                        }
+
+                        window.clearInterval(
+                            timerInterval
+                        );
+
+                        submitModule();
+                    },
+                    1000
+                );
+
+                showScreen(currentIndex);
+                renderTimer();
+            }
+        );
+    </script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>
+        {{ mock_test.title }} - {{ section_display_name }} Instructions
+    </title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: #ffffff;
+            color: #202020;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .exam-header {
+            display: flex;
+            min-height: 48px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 8px 4px 12px;
+            background: #176a8b;
+            color: #ffffff;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 31px;
+            height: 31px;
+            place-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            font-size: 17px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-button {
+            min-height: 36px;
+            padding: 4px 9px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 2px;
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .continue-button {
+            min-width: 70px;
+        }
+
+        .section-strip {
+            display: flex;
+            height: 31px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            border-bottom: 1px solid #dddddd;
+            background: #fafafa;
+            color: #555555;
+            font-size: 11px;
+        }
+
+        .hide-time {
+            color: #6a6a6a;
+        }
+
+        .page {
+            width: min(100%, 980px);
+            margin: 0 auto;
+            padding: 45px 28px 90px;
+        }
+
+        .content-card {
+            width: min(100%, 650px);
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 20px;
+            font-size: 24px;
+            line-height: 1.25;
+        }
+
+        h2 {
+            margin: 0 0 25px;
+            text-align: center;
+            font-size: 23px;
+            line-height: 1.3;
+        }
+
+        p {
+            margin: 0 0 17px;
+            line-height: 1.55;
+        }
+
+        .section-overview {
+            margin-bottom: 18px;
+        }
+
+        .task-table {
+            width: 100%;
+            max-width: 520px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .task-table th,
+        .task-table td {
+            padding: 8px 10px;
+            border: 1px solid #4d4d4d;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .task-table th {
+            background: #79b4cf;
+            font-weight: 700;
+        }
+
+        .task-table th:first-child,
+        .task-table td:first-child {
+            width: 42%;
+        }
+
+        .small-note {
+            margin-top: 24px;
+            color: #555555;
+        }
+
+        @media (max-width: 650px) {
+            .exam-header {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .brand-text {
+                display: none;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+
+            .header-button {
+                min-height: 34px;
+                padding: 4px 7px;
+            }
+
+            .page {
+                padding: 30px 18px 70px;
+            }
+
+            h1 {
+                font-size: 21px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="exam-header">
+        <div class="brand">
+            <div class="brand-mark">✓</div>
+            <div class="brand-text">
+                {{ mock_test.title }}<br>
+                TOEFL Test
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button
+                type="button"
+                class="header-button"
+                id="exit-button"
+            >
+                Exit
+            </button>
+
+            <button
+                type="button"
+                class="header-button"
+                id="fullscreen-button"
+            >
+                Fullscreen
+            </button>
+
+            <form method="post">
+                {% csrf_token %}
+                <button
+                    type="submit"
+                    class="header-button continue-button"
+                >
+                    Continue →
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <div class="section-strip">
+        <span>{{ section_display_name }}</span>
+        <span class="hide-time">◷ Hide Time</span>
+    </div>
+
+    <main class="page">
+        <section class="content-card">
+            {% if step == 1 %}
+                <h2>
+                    {{ mock_test.title }}<br>
+                    TOEFL Simulation Test
+                </h2>
+
+                <p>
+                    This TOEFL Simulation Test is a practice test and is not
+                    an official ETS examination.
+                </p>
+
+                <p>
+                    Complete the test under realistic conditions so your
+                    results reflect your current English-language skills.
+                </p>
+
+                <p>
+                    The questions and preparation material in this simulation
+                    belong to the test provider. TOEFL is a trademark of ETS.
+                </p>
+
+                <p>
+                    Click <strong>Continue</strong> in the top-right corner
+                    to continue.
+                </p>
+            {% else %}
+                <h1>{{ section_display_name }} Section</h1>
+
+                <p class="section-overview">
+                    {{ section_content.overview }}
+                    The task types in this section are shown below.
+                </p>
+
+                <table class="task-table">
+                    <thead>
+                        <tr>
+                            <th>Type of Task</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task_name, task_description in section_content.tasks %}
+                            <tr>
+                                <td>{{ task_name }}</td>
+                                <td>{{ task_description }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <p class="small-note">
+                    Click <strong>Continue</strong> when you are ready to see
+                    the instructions for the first module.
+                </p>
+            {% endif %}
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("exit-button").addEventListener(
+            "click",
+            function () {
+                const shouldExit = window.confirm(
+                    "Exit this test screen?"
+                );
+
+                if (shouldExit) {
+                    window.history.back();
+                }
+            }
+        );
+
+        document.getElementById("fullscreen-button").addEventListener(
+            "click",
+            async function () {
+                try {
+                    if (!document.fullscreenElement) {
+                        await document.documentElement.requestFullscreen();
+                    } else {
+                        await document.exitFullscreen();
+                    }
+                } catch (error) {
+                    console.error("Fullscreen request failed.", error);
+                }
+            }
+        );
+    </script>
+</body>
+</html>

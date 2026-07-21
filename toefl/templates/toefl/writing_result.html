@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Writing Result</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 40px;
+        }
+
+        .result-card {
+            max-width: 600px;
+            margin: auto;
+            padding: 35px;
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .score {
+            margin: 25px 0;
+            color: #2476a8;
+            font-size: 32px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="result-card">
+
+    <h1>Writing Result</h1>
+
+    <div class="score">
+        {{ attempt.correct_answers }}
+        /
+        {{ attempt.total_questions }}
+    </div>
+
+    <p>
+        Correct answers:
+        {{ attempt.correct_answers }}
+    </p>
+
+    <p>
+        Total questions:
+        {{ attempt.total_questions }}
+    </p>
+
+</div>
+
+</body>
+
+</html>

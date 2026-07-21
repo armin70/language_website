@@ -1,0 +1,338 @@
+{% load toefl_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ mock_test.title }} - {{ block.title }}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f6f6;
+            color: #222;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 28px;
+            padding: 0 12px;
+            border-bottom: 1px solid #ddd;
+            font-size: 12px;
+            color: #666;
+            background: #fafafa;
+        }
+
+        .page {
+            width: 100%;
+            min-height: calc(100vh - 28px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 20px 40px;
+        }
+
+        .title {
+            margin: 20px 0 40px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 860px;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .image-panel {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 420px;
+        }
+
+        .speaker-image {
+            max-width: 230px;
+            max-height: 420px;
+            object-fit: contain;
+        }
+
+        .questions-panel {
+            position: relative;
+            min-height: 320px;
+        }
+
+        .questions-panel.disabled {
+            opacity: 0.55;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .lock-message {
+            margin-bottom: 20px;
+            color: #8a8a8a;
+            font-size: 14px;
+        }
+
+        .question-box {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .choice-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .choice-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .bottom-actions {
+            margin-top: 36px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .submit-btn {
+            background: #2f83bf;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #246d9f;
+        }
+
+        .play-overlay {
+            margin-bottom: 16px;
+            color: #b14d4d;
+            font-size: 14px;
+            display: none;
+        }
+
+        .play-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #777;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .image-panel {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <span id="timer-display">{{ block.time_limit_display }}</span>
+    </div>
+
+    <div class="page">
+        <div class="title">{{ block.title }}</div>
+
+        <div class="content">
+            <div class="image-panel">
+                {% if block.speaker_image %}
+                    <img
+                        src="{{ block.speaker_image.url }}"
+                        alt="Speaker"
+                        class="speaker-image"
+                    >
+                {% endif %}
+            </div>
+
+            <div>
+                <div id="play-overlay" class="play-overlay">
+                    Audio autoplay was blocked by the browser.
+                    <br>
+                    <button type="button" id="manual-play-btn" class="play-btn">
+                        Play Audio
+                    </button>
+                </div>
+
+                <form method="POST" action="">
+                    {% csrf_token %}
+
+                    <div
+                        id="questions-panel"
+                        class="questions-panel {% if block.lock_questions_until_audio_ends %}disabled{% endif %}"
+                    >
+                        {% if block.lock_questions_until_audio_ends %}
+                            <div class="lock-message" id="lock-message">
+                                Please listen first. The answer choices will be enabled after the audio finishes.
+                            </div>
+                        {% endif %}
+
+                        {% for question in questions %}
+                            <div class="question-box">
+                                {% if question.question_text %}
+                                    <div class="question-text">
+                                        {{ question.question_text }}
+                                    </div>
+                                {% endif %}
+
+                                {% for choice in question.choices.all %}
+                                    <label class="choice-option">
+                                        <input
+                                            type="radio"
+                                            name="question_{{ question.id }}"
+                                            value="{{ choice.id }}"
+                                            {% if saved_answers|get_item:question.id == choice.id %}checked{% endif %}
+                                        >
+                                        <span>{{ choice.text }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="bottom-actions">
+                        <button type="submit" class="submit-btn">
+                            {% if next_block %}
+                                Next
+                            {% else %}
+                                Submit Listening
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if block.audio_file %}
+            <audio id="listening-audio" preload="auto">
+                <source src="{{ block.audio_file.url }}">
+            </audio>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const audio = document.getElementById("listening-audio");
+            const questionsPanel = document.getElementById("questions-panel");
+            const lockMessage = document.getElementById("lock-message");
+            const playOverlay = document.getElementById("play-overlay");
+            const manualPlayBtn = document.getElementById("manual-play-btn");
+            const timerDisplay = document.getElementById("timer-display");
+
+            let totalSeconds = parseInt("{{ time_limit_seconds|default:15 }}", 10);
+
+            function renderTimer() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerDisplay.textContent =
+                    String(minutes).padStart(2, "0") +
+                    ":" +
+                    String(seconds).padStart(2, "0");
+            }
+
+            renderTimer();
+
+            const timerInterval = setInterval(function () {
+                if (totalSeconds > 0) {
+                    totalSeconds -= 1;
+                    renderTimer();
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+
+            function enableQuestions() {
+                if (questionsPanel) {
+                    questionsPanel.classList.remove("disabled");
+                }
+
+                if (lockMessage) {
+                    lockMessage.style.display = "none";
+                }
+
+                if (playOverlay) {
+                    playOverlay.style.display = "none";
+                }
+            }
+
+            function startAudio() {
+                if (!audio) {
+                    enableQuestions();
+                    return;
+                }
+
+                const playPromise = audio.play();
+
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(function () {
+                            // autoplay worked
+                        })
+                        .catch(function () {
+                            if (playOverlay) {
+                                playOverlay.style.display = "block";
+                            }
+                        });
+                }
+            }
+
+            if (audio) {
+                audio.addEventListener("ended", function () {
+                    enableQuestions();
+                });
+            } else {
+                enableQuestions();
+            }
+
+            if (manualPlayBtn) {
+                manualPlayBtn.addEventListener("click", function () {
+                    if (!audio) return;
+
+                    audio.play().then(function () {
+                        if (playOverlay) {
+                            playOverlay.style.display = "none";
+                        }
+                    });
+                });
+            }
+
+            startAudio();
+        });
+    </script>
+
+</body>
+</html>

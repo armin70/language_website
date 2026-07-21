@@ -43,14 +43,14 @@
             margin-bottom: 20px;
         }
 
-    .passage-text {
-            line-height: 2.2; 
+        .passage-text {
+            line-height: 2.2;
             font-size: 17px;
             margin-bottom: 20px;
-            text-align: justify; 
+            text-align: justify;
         }
 
-         .word-wrapper {
+        .word-wrapper {
             display: inline-flex;
             align-items: center;
             font-family: 'Courier New', Courier, monospace;
@@ -153,6 +153,167 @@
         .next-btn:hover {
             background: #2980b9;
         }
+
+
+        /* ==============================
+   Email Block
+============================== */
+
+        .email-card {
+            background: #ffffff;
+            border: 1px solid #dfe5eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 25px 0;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .email-header {
+            background: #f4f6f8;
+            border-bottom: 1px solid #dfe5eb;
+            padding: 18px 22px;
+        }
+
+        .email-row {
+            display: flex;
+            gap: 10px;
+            margin: 7px 0;
+            font-size: 15px;
+        }
+
+        .email-label {
+            min-width: 70px;
+            font-weight: bold;
+            color: #536273;
+        }
+
+        .email-body {
+            padding: 25px;
+            line-height: 1.9;
+            font-size: 17px;
+            color: #2c3e50;
+        }
+
+
+        /* ==============================
+   Text Message Block
+============================== */
+
+        .message-card {
+            max-width: 520px;
+            margin: 25px auto;
+            padding: 20px;
+            background: #f4f6f9;
+            border-radius: 15px;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            background: #dff0ff;
+            padding: 14px 18px;
+            border-radius: 18px;
+            line-height: 1.7;
+        }
+
+        .message-time {
+            margin-top: 8px;
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+
+
+        /* ==============================
+   Notice Block
+============================== */
+
+        .notice-card {
+            background: #fffbea;
+            border: 2px solid #f1c40f;
+            border-radius: 8px;
+            margin: 25px 0;
+            padding: 25px;
+        }
+
+        .notice-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            color: #8a6d00;
+        }
+
+        .notice-body {
+            line-height: 1.9;
+            font-size: 17px;
+        }
+
+
+        /* ==============================
+   Questions
+============================== */
+
+        .questions-section {
+            margin-top: 30px;
+        }
+
+        .question-box {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #e3e8ed;
+            border-left: 5px solid #3498db;
+            border-radius: 7px;
+        }
+
+        .question-text {
+            margin-top: 0;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .choices-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .choice-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1px solid #dde4ea;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .choice-option:hover {
+            background: #f0f7fd;
+            border-color: #3498db;
+        }
+
+        .choice-option input[type="radio"] {
+            margin-top: 3px;
+        }
+
+        .choice-text {
+            line-height: 1.5;
+        }
+
+        .no-choices-message,
+        .no-questions-message {
+            color: #c0392b;
+            background: #fdecea;
+            padding: 12px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -161,7 +322,7 @@
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: baseline;">
             <h1>{{ mock_test.title }}</h1>
-              <span id="timer-display" style="color: #e67e22; font-weight: bold; font-size: 1.2rem;">35:00</span>
+            <span id="timer-display" style="color: #e67e22; font-weight: bold; font-size: 1.2rem;">35:00</span>
         </div>
         <p>{{ mock_test.description }}</p>
         <hr>
@@ -171,88 +332,287 @@
             <h3>{{ block.title }}</h3>
             <p><i>{{ block.instructions }}</i></p>
 
-            <form method="POST" action="">
+            <form id="reading-block-form" method="POST" action="">
                 {% csrf_token %}
 
-                {% if block.block_type == 'complete_words' %}
+                <input type="hidden" name="module_timeout" id="is-timeout" value="0">
+
+                {% if block.block_type == "complete_words" %}
+
+                <!-- Complete the Words -->
                 <div class="passage-text">
+
                     {% for part in block.get_processed_content %}
-                    {% if part.type == 'text' %}
+
+                    {% if part.type == "text" %}
+
                     {{ part.content|linebreaksbr }}
+
                     {% else %}
+
                     <span class="word-wrapper">
-                        <span class="start">{{ part.start_part }}</span>
-                        <span class="blank-area">
-                            <span class="dashes">{{ part.dashes }}</span>
-                            <input type="text" name="q_{{ part.q_number }}" class="blank-input"
-                                maxlength="{{ part.remaining_len }}" autocomplete="off" spellcheck="false">
+
+                        <span class="start">
+                            {{ part.start_part }}
                         </span>
+
+                        <span class="blank-area">
+
+                            <span class="dashes">
+                                {{ part.dashes }}
+                            </span>
+
+                            <input type="text" name="q_{{ part.q_number }}" class="blank-input"
+                                maxlength="{{ part.remaining_len }}" autocomplete="off" spellcheck="false"
+                                aria-label="Question {{ part.q_number }}">
+
+                        </span>
+
                     </span>
+
                     {% endif %}
+
                     {% endfor %}
+
                 </div>
+
                 {% else %}
+
+                <!-- Email block -->
+                {% if block.block_type == "email" %}
+
+                <div class="email-card">
+
+                    <div class="email-header">
+
+                        {% if block.sender %}
+                        <div class="email-row">
+                            <span class="email-label">From:</span>
+                            <span>{{ block.sender }}</span>
+                        </div>
+                        {% endif %}
+
+                        {% if block.recipient %}
+                        <div class="email-row">
+                            <span class="email-label">To:</span>
+                            <span>{{ block.recipient }}</span>
+                        </div>
+                        {% endif %}
+
+                        {% if block.subject %}
+                        <div class="email-row">
+                            <span class="email-label">Subject:</span>
+                            <span>{{ block.subject }}</span>
+                        </div>
+                        {% endif %}
+
+                        {% if block.sent_at_text %}
+                        <div class="email-row">
+                            <span class="email-label">Date:</span>
+                            <span>{{ block.sent_at_text }}</span>
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="email-body">
+                        {{ block.text|linebreaksbr }}
+                    </div>
+
+                </div>
+
+                <!-- Text message block -->
+                {% elif block.block_type == "text_message" %}
+
+                <div class="message-card">
+
+                    {% if block.sender %}
+                    <div class="message-sender">
+                        {{ block.sender }}
+                    </div>
+                    {% endif %}
+
+                    <div class="message-bubble">
+                        {{ block.text|linebreaksbr }}
+                    </div>
+
+                    {% if block.sent_at_text %}
+                    <div class="message-time">
+                        {{ block.sent_at_text }}
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                <!-- Notice block -->
+                {% elif block.block_type == "notice" %}
+
+                <div class="notice-card">
+
+                    <div class="notice-title">
+                        {{ block.title }}
+                    </div>
+
+                    <div class="notice-body">
+                        {{ block.text|linebreaksbr }}
+                    </div>
+
+                </div>
+
+                <!-- Academic passage, daily life, other -->
+                {% else %}
+
                 <div class="passage-text">
                     {{ block.text|linebreaksbr }}
                 </div>
 
-                {% for question in block.questions.all %}
-                <div class="question-box">
-                    <p><strong>Q{{ question.question_number }}. {{ question.question_text }}</strong></p>
-                    {% for choice in question.choices.all %}
-                    <label class="choice-option">
-                        <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}">
-                        {{ choice.text }}
-                    </label>
-                    {% endfor %}
-                </div>
-                {% endfor %}
                 {% endif %}
 
-                <div class="nav-buttons">
-                    {% if next_block %}
-                    <button type="submit" class="next-btn">Next Section →</button>
-                    {% else %}
-                    <button type="submit" class="submit-btn">Submit Test</button>
-                    {% endif %}
+
+                <!-- Multiple-choice questions -->
+                <div class="questions-section">
+
+                    {% for question in questions %}
+
+                    <div class="question-box">
+
+                        <p class="question-text">
+                            <strong>
+                                Q{{ question.question_number }}.
+                                {{ question.question_text }}
+                            </strong>
+                        </p>
+
+                        <div class="choices-list">
+
+                            {% for choice in question.choices.all %}
+
+                            <label class="choice-option">
+
+                                <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}" {% if question.saved_choice_id == choice.id %}checked{% endif %}>
+
+                                <span class="choice-text">
+                                    {{ choice.text }}
+                                </span>
+
+                            </label>
+
+                            {% empty %}
+
+                            <p class="no-choices-message">
+                                No choices have been added for this question.
+                            </p>
+
+                            {% endfor %}
+
+                        </div>
+                    </div>
+
+                    {% empty %}
+
+                    <div class="no-questions-message">
+                        No questions have been added to this block.
+                    </div>
+
+                    {% endfor %}
+
                 </div>
+
+                {% endif %}
+
+
+                <div class="nav-buttons">
+
+                    {% if next_block %}
+
+                    <button type="submit" class="next-btn">
+                        Next Section →
+                    </button>
+
+                    {% else %}
+
+                    <button type="submit" class="submit-btn">
+                        Submit Test
+                    </button>
+
+                    {% endif %}
+
+                </div>
+
             </form>
+
         </div>
     </div>
-<script>
-    // تنظیم زمان کل به ثانیه (مثلاً 35 دقیقه)
-    let totalSeconds = 35 * 60;
+    <span id="timer-config" data-time-limit="{{ time_limit_seconds|default:0 }}"
+        data-module-id="{{ block.module.id }}"></span>
 
-    // بررسی اینکه آیا قبلاً زمانی در Session Storage ذخیره شده یا خیر
-    if (sessionStorage.getItem('remainingTime')) {
-        totalSeconds = parseInt(sessionStorage.getItem('remainingTime'));
-    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("reading-block-form") || document.querySelector("form");
+            const timeoutInput = document.getElementById("is-timeout");
 
-    const timerDisplay = document.getElementById('timer-display');
+            // ۱. مستقیم مقدار عددی دیتابیس را از جنگو در متغیر قرار می‌دهیم
+            // فیلتر default در جنگو تضمین می‌کند که اگر مقدار نال یا خالی بود، مثلاً ۱۸۰۰ ثانیه (۳۰ دقیقه) در نظر گرفته شود.
+            const dbTimeLimit = parseInt("{{ time_limit_seconds|default:1800 }}", 10);
 
-    function updateTimer() {
-        let minutes = Math.floor(totalSeconds / 60);
-        let seconds = totalSeconds % 60;
+            // ۲. تعریف کلید منحصربه‌فرد برای این ماژول در مرورگر
+            const timerKey = "remainingTime_module_{{ block.module.id }}";
 
-        // فرمت دو رقمی (05:09)
-        timerDisplay.innerText = 
-            (minutes < 10 ? "0" + minutes : minutes) + ":" + 
-            (seconds < 10 ? "0" + seconds : seconds);
+            // ۳. بررسی وضعیت sessionStorage جهت پایداری زمان با رفرش صفحه
+            const storedTimeRaw = sessionStorage.getItem(timerKey);
+            let totalSeconds = (storedTimeRaw !== null) ? parseInt(storedTimeRaw, 10) : dbTimeLimit;
 
-        if (totalSeconds <= 0) {
-            clearInterval(timerInterval);
-            alert("Time is up!");
-            document.querySelector('form').submit(); // ارسال خودکار فرم وقتی وقت تمام شد
-        } else {
-            totalSeconds--;
-            // ذخیره زمان فعلی برای اینکه با رفرش شدن صفحه یا رفتن به بلاک بعد نپرد
-            sessionStorage.setItem('remainingTime', totalSeconds);
-        }
-    }
+            // اگر به هر دلیلی مقدار ذخیره شده قبلی خراب یا نامعتبر بود، از مقدار دیتابیس استفاده کن
+            if (isNaN(totalSeconds) || totalSeconds < 0) {
+                totalSeconds = dbTimeLimit;
+            }
 
-    // آپدیت هر یک ثانیه
-    const timerInterval = setInterval(updateTimer, 1000);
-</script>
+            const timerDisplay = document.getElementById("timer-display");
+            let timerInterval = null;
+
+            function renderTimer() {
+                if (!timerDisplay) return;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerDisplay.textContent =
+                    String(minutes).padStart(2, "0") + ":" +
+                    String(seconds).padStart(2, "0");
+            }
+
+            function finishModule() {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                sessionStorage.removeItem(timerKey);
+
+                if (timeoutInput) {
+                    timeoutInput.value = "true";
+                }
+                alert("Time is up for this module!");
+                form.submit();
+            }
+
+            function updateTimer() {
+                renderTimer();
+
+                if (totalSeconds <= 0) {
+                    finishModule();
+                    return;
+                }
+
+                totalSeconds -= 1;
+                sessionStorage.setItem(timerKey, String(totalSeconds));
+            }
+
+            // شروع و نمایش اول تایمر
+            renderTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        });
+    </script>
+
+
+
+
 </body>
 
 </html>
